@@ -88,7 +88,7 @@ Robert
 - Global Tray Easing
 
 ## Contributions & Feedback
-Always welcome, discuss in a the [community](https://community.canvaslms.com/), or PR's and issues if you enjoy committing.
+Always welcome, discuss in a the [community](https://community.canvaslms.com/t5/Canvas-Developers-Group/Thread-with-space-for-Global-Custom-Navigation/td-p/583803), or PR's and issues if you enjoy committing.
 
 ## Contributors
 There a snippets and concepts in this code revolving around conversations and contributions by: 
