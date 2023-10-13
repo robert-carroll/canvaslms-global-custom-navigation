@@ -57,15 +57,42 @@ Robert
   roles: function () {}, 
 }
 ```
-
-
-### Trays
+### Link Trays
 ```js
 {
-  title: 'Custom Tray',
+  title: 'Tray with Links',
+  icon_svg: 'icon-paperclip',
+  href: 'https://community.canvaslms.com/',
+  target: '_blank',
+  position: 'before' // default
+  tray: {
+    footer: 'Optional footer text, put whatever you want here, or leave it blank.',
+    links: [{
+        href: 'http://www.example.com/your-library',
+        title: 'Library',
+        desc: 'Optional text description'
+      },
+      {
+        href: 'http://www.google.com',
+        title: 'Google'
+      },
+      {
+        href: 'http://www.example.com/help-desk',
+        title: 'Help Desk',
+        desc: 'Optional text description'
+      }
+    ]
+  }
+}
+```
+
+### Callback Trays
+```js
+{
+  title: 'Callback Tray',
   icon_svg: 'icon-integrations',
   href: '#',
-  target: '_blank',
+  // target: '_blank',
   position: 'after',
   // optional tray
   tray: {
@@ -88,11 +115,11 @@ Robert
 - Global Tray Easing
 
 ## Contributions & Feedback
-Always welcome, discuss in a the [community](https://community.canvaslms.com/t5/Canvas-Developers-Group/Thread-with-space-for-Global-Custom-Navigation/td-p/583803), or PR's and issues if you enjoy committing.
+Always welcome, discuss in the [community](https://community.canvaslms.com/t5/Canvas-Developers-Group/Thread-with-space-for-Global-Custom-Navigation/td-p/583803), or PR's and issues if you enjoy committing.
 
 ## Contributors
 There a snippets and concepts in this code revolving around conversations and contributions by: 
-- [James](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/105160) mutations/append css
+- [James](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/105160) mutations/append css/clones!
 - [jsimon3](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/685323)  responsive tray
 - [dbrace](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/375810) instui icons
 - [JACOBSEN_C](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/103689) roles 
