@@ -37,7 +37,7 @@ function (item) {
           html += `<a href="${c.replace('_' ,'s/')}" style="background-color: ${colors[c]}; width:20px; height: 20px; display: inline-block;"></a>`;
         }
       });
-      html += '<div>';
+      html += '</div>';
       return html;
     }).then(html => globalCustomNav.append_cb_content(item, html))
     .catch(err => console.error(err));
