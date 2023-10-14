@@ -119,11 +119,12 @@ Always welcome, discuss in the [community](https://community.canvaslms.com/t5/Ca
 
 ## Contributors
 There a snippets and concepts in this code revolving around conversations and contributions by: 
-- [James](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/105160) mutations/append css/clones!
+- [James](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/105160) mutations/append css/clones
 - [jsimon3](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/685323)  responsive tray
 - [dbrace](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/375810) instui icons
-- [JACOBSEN_C](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/103689) roles 
+- [JACOBSEN_C](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/103689) roles
 - [hechla](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/521056) icon placement
+- [cesbrandt](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/109121) easily readable role conditions
 - threads that have been archived
 - notes from 2020
 - the community for it's feedback
