@@ -399,7 +399,7 @@
     // close tray when user clicks outside the tray
     window.addEventListener('click', function (e) {
       if (document.querySelector(`#nav-tray-portal > #${item.slug}-tray`) !== null) {
-        if (document.getElementById(`main`).contains(e.target) || !document.getElementById(`${item.slug}-item`).contains(e.target)) {
+        if (!document.getElementById(`${item.slug}-tray`)?.contains(e.target) && (document.getElementById(`main`).contains(e.target) || !document.getElementById(`${item.slug}-item`).contains(e.target))) {
           document.getElementById(`${item.slug}-tray`).remove();
           document.getElementById(item.slug).closest('li').classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
         }
