@@ -658,7 +658,7 @@
     },
   ];
 
-  // todo: find a ENV or DOM point that lets us automate language direction for all
-  globalCustomNav.load(globalCustomNav_items, 'ltr');
+  const dir = document.querySelector("html").getAttribute("dir") ?? "ltr";
+  globalCustomNav.load(globalCustomNav_items, dir);
 
 })();
