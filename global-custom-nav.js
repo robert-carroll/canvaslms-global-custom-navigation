@@ -262,7 +262,8 @@
     return html;
   };
 
-  globalCustomNav.load = (opts, dir) => {
+  globalCustomNav.load = (opts) => {
+    const lang_dir = document.querySelector('html').getAttribute('dir') ?? 'ltr';
     globalCustomNav.cfg = {
       glbl: {
         nav_selector: '#menu',
@@ -270,14 +271,14 @@
         trayActiveClass: `ic-app-header__menu-list-item--active`
       },
       rspv: {
-        nav_selector: `span[dir="${dir}"] div[role="dialog"] ul`,
+        nav_selector: `span[dir="${lang_dir}"] div[role="dialog"] ul`,
         INSTUI_aodown: `<svg name="IconArrowOpenDown" viewBox="0 0 1920 1920" rotate="0" style="width: 1em; height: 1em;" 
         width="1em" height="1em" aria-hidden="true" role="presentation" focusable="false" class="dUOHu_bGBk dUOHu_drOs dUOHu_eXrk cGqzL_bGBk">
         <g role="presentation"><path d="M568.129648 0.0124561278L392 176.142104 1175.86412 960.130789 392 1743.87035 568.129648 1920 1528.24798 960.130789z" 
         fill-rule="evenodd" stroke="none" stroke-width="1" transform="matrix(0 1 1 0 .067 -.067)"></path></g></svg>`
       },
       nav_items: [],
-      lang_dir: dir
+      lang_dir: lang_dir
     }
     if (!document.querySelector(globalCustomNav.cfg.glbl.nav_selector) && !document.querySelector(globalCustomNav.cfg.rspv.nav_selector)) return;
 
@@ -656,8 +657,8 @@
       }
     },
   ];
-
-  const dir = document.querySelector("html").getAttribute("dir") ?? "ltr";
-  globalCustomNav.load(globalCustomNav_items, dir);
+  
+  // add items to menu
+  globalCustomNav.load(globalCustomNav_items);
 
 })();

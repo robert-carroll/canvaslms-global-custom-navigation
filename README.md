@@ -18,7 +18,7 @@ Robert
 
 ## Features
   - No jQuery
-  - Right To Left language support*
+  - Right To Left language support
   - Global and Responsive (mobile) navigation icon creation
   - 3 svg options for icon: instructure icons, external svg, inline svg
   - Tray for both Global and Responsive navigation
@@ -101,15 +101,10 @@ Robert
 }
 ```
 
-## Considerations
-- `$$$` *Automate LTR/RTL, best for all, if rendered from user settings; not the root account or otherwise
-    - `ENV.local` exists, but would require a supported languages array?
-    - prefer to find `ltr` or `rtl` within `DOM` or `ENV`
+## Thoughts on Trays
 - Cloning elements is used to replace jQuery for standard JavaScript
-- Anything clonable improves forward compatability and reduces copy/paste for elements
-- This results in less need to copy all the classes
-    - Always review upcoming changes in beta to prepare/update...
-    - ...unless we copy in the computed styles as done with that jQuery tray solution
+  - Anything clonable improves forward compatability and reduces copy/paste for elements
+  - This results in less need to copy all the classes
 - The Global Tray is directly copied in. There is no way to clone it. Options...?
 - Global Tray CSS
 - Global Tray Easing
@@ -125,6 +120,7 @@ There a snippets and concepts in this code revolving around conversations and co
 - [JACOBSEN_C](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/103689) roles
 - [hechla](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/521056) icon placement
 - [cesbrandt](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/109121) easily readable role conditions
+- [Code-with-Ski](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/2432278) language direction detection
 - threads that have been archived
 - notes from 2020
 - the community for it's feedback
