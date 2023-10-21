@@ -43,7 +43,6 @@
         ".gnct_link-item":
           "margin-top: 0.75rem; margin-bottom: 0.75rem; padding: 0px; max-width: 100%;",
         ".gnct_link-item:first-of-type": "margin-top: 0;",
-
         ".gnct_link:focus": "outline-color: var(--ic-link-color);",
         ".gnct_link":
           "outline-color: transparent; outline-offset: 0.25rem; outline-style: solid; outline-width: 0.125rem; transition: outline-color 0.2s ease 0s; vertical-align: baseline; max-width: 100%; overflow: visible;",
@@ -321,12 +320,6 @@
     globalCustomNav.watch_burger_tray();
   };
 
-  /* TODOs: left global tray
-    eval bullets on ul, list-style-type: none;
-    eval padding on tray content load
-    OR
-    collect and use .css with computed classes; decisions
-  */
   globalCustomNav.glbl_tray_toggle = (item, click) => {
     // bind/click on each menu item, if current is custom open
     // if clicked menu item is not custom, close custom trays
@@ -404,10 +397,10 @@
     document.getElementById('nav-tray-portal').insertAdjacentHTML('afterbegin', tray_html);
 
     // focus on close button
-    document.querySelector(".gnct_close-btn")?.focus();
+    document.querySelector('.gnct_close-btn')?.focus();
 
     // slide in tray on open
-    document.querySelector(".gnct_tray-wrapper").classList.add("gnct_open");
+    document.querySelector('.gnct_tray-wrapper').classList.add('gnct_open');
 
     // handle callback
     globalCustomNav.handle_tray_cb(item, '.tray-with-space-for-global-nav div.gnct-loading-tray-cb-svg', 'afterbegin', false);
@@ -416,22 +409,22 @@
   globalCustomNav.glbl_tray_close = item => {
     // close tray when user clicks outside the tray
     document.querySelector(`#${item.slug}-tray-close`).addEventListener('click', function () {
-      const trayWrapper = document.querySelector(".gnct_tray-wrapper");
-        trayWrapper.addEventListener("transitionend", () => {
+      const trayWrapper = document.querySelector('.gnct_tray-wrapper');
+        trayWrapper.addEventListener('transitionend', () => {
         // remove tray after transition if it still exists
         document.getElementById(`${item.slug}-tray`)?.remove();
 
         // remove active class on global nav icon on close
         document
           .getElementById(item.slug)
-          .closest("li")
+          .closest('li')
           .classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
 
         // TODO Ensure active class is restored to appropriate icon based on context
       });
 
       // slide out tray on close
-      trayWrapper.classList.remove("gnct_open");
+      trayWrapper.classList.remove('gnct_open');
     }.bind(item));
   };
 
@@ -439,23 +432,23 @@
     // close tray when user clicks outside the tray
     window.addEventListener('click', function (e) {
       if (document.querySelector(`#nav-tray-portal > #${item.slug}-tray`) !== null) {
-        if (!document.getElementById(`${item.slug}-tray`)?.contains(e.target) && (document.getElementById(`main`).contains(e.target) || !document.getElementById(`${item.slug}-item`).contains(e.target))) {
-          const trayWrapper = document.querySelector(".gnct_tray-wrapper");
-          trayWrapper.addEventListener("transitionend", () => {
+        if (!document.getElementById(`${item.slug}-tray`)?.contains(e.target) && (document.getElementById('main').contains(e.target) || !document.getElementById(`${item.slug}-item`).contains(e.target))) {
+          const trayWrapper = document.querySelector('.gnct_tray-wrapper');
+          trayWrapper.addEventListener('transitionend', () => {
             // remove tray after transition if it still exists
             document.getElementById(`${item.slug}-tray`)?.remove();
   
             // remove active class on global nav icon on close
             document
               .getElementById(item.slug)
-              .closest("li")
+              .closest('li')
               .classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
   
             // TODO Ensure active class is restored to appropriate icon based on context
           });
   
           // slide out tray on close
-          trayWrapper.classList.remove("gnct_open");
+          trayWrapper.classList.remove('gnct_open');
         }
       }
     });
