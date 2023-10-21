@@ -16,7 +16,38 @@
         '.gnct_icon_svg': 'width: 32px !important; height: 32px !important; font-style: bold;',
         'div.gnct_tray-content': 'display: block !important;',
         'div.gnct_tray-open': 'display: block !important;',
-        'svg.gnct_tray-closed': 'display: none !important;'
+        'svg.gnct_tray-closed': 'display: none !important;',
+        ".gnct_tray-wrapper":
+          "transform: translateZ(0px); transition: 0.5s; opacity: 1; background-color: #FFFFFF; max-height: 100vh; max-width: 100vw; overflow: hidden auto; position: fixed; box-shadow: 0 0.375rem 0.4375rem rgba(0, 0, 0, 0.1), 0 0.625rem 1.75rem rgba(0, 0, 0, 0.25); top: 0; bottom: 0; width: 28em;",
+        "[dir='ltr'] .gnct_tray-wrapper": "left: -28em; right: auto;",
+        "[dir='rtl'] .gnct_tray-wrapper": "right: -28em; left: auto;",
+        "[dir='ltr'] .gnct_tray-wrapper.gnct_open": "left: 0; right: auto;",
+        "[dir='rtl'] .gnct_tray-wrapper.gnct_open": "right: 0; left: auto;",
+        ".gnct_close-btn-wrapper": "position: absolute; top: 0.5rem;",
+        "[dir='ltr'] .gnct_close-btn-wrapper": "left: auto; right: 0.5rem",
+        "[dir='rtl'] .gnct_close-btn-wrapper": "right: auto; left: 0.5rem",
+        ".gnct_close-btn":
+          "box-sizing: border-box; background: none; color: #2D3B45; margin: 0px; padding: 0px; border-radius: 0.25rem; outline: none; border: none; width: auto; cursor: pointer;",
+        ".gnct_close-btn:hover": "background-color: rgba(45, 59, 69, 0.1);",
+        ".gnct_close-btn::before":
+          "position: absolute; pointer-events: none; opacity: 0; content: ''; transform: scale(0.95); transition: all 0.2s ease 0s; top: -0.3125rem; right: -0.3125rem; bottom: -0.3125rem; left: -0.3125rem; border-style: solid; border-color: var(--ic-brand-primary); border-width: 0.125rem; border-radius: 0.5rem; transform: scale(1);",
+        ".gnct_close-btn:focus::before": "opacity: 1;",
+        ".gnct_tray-content-wrapper":
+          "box-sizing: border-box; max-width: 100%; overflow: visible; padding: 1.5rem;",
+        ".gnct_tray-heading":
+          "line-height: 1.125; margin: 0px; font-size: 1.375rem; font-weight: 700; color: inherit; box-sizing: border-box; max-width: 100%; overflow: visible;",
+        ".gnct_list-group-heading":
+          "line-height: 1.125; margin: 0px; font-size: 1rem; font-weight: 700; color: inherit; box-sizing: border-box; max-width: 100%; overflow: visible;",
+        ".gnct_link-list": "margin: 0.75rem 0; list-style-type: none;",
+        ".gnct_list-group-heading + .gnct_link-list": "margin: 0.75rem;",
+        ".gnct_link-item":
+          "margin-top: 0.75rem; margin-bottom: 0.75rem; padding: 0px; max-width: 100%;",
+        ".gnct_link-item:first-of-type": "margin-top: 0;",
+
+        ".gnct_link:focus": "outline-color: var(--ic-link-color);",
+        ".gnct_link":
+          "outline-color: transparent; outline-offset: 0.25rem; outline-style: solid; outline-width: 0.125rem; transition: outline-color 0.2s ease 0s; vertical-align: baseline; max-width: 100%; overflow: visible;",
+        ".gnct_link-desc": "font-size: 0.875rem;",
       };
       if (typeof styles !== 'undefined' && Object.keys(styles).length > 0) {
         let style = document.createElement('style');
@@ -249,13 +280,13 @@
   // end rspv tray
 
   globalCustomNav.glbl_tray_links = links => {
-    var html = `<ul class="fOyUs_bGBk fOyUs_UeJS fClCc_bGBk fClCc_fLbg" style="margin: 0.75rem; list-style-type: none;">`;
+    var html = `<ul class="gnct_link-list">`;
     links.forEach(link => {
-      html += `<li class="fOyUs_bGBk jpyTq_bGBk jpyTq_ycrn jpyTq_bCcs" style="padding: 0px; max-width: 100%;">
-        <a href="${link.href}" target="_blank" class="fOyUs_bGBk fbyHH_bGBk fbyHH_bSMN">${link.title}</a>`;
+      html += `<li class="gnct_link-item">
+        <a href="${link.href}" target="_blank" class="gnct_link">${link.title}</a>`;
 
       // append link description if set
-      html += (!!link.desc && link.desc.length > 1) ? `<div wrap="normal" letter-spacing="normal" class="enRcg_bGBk enRcg_dfBC enRcg_pEgL enRcg_eQnG">${link.desc}</div>` : '';
+      html += (!!link.desc && link.desc.length > 1) ? `<div wrap="normal" letter-spacing="normal" class="gnct_link-desc">${link.desc}</div>` : '';
       html += '</li>';
     })
     html += `</ul>`;
@@ -325,6 +356,8 @@
         // close
         document.getElementById(`${item.slug}-tray`).remove();
         document.getElementById(item.slug).closest('li').classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
+
+        // TODO Ensure tray active class is restored to appropriate icon based on context
       } catch (e) {
         console.log(e);
       }
@@ -334,54 +367,46 @@
   globalCustomNav.glbl_tray_content = (item) => {
     const tray_content_id = `${item.slug}-tray`;
 
-    var tray_html = `<span id="${tray_content_id}" dir="${globalCustomNav.cfg.lang_dir}" style="--fLzZc-smallWidth: 28em;">
-      <span class="fLzZc_bGBk fLzZc_fSpQ fLzZc_doqw fLzZc_bxia eJkkQ_eOlt" style="--fLzZc-smallWidth: 28em;">
+    var tray_html = `<span id="${tray_content_id}" dir="${globalCustomNav.cfg.lang_dir}">
+      <span class="gnct_tray-wrapper">
       <div role="dialog" aria-label="${item.title} tray">
-      <div class="fLzZc_caGd">
+      <div style="min-height: 100vh;">
       <div class="navigation-tray-container ${item.title.toLowerCase()}-tray">`;
 
-    // close button - doesn't render nicely w/o native tray first - see margin-left here
-    tray_html += `<span class="ejhDx_bGBk ejhDx_bQpq ejhDx_coHh" style="margin-${(globalCustomNav.cfg.lang_dir == 'ltr')?'left':'right'}: 412px; right: 8px; top 8px;">
+    // close button
+    tray_html += `<span class="gnct_close-btn-wrapper">
       <button id="${tray_content_id}-close" cursor="pointer" type="button" tabindex="0"
-          class="fOyUs_bGBk fOyUs_fKyb fOyUs_cuDs fOyUs_cBHs fOyUs_eWbJ fOyUs_fmDy fOyUs_eeJl fOyUs_cBtr fOyUs_fuTR fOyUs_cnfU fQfxa_bGBk"
-          style="margin: 0px; padding: 0px; border-radius: 0.25rem; border-width: 0px; width: auto; cursor: pointer;">
-          <span class="fQfxa_caGd fQfxa_VCXp fQfxa_buuG fQfxa_EMjX fQfxa_bCUx fQfxa_bVmg fQfxa_bIHL">
-            <span direction="row" wrap="no-wrap"
-              class="fOyUs_bGBk fOyUs_desw bDzpk_bGBk bDzpk_eRIA bDzpk_fZWR bDzpk_qOas"
-              style="width: 100%; height: 100%;"><span class="fOyUs_bGBk dJCgj_bGBk">
-                <span class="fQfxa_eoCh">
-                  <svg name="IconX" viewBox="0 0 1920 1920" rotate="0" style="width: 1em; height: 1em;"
-                    width="1em" height="1em" aria-hidden="true" role="presentation" focusable="false"
-                    class="dUOHu_bGBk dUOHu_drOs dUOHu_eXrk cGqzL_bGBk">
-                    <g role="presentation">
-                      <path d="M797.319865 985.881673L344.771525 1438.43001 533.333333 1626.99182 985.881673 1174.44348 1438.43001 1626.99182 1626.99182 1438.43001 1174.44348 985.881673 1626.99182 533.333333 1438.43001 344.771525 985.881673 797.319865 533.333333 344.771525 344.771525 533.333333z" fill-rule="nonzero" stroke="none" stroke-width="1"></path>
-                    </g>
-                </svg>
-          </span>
-        <span class="ergWt_bGBk">Close</span>
-      </span></span></span></button></span>`;
+          class="gnct_close-btn">
+          <i class="icon-solid icon-x" style="padding:0.5rem;"></i><span class="screenreader-only">Close</span>
+      </button></span>`;
 
     // tray content
     tray_html += `<div class="tray-with-space-for-global-nav">
-            <div class="fOyUs_bGBk" style="padding: 1.5rem;">
-              <h2 class="fOyUs_bGBk blnAQ_bGBk blnAQ_dnfM blnAQ_drOs">${item.title}</h2>
+            <div class="gnct_tray-content-wrapper">
+              <h2 class="gnct_tray-heading">${item.title}</h2>
               <hr role="presentation" class="cb_content">`;
-
+    
     // handle links vs callback
     tray_html += globalCustomNav.tray_links_vs_cb(item, false);
 
     if (item.tray.footer && item.tray.footer.length > 1) {
-      tray_html += `<ul class="fOyUs_bGBk fOyUs_UeJS fClCc_bGBk fClCc_fLbg" style="margin: 0.75rem 0px; list-style-type: none;">
-        <li class="fOyUs_bGBk jpyTq_bGBk jpyTq_ycrn jpyTq_bCcs" style="padding: 0px; max-width: 100%;"><hr role="presentation"></li>
-        <li class="fOyUs_bGBk jpyTq_bGBk jpyTq_ycrn jpyTq_bCcs" style="padding: 0px; max-width: 100%;">
-        <a href="${item.href}" class="fOyUs_bGBk fbyHH_bGBk fbyHH_bSMN">${item.title}</a></li>
+      tray_html += `<ul class="gnct_link-list">
+        <li class="gnct_link-item"><hr role="presentation"></li>
+        <li class="gnct_link-item">
+        <a href="${item.href}" class="gnct_link">${item.title}</a></li>
         </ul><br>
-        <div wrap="normal" letter-spacing="normal" class="enRcg_bGBk enRcg_ycrn enRcg_eQnG">${item.tray.footer}</div>`;
+        <div wrap="normal" letter-spacing="normal" class="gnct_link-desc">${item.tray.footer}</div>`;
     }
     tray_html += `</div></div></div></div></div></span></span>`;
 
     // append tray
     document.getElementById('nav-tray-portal').insertAdjacentHTML('afterbegin', tray_html);
+
+    // focus on close button
+    document.querySelector(".gnct_close-btn")?.focus();
+
+    // slide in tray on open
+    document.querySelector(".gnct_tray-wrapper").classList.add("gnct_open");
 
     // handle callback
     globalCustomNav.handle_tray_cb(item, '.tray-with-space-for-global-nav div.gnct-loading-tray-cb-svg', 'afterbegin', false);
@@ -390,8 +415,22 @@
   globalCustomNav.glbl_tray_close = item => {
     // close tray when user clicks outside the tray
     document.querySelector(`#${item.slug}-tray-close`).addEventListener('click', function () {
-      document.getElementById(`${item.slug}-tray`).remove();
-      document.getElementById(item.slug).closest('li').classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
+      const trayWrapper = document.querySelector(".gnct_tray-wrapper");
+        trayWrapper.addEventListener("transitionend", () => {
+        // remove tray after transition if it still exists
+        document.getElementById(`${item.slug}-tray`)?.remove();
+
+        // remove active class on global nav icon on close
+        document
+          .getElementById(item.slug)
+          .closest("li")
+          .classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
+
+        // TODO Ensure active class is restored to appropriate icon based on context
+      });
+
+      // slide out tray on close
+      trayWrapper.classList.remove("gnct_open");
     }.bind(item));
   };
 
@@ -400,8 +439,22 @@
     window.addEventListener('click', function (e) {
       if (document.querySelector(`#nav-tray-portal > #${item.slug}-tray`) !== null) {
         if (!document.getElementById(`${item.slug}-tray`)?.contains(e.target) && (document.getElementById(`main`).contains(e.target) || !document.getElementById(`${item.slug}-item`).contains(e.target))) {
-          document.getElementById(`${item.slug}-tray`).remove();
-          document.getElementById(item.slug).closest('li').classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
+          const trayWrapper = document.querySelector(".gnct_tray-wrapper");
+          trayWrapper.addEventListener("transitionend", () => {
+            // remove tray after transition if it still exists
+            document.getElementById(`${item.slug}-tray`)?.remove();
+  
+            // remove active class on global nav icon on close
+            document
+              .getElementById(item.slug)
+              .closest("li")
+              .classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
+  
+            // TODO Ensure active class is restored to appropriate icon based on context
+          });
+  
+          // slide out tray on close
+          trayWrapper.classList.remove("gnct_open");
         }
       }
     });
@@ -425,16 +478,16 @@
           tray_html += globalCustomNav.glbl_tray_links(tray_links);
         } else {
           Object.keys(item.tray.links).forEach(group => {
-            tray_html += `<h3 class="fOyUs_bGBk blnAQ_bGBk blnAQ_KGwv blnAQ_drOs">${group}</h3>`;
+            tray_html += `<h3 class="gnct_list-group-heading">${group}</h3>`;
             tray_html += globalCustomNav.glbl_tray_links(item.tray.links[group]);
           })
         }
       }
       // prep for callback
     } else if (typeof item.tray.cb !== 'undefined' && typeof item.tray.cb === 'function') {
-      tray_html += `<ul class="gnct-loading-tray-cb fOyUs_bGBk fOyUs_UeJS fClCc_bGBk fClCc_fLbg" style="margin: 0.75rem 0px;">
-        <li class="fOyUs_bGBk jpyTq_bGBk jpyTq_ycrn jpyTq_bCcs" style="padding: 0px; max-width: 100%;">
-          <div class="gnct-loading-tray-cb-svg fOyUs_bGBk eHQDY_bGBk eHQDY_doqw eHQDY_ddES"></div>
+      tray_html += `<ul class="gnct-loading-tray-cb gnct_link-list">
+        <li class="gnct_link-item">
+          <div class="gnct-loading-tray-cb-svg gnct_link-desc"></div>
         </li>
       </ul>`;
     }
