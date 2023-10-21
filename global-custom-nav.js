@@ -549,7 +549,7 @@
       // example only, host your own, or use icon class
       icon_svg: 'icon-expand-start',
       href: '/courses/1234567',
-      target: '_blank',
+      target: '',
       //position: 'before' // default
     },
     {
