@@ -123,6 +123,15 @@
     } else {
       target_li.before(icon);
     }
+    
+    const regex = new RegExp(`^${item.href}`);
+    if(!hamb && regex.test(window.location.pathname)) {
+
+      globalCustomNav.glbl_clear_active_class();
+
+      // set active class if icon is current context path
+      document.getElementById(item.slug).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
+    }
   };
 
   globalCustomNav.create_nav_icon = (item, hamb = true) => {
@@ -321,19 +330,19 @@
     globalCustomNav.watch_burger_tray();
   };
 
+  globalCustomNav.glbl_clear_active_class = () => {
+    Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} .${globalCustomNav.cfg.glbl.trayActiveClass}`)).forEach(e => {
+      e.classList.toggle(globalCustomNav.cfg.glbl.trayActiveClass);
+    });
+  }
+
   globalCustomNav.glbl_tray_toggle = (item, click) => {
     // bind/click on each menu item, if current is custom open
     // if clicked menu item is not custom, close custom trays
     Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} li`)).forEach(nav => {
-      
-      //console.log(nav)
-      //console.log(nav.querySelector('a').href)
-      // nav.classList.contains(globalCustomNav.cfg.glbl.trayActiveClass) == true || 
       if(nav.classList.contains(globalCustomNav.cfg.glbl.trayActiveClass) == true) {
         // preserve the nav item to restore active class when a tray is closed
-        // TODO pickup the context/href of a custom nav item if we're there
-        
-        // handle primary routes and external tools
+        // handle primary routes, external tools, and custom contexts
         globalCustomNav.cfg.context_item = nav.querySelector('a').getAttribute('id') || nav.querySelector('a').closest('li').getAttribute('id');
         console.log(globalCustomNav.cfg.context_item)
       }
@@ -348,10 +357,7 @@
       })
     });
 
-    // clear all
-    Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} .${globalCustomNav.cfg.glbl.trayActiveClass}`)).forEach(e => {
-      e.classList.toggle(globalCustomNav.cfg.glbl.trayActiveClass);
-    });
+    globalCustomNav.glbl_clear_active_class();
 
     // toggle'd and tray content is not loaded
     if (!document.querySelector(`#nav-tray-portal > #${item.slug}-tray`)) {
