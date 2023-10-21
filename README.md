@@ -101,13 +101,12 @@ Robert
 }
 ```
 
-## Thoughts on Trays
+## Considerations on Clones
 - Cloning elements is used to replace jQuery for standard JavaScript
   - Anything clonable improves forward compatability and reduces copy/paste for elements
   - This results in less need to copy all the classes
-- The Global Tray is directly copied in. There is no way to clone it. Options...?
-- Global Tray CSS
-- Global Tray Easing
+- The Global Tray is directly copied in. It is not available to clone.
+
 
 ## Contributions & Feedback
 Always welcome, discuss in the [community](https://community.canvaslms.com/t5/Canvas-Developers-Group/Thread-with-space-for-Global-Custom-Navigation/td-p/583803), or PR's and issues if you enjoy committing.
@@ -120,7 +119,7 @@ There a snippets and concepts in this code revolving around conversations and co
 - [JACOBSEN_C](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/103689) roles
 - [hechla](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/521056) icon placement
 - [cesbrandt](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/109121) easily readable role conditions
-- [Code-with-Ski](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/2432278) language direction detection
+- [Code-with-Ski](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/2432278) language direction detection, tray transition and classes
 - threads that have been archived
 - notes from 2020
 - the community for it's feedback
