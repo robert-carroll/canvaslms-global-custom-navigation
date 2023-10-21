@@ -180,6 +180,7 @@
     if (/^icon-[a-z]/.test(item.icon_svg) == true) {
       // instructure icon
       let instuicon = `<div id="${(hamb ? 'rspv-' : '') + `${item.slug}-svg`}" role="presentation">`;
+      // TODO dUOHu_cVUo is the brand color
       instuicon += `<i class="icon-line ${item.icon_svg}${hamb ? ' dUOHu_cVUo' : ''} gnct_inst_menu_icon"></i></div>`;
       svg_holder.insertAdjacentHTML('afterbegin', instuicon);
 
@@ -269,7 +270,7 @@
       tray_html += globalCustomNav.tray_links_vs_cb(item);
 
       // add default footer link
-      tray_html += `<a href="${item.href}" class="fOyUs_bGBk fbyHH_bGBk fbyHH_bSMN">${item.title}</a></li>`;
+      tray_html += `<a href="${item.href}" class="gnct_link">${item.title}</a></li>`;
       // append
       tray_content.insertAdjacentHTML('afterbegin', tray_html);
 
