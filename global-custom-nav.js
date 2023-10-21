@@ -385,7 +385,7 @@
     tray_html += `<div class="tray-with-space-for-global-nav">
             <div class="gnct_tray-content-wrapper">
               <h2 class="gnct_tray-heading">${item.title}</h2>
-              <hr role="presentation" class="cb_content">`;
+              <hr role="presentation" class="gcn-cb_content">`;
     
     // handle links vs callback
     tray_html += globalCustomNav.tray_links_vs_cb(item, false);
@@ -511,8 +511,8 @@
   };
 
   globalCustomNav.append_cb_content = (item, content) => {
-    if (document.querySelector('.tray-with-space-for-global-nav hr.cb_content')) {
-      document.querySelector('.tray-with-space-for-global-nav hr.cb_content').insertAdjacentHTML('afterend', content);
+    if (document.querySelector('.tray-with-space-for-global-nav hr.gcn-cb_content')) {
+      document.querySelector('.tray-with-space-for-global-nav hr.gcn-cb_content').insertAdjacentHTML('afterend', content);
       document.querySelector('.tray-with-space-for-global-nav .gnct-loading-tray-cb').remove();
     } else if (document.querySelector(`#rspv-${item.slug}-tray`)) {
       document.querySelector(`#rspv-${item.slug}-tray`).insertAdjacentHTML('afterbegin', content);
