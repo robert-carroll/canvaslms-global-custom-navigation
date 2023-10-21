@@ -9,7 +9,7 @@
 
   // handle css, for now
   (function () {
-    if (document.querySelectorAll('[data-global-nav-custom-css="set"]').length == 0) {
+    if (document.querySelectorAll('[data-global-custom-nav-css="set"]').length == 0) {
       let styles = {
         'i.gcn_inst_menu_icon:before': 'font-size: 32px; width: 32px; line-height: 32px;',
         'i.gcn_inst_menu_icon': 'width: 32px; height: 32px; font-style: bold;',
@@ -17,7 +17,7 @@
       };
       if (typeof styles !== 'undefined' && Object.keys(styles).length > 0) {
         let style = document.createElement('style');
-        style.setAttribute('data-global-nav-custom-css', 'set');
+        style.setAttribute('data-global-custom-nav-css', 'set');
         document.head.appendChild(style);
         let sheet = style.sheet;
         Object.keys(styles).forEach(function (key) {
