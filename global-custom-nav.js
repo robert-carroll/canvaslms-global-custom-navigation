@@ -328,6 +328,8 @@
       
       if(nav.classList.contains(globalCustomNav.cfg.glbl.trayActiveClass) == true) {
         // preserve the nav item to restore active class when a tray is closed
+        // TODO pickup the context/href of a custom nav item if we're there
+        // TODO, check/handle context unknown
         globalCustomNav.cfg.context_item = nav.querySelector('a[id^="global_nav"]').getAttribute('id');
       }
 
@@ -530,6 +532,14 @@
       href: 'https://community.canvaslms.com/',
       target: '_blank',
       position: 1, // can be one of : integer (position after first), 'after' (help or last), 'before' (help or last)
+    },
+    {
+      title: 'Custom Context',
+      // example only, host your own, or use icon class
+      icon_svg: 'icon-expand-start',
+      href: '/courses/1234567',
+      target: '_blank',
+      //position: 'before' // default
     },
     {
       title: 'External Icon',
