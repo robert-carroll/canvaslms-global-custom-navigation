@@ -326,11 +326,16 @@
     // if clicked menu item is not custom, close custom trays
     Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} li`)).forEach(nav => {
       
+      //console.log(nav)
+      //console.log(nav.querySelector('a').href)
+      // nav.classList.contains(globalCustomNav.cfg.glbl.trayActiveClass) == true || 
       if(nav.classList.contains(globalCustomNav.cfg.glbl.trayActiveClass) == true) {
         // preserve the nav item to restore active class when a tray is closed
         // TODO pickup the context/href of a custom nav item if we're there
-        // TODO, check/handle context unknown
-        globalCustomNav.cfg.context_item = nav.querySelector('a[id^="global_nav"]').getAttribute('id');
+        
+        // handle primary routes and external tools
+        globalCustomNav.cfg.context_item = nav.querySelector('a').getAttribute('id') || nav.querySelector('a').closest('li').getAttribute('id');
+        console.log(globalCustomNav.cfg.context_item)
       }
 
       nav.addEventListener('click', function (ne) {
