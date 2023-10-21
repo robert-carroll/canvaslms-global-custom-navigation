@@ -296,6 +296,7 @@
   globalCustomNav.load = (opts) => {
     const lang_dir = document.querySelector('html').getAttribute('dir') ?? 'ltr';
     globalCustomNav.cfg = {
+      route: '',
       glbl: {
         nav_selector: '#menu',
         menuItemClass: `ic-app-header__menu-list-item`,
@@ -324,6 +325,12 @@
     // bind/click on each menu item, if current is custom open
     // if clicked menu item is not custom, close custom trays
     Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} li`)).forEach(nav => {
+      
+      if(nav.classList.contains(globalCustomNav.cfg.glbl.trayActiveClass) == true) {
+        // preserve the route to restore a tray is closed
+        globalCustomNav.cfg.route = nav.querySelector('a[id^="global_nav"]').getAttribute('id');
+      }
+
       nav.addEventListener('click', function (ne) {
         const regex = new RegExp(item.tidle);
         if (!regex.test(ne.target.closest('a').id)) {
@@ -351,7 +358,8 @@
         document.getElementById(`${item.slug}-tray`).remove();
         document.getElementById(item.slug).closest('li').classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
 
-        // TODO Ensure tray active class is restored to appropriate icon based on context
+        // ensure active class is restored to appropriate icon based on context
+        document.getElementById(globalCustomNav.cfg.route).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
       } catch (e) {
         console.log(e);
       }
@@ -420,7 +428,8 @@
           .closest('li')
           .classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
 
-        // TODO Ensure active class is restored to appropriate icon based on context
+        // ensure active class is restored to appropriate icon based on context
+        document.getElementById(globalCustomNav.cfg.route).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
       });
 
       // slide out tray on close
@@ -444,7 +453,8 @@
               .closest('li')
               .classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
   
-            // TODO Ensure active class is restored to appropriate icon based on context
+            // ensure active class is restored to appropriate icon based on context
+            document.getElementById(globalCustomNav.cfg.route).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
           });
   
           // slide out tray on close
