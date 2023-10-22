@@ -163,7 +163,7 @@
 
     try {
       // inst-ui 7 or 8 or global or hamb
-      var icon_text_el = icon.querySelector('span[letter-spacing="normal"') || (icon.querySelector('.menu-item__text') || icon.querySelector('span[class$="text"]'));
+      var icon_text_el = icon.querySelector('span[letter-spacing="normal"]') || (icon.querySelector('.menu-item__text') || icon.querySelector('span[class$="text"]'));
       icon_text_el.textContent = item.title;
     } catch (e) {
       console.log(e);
@@ -329,12 +329,16 @@
   };
 
   globalCustomNav.glbl_active_class_clear = () => {
-    Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} .${globalCustomNav.cfg.glbl.trayActiveClass}`)).forEach(e => {
-      if(e.classList.contains(globalCustomNav.cfg.glbl.trayActiveClass) == true) {
+    Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} li`)).forEach(nav => {
+      if(nav.classList.contains(globalCustomNav.cfg.glbl.trayActiveClass) == true) {
         // preserve the nav item to restore active class when a tray is closed
         // handle primary routes, external tools, and custom contexts
-        globalCustomNav.cfg.context_item = e.querySelector('a').getAttribute('id') || e.querySelector('a').closest('li').getAttribute('id');
+        // TODO custom context active has to override native tray when native tray is toggled
+        globalCustomNav.cfg.context_item = nav.querySelector('a').getAttribute('id') || nav.querySelector('a').closest('li').getAttribute('id');
+        console.log(globalCustomNav.cfg.context_item)
       }
+    });
+    Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} .${globalCustomNav.cfg.glbl.trayActiveClass}`)).forEach(e => {
       e.classList.toggle(globalCustomNav.cfg.glbl.trayActiveClass);
     });
   }
