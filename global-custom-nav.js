@@ -343,6 +343,7 @@
       if(nav.classList.contains(globalCustomNav.cfg.glbl.trayActiveClass) == true) {
         // preserve the nav item to restore active class when a tray is closed
         // handle primary routes, external tools, and custom contexts
+        // TODO move this, decouple from tray for icon script use
         globalCustomNav.cfg.context_item = nav.querySelector('a').getAttribute('id') || nav.querySelector('a').closest('li').getAttribute('id');
         console.log(globalCustomNav.cfg.context_item)
       }
