@@ -101,11 +101,18 @@ Robert
 }
 ```
 
-## Considerations on Clones
-- Cloning elements is used to replace jQuery for standard JavaScript
+## Considerations on Context and Clones
+
+_Restoring active state to current context nav icon_ may result in flavors of the script depending on needs:
+
+  - Icon with link out, doesn't need to handle context
+  - Icons with custom context link, would need to handle context if current path is the nav item
+  - Trays (all feaures) should always handle context
+
+Cloning elements is used to replace jQuery for standard JavaScript
   - Anything clonable improves forward compatability and reduces copy/paste for elements
   - This results in less need to copy all the classes
-- The Global Tray is directly copied in. It is not available to clone.
+  - The Global Tray is directly copied in. It is not available to clone.
 
 
 ## Contributions & Feedback
