@@ -311,6 +311,7 @@
       },
       rspv: {
         nav_selector: `span[dir="${lang_dir}"] div[role="dialog"] ul`,
+        // TODO brand colors
         INSTUI_aodown: `<svg name="IconArrowOpenDown" viewBox="0 0 1920 1920" rotate="0" style="width: 1em; height: 1em;" 
         width="1em" height="1em" aria-hidden="true" role="presentation" focusable="false" class="dUOHu_bGBk dUOHu_drOs dUOHu_eXrk cGqzL_bGBk">
         <g role="presentation"><path d="M568.129648 0.0124561278L392 176.142104 1175.86412 960.130789 392 1743.87035 568.129648 1920 1528.24798 960.130789z" 
@@ -324,29 +325,30 @@
     if (document.querySelector(globalCustomNav.cfg.glbl.nav_selector) !== 'undefined') {
       globalCustomNav.nav_items = opts;
       globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
+      globalCustomNav.glbl_tray_bind();
     }
     globalCustomNav.watch_burger_tray();
   };
 
   globalCustomNav.glbl_active_class_clear = () => {
-    Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} li`)).forEach(nav => {
-      if(nav.classList.contains(globalCustomNav.cfg.glbl.trayActiveClass) == true) {
-        // preserve the nav item to restore active class when a tray is closed
-        // handle primary routes, external tools, and custom contexts
-        // TODO custom context active has to override native tray when native tray is toggled
-        globalCustomNav.cfg.context_item = nav.querySelector('a').getAttribute('id') || nav.querySelector('a').closest('li').getAttribute('id');
-        console.log(globalCustomNav.cfg.context_item)
-      }
-    });
     Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} .${globalCustomNav.cfg.glbl.trayActiveClass}`)).forEach(e => {
       e.classList.toggle(globalCustomNav.cfg.glbl.trayActiveClass);
     });
   }
 
-  globalCustomNav.glbl_tray_toggle = (item, click) => {
+  globalCustomNav.glbl_tray_bind = () => {
     // bind/click on each menu item, if current is custom open
     // if clicked menu item is not custom, close custom trays
     Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} li`)).forEach(nav => {
+      if(nav.classList.contains(globalCustomNav.cfg.glbl.trayActiveClass) == true) {
+        // preserve the nav item to restore active class when a tray is closed
+        // handle primary routes, external tools, and custom contexts
+        // TODO custom context active has to override native tray when native tray is exited... hmmm mutation observer?
+        // ALSO... the tray does not exit when clicking outside this is true for the native instui tray (prod/beta/bug?) (true for studio, not true for commons)
+        globalCustomNav.cfg.context_item = nav.querySelector('a').getAttribute('id') || nav.querySelector('a').closest('li').getAttribute('id');
+        console.log(globalCustomNav.cfg.context_item)
+      }
+
       nav.addEventListener('click', function (ne) {
         const regex = new RegExp(item.tidle);
         if (!regex.test(ne.target.closest('a').id)) {
@@ -356,7 +358,9 @@
         }
       })
     });
+  }
 
+  globalCustomNav.glbl_tray_toggle = (item, click) => {
     globalCustomNav.glbl_active_class_clear();
 
     // toggle'd and tray content is not loaded
