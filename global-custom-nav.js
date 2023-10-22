@@ -100,6 +100,43 @@
     }
   };
 
+  globalCustomNav.watch_glbl_tray = (_mtx, observer) => {
+    let portal = document.querySelector(globalCustomNav.cfg.glbl.tray_portal);
+    if (!portal) {
+      if (typeof observer === 'undefined') {
+        var obs = new MutationObserver(globalCustomNav.watch_glbl_tray);
+        obs.observe(document.body, { childList: true });
+      }
+      return;
+    }
+    if (typeof observer !== 'undefined') {
+       observer.disconnect();
+    }
+    let tray = new MutationObserver(globalCustomNav.exit_glbl_tray);
+    tray.observe(portal, { 'childList': true });
+  };
+  
+  globalCustomNav.exit_glbl_tray = (_mtx, observer) => {
+    let tray_portal_open = document.querySelector(globalCustomNav.cfg.glbl.tray_portal).children.length ? true : false;
+    let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector.slice(0,-3));
+    
+    if (rspv_nav != null && tray_portal_open) {
+      if (typeof observer === 'undefined') {
+        var obs = new MutationObserver(globalCustomNav.exit_glbl_tray);
+        obs.observe(document.body, { childList: true });
+      }
+      return;
+    }
+    if (rspv_nav == null && !tray_portal_open) {
+      globalCustomNav.glbl_active_class_clear();
+      // ensure active class is restored to appropriate icon based on context
+      console.log(globalCustomNav.cfg.context_item)
+      document.getElementById(globalCustomNav.cfg.context_item).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
+      observer.disconnect();
+      globalCustomNav.watch_glbl_tray();
+    }
+  };
+
   globalCustomNav.prepare_nav_items = (items, hamb = true) => {
     items.forEach(item => {
       // if roles for the current item are not set, the user can see it, otherwise
@@ -306,6 +343,7 @@
       context_item: '',
       glbl: {
         nav_selector: '#menu',
+        tray_portal: '#nav-tray-portal',
         menuItemClass: `ic-app-header__menu-list-item`,
         trayActiveClass: `ic-app-header__menu-list-item--active`
       },
@@ -325,7 +363,7 @@
     if (document.querySelector(globalCustomNav.cfg.glbl.nav_selector) !== 'undefined') {
       globalCustomNav.nav_items = opts;
       globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
-      globalCustomNav.glbl_tray_bind();
+      globalCustomNav.watch_glbl_tray();
     }
     globalCustomNav.watch_burger_tray();
   };
@@ -336,15 +374,15 @@
     });
   }
 
-  globalCustomNav.glbl_tray_bind = () => {
+  globalCustomNav.glbl_tray_toggle = (item, click) => {
     // bind/click on each menu item, if current is custom open
     // if clicked menu item is not custom, close custom trays
     Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} li`)).forEach(nav => {
       if(nav.classList.contains(globalCustomNav.cfg.glbl.trayActiveClass) == true) {
         // preserve the nav item to restore active class when a tray is closed
         // handle primary routes, external tools, and custom contexts
-        // TODO custom context active has to override native tray when native tray is exited... hmmm mutation observer?
-        // ALSO... the tray does not exit when clicking outside this is true for the native instui tray (prod/beta/bug?) (true for studio, not true for commons)
+        // TODO verify? custom context active has to override native tray when native tray is exited... hmmm mutation observer?
+        // ALSO... the tray does not exit when clicking outside, this is true for the native instui (prod/beta/bug?) (true for studio, not true for commons)
         globalCustomNav.cfg.context_item = nav.querySelector('a').getAttribute('id') || nav.querySelector('a').closest('li').getAttribute('id');
         console.log(globalCustomNav.cfg.context_item)
       }
@@ -358,10 +396,6 @@
         }
       })
     });
-  }
-
-  globalCustomNav.glbl_tray_toggle = (item, click) => {
-    globalCustomNav.glbl_active_class_clear();
 
     // toggle'd and tray content is not loaded
     if (!document.querySelector(`#nav-tray-portal > #${item.slug}-tray`)) {
