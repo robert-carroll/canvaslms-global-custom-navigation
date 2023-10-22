@@ -126,9 +126,7 @@
     
     const regex = new RegExp(`^${item.href}`);
     if(!hamb && regex.test(window.location.pathname)) {
-
-      globalCustomNav.glbl_clear_active_class();
-
+      globalCustomNav.glbl_active_class_clear();
       // set active class if icon is current context path
       document.getElementById(item.slug).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
     }
@@ -330,8 +328,13 @@
     globalCustomNav.watch_burger_tray();
   };
 
-  globalCustomNav.glbl_clear_active_class = () => {
+  globalCustomNav.glbl_active_class_clear = () => {
     Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} .${globalCustomNav.cfg.glbl.trayActiveClass}`)).forEach(e => {
+      if(e.classList.contains(globalCustomNav.cfg.glbl.trayActiveClass) == true) {
+        // preserve the nav item to restore active class when a tray is closed
+        // handle primary routes, external tools, and custom contexts
+        globalCustomNav.cfg.context_item = e.querySelector('a').getAttribute('id') || e.querySelector('a').closest('li').getAttribute('id');
+      }
       e.classList.toggle(globalCustomNav.cfg.glbl.trayActiveClass);
     });
   }
@@ -340,14 +343,6 @@
     // bind/click on each menu item, if current is custom open
     // if clicked menu item is not custom, close custom trays
     Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} li`)).forEach(nav => {
-      if(nav.classList.contains(globalCustomNav.cfg.glbl.trayActiveClass) == true) {
-        // preserve the nav item to restore active class when a tray is closed
-        // handle primary routes, external tools, and custom contexts
-        // TODO move this, decouple from tray for icon script use
-        globalCustomNav.cfg.context_item = nav.querySelector('a').getAttribute('id') || nav.querySelector('a').closest('li').getAttribute('id');
-        console.log(globalCustomNav.cfg.context_item)
-      }
-
       nav.addEventListener('click', function (ne) {
         const regex = new RegExp(item.tidle);
         if (!regex.test(ne.target.closest('a').id)) {
@@ -358,7 +353,7 @@
       })
     });
 
-    globalCustomNav.glbl_clear_active_class();
+    globalCustomNav.glbl_active_class_clear();
 
     // toggle'd and tray content is not loaded
     if (!document.querySelector(`#nav-tray-portal > #${item.slug}-tray`)) {
