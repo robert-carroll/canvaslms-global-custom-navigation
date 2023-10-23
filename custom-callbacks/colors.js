@@ -34,7 +34,7 @@ function (item) {
       html += '<div style="line-height: 0;">';
       Object.keys(colors).forEach(c => {
         if (/course_/.test(c)) {
-          html += `<a href="${c.replace('_' ,'s/')}" style="background-color: ${colors[c]}; width:20px; height: 20px; display: inline-block;"></a>`;
+          html += `<a href="/${c.replace('_' ,'s/')}" style="background-color: ${colors[c]}; width:20px; height: 20px; display: inline-block;"></a>`;
         }
       });
       html += '</div>';
