@@ -159,7 +159,7 @@
       target_li.after(icon);
     } else {
       target_li.before(icon);
-    }    
+    }
     
     const regex = new RegExp(`^${item.href}`);
     if(!hamb && regex.test(window.location.pathname)) {
@@ -363,17 +363,19 @@
     if (document.querySelector(globalCustomNav.cfg.glbl.nav_selector) !== 'undefined') {
       globalCustomNav.nav_items = opts;
       globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
+      globalCustomNav.glbl_tray_bind();
       globalCustomNav.watch_glbl_tray();
     }
     globalCustomNav.watch_burger_tray();
   };
-  
+
   globalCustomNav.glbl_active_class_clear = () => {
     Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} .${globalCustomNav.cfg.glbl.trayActiveClass}`)).forEach(e => {
       e.classList.toggle(globalCustomNav.cfg.glbl.trayActiveClass);
     });
   }
-  globalCustomNav.glbl_tray_toggle = (item, click) => {
+
+  globalCustomNav.glbl_tray_bind = () => {
     // bind/click on each menu item, if current is custom open
     // if clicked menu item is not custom, close custom trays
     Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} li`)).forEach(nav => {
@@ -385,7 +387,7 @@
         globalCustomNav.cfg.context_item = nav.querySelector('a').getAttribute('id') || nav.querySelector('a').closest('li').getAttribute('id');
         console.log(globalCustomNav.cfg.context_item)
       }
-      
+
       nav.addEventListener('click', function (ne) {
         const regex = new RegExp(item.tidle);
         if (!regex.test(ne.target.closest('a').id)) {
@@ -395,11 +397,11 @@
         }
       })
     });
+  }
+  
+  globalCustomNav.glbl_tray_toggle = (item, click) => {
 
-    // clear all
-    Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} .${globalCustomNav.cfg.glbl.trayActiveClass}`)).forEach(e => {
-      e.classList.toggle(globalCustomNav.cfg.glbl.trayActiveClass);
-    });
+    globalCustomNav.glbl_active_class_clear();
 
     // toggle'd and tray content is not loaded
     if (!document.querySelector(`#nav-tray-portal > #${item.slug}-tray`)) {
