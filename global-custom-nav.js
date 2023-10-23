@@ -405,6 +405,9 @@
 
     // toggle'd and tray content is not loaded
     if (!document.querySelector(`#nav-tray-portal > #${item.slug}-tray`)) {
+
+      // TODO bind close on esc to close tray
+
       globalCustomNav.glbl_tray_content(item);
       click.target.closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
       globalCustomNav.glbl_tray_close(item);
