@@ -159,7 +159,7 @@
       target_li.after(icon);
     } else {
       target_li.before(icon);
-    }
+    }    
     
     const regex = new RegExp(`^${item.href}`);
     if(!hamb && regex.test(window.location.pathname)) {
@@ -367,13 +367,12 @@
     }
     globalCustomNav.watch_burger_tray();
   };
-
+  
   globalCustomNav.glbl_active_class_clear = () => {
     Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} .${globalCustomNav.cfg.glbl.trayActiveClass}`)).forEach(e => {
       e.classList.toggle(globalCustomNav.cfg.glbl.trayActiveClass);
     });
   }
-
   globalCustomNav.glbl_tray_toggle = (item, click) => {
     // bind/click on each menu item, if current is custom open
     // if clicked menu item is not custom, close custom trays
@@ -386,7 +385,7 @@
         globalCustomNav.cfg.context_item = nav.querySelector('a').getAttribute('id') || nav.querySelector('a').closest('li').getAttribute('id');
         console.log(globalCustomNav.cfg.context_item)
       }
-
+      
       nav.addEventListener('click', function (ne) {
         const regex = new RegExp(item.tidle);
         if (!regex.test(ne.target.closest('a').id)) {
@@ -395,6 +394,11 @@
           }
         }
       })
+    });
+
+    // clear all
+    Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} .${globalCustomNav.cfg.glbl.trayActiveClass}`)).forEach(e => {
+      e.classList.toggle(globalCustomNav.cfg.glbl.trayActiveClass);
     });
 
     // toggle'd and tray content is not loaded
@@ -409,8 +413,7 @@
         document.getElementById(`${item.slug}-tray`).remove();
         document.getElementById(item.slug).closest('li').classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
 
-        // ensure active class is restored to appropriate icon based on context
-        document.getElementById(globalCustomNav.cfg.context_item).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
+        // TODO Ensure tray active class is restored to appropriate icon based on context
       } catch (e) {
         console.log(e);
       }
@@ -479,8 +482,7 @@
           .closest('li')
           .classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
 
-        // ensure active class is restored to appropriate icon based on context
-        document.getElementById(globalCustomNav.cfg.context_item).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
+        // TODO Ensure active class is restored to appropriate icon based on context
       });
 
       // slide out tray on close
@@ -504,8 +506,7 @@
               .closest('li')
               .classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
   
-            // ensure active class is restored to appropriate icon based on context
-            document.getElementById(globalCustomNav.cfg.context_item).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
+            // TODO Ensure active class is restored to appropriate icon based on context
           });
   
           // slide out tray on close
