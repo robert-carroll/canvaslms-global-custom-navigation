@@ -408,12 +408,10 @@
     // toggle'd and tray content is not loaded
     if (!document.querySelector(`#nav-tray-portal > #${item.slug}-tray`)) {
 
-      // TODO bind close on esc to close tray
-
       globalCustomNav.glbl_tray_content(item);
       click.target.closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
       globalCustomNav.glbl_tray_close(item);
-      globalCustomNav.glbl_tray_focus(item);
+      //globalCustomNav.glbl_tray_focus(item);
     } else {
       try {
         // close
@@ -424,6 +422,46 @@
       }
     }
   }
+
+  globalCustomNav.glbl_tray_close = item => {
+    function close_transition () {
+      const trayWrapper = document.querySelector('.gcn_tray-wrapper');
+        trayWrapper.addEventListener('transitionend', () => {
+        // remove tray after transition if it still exists
+        document.getElementById(`${item.slug}-tray`)?.remove();
+
+        // remove active class on global nav icon on close
+        document
+          .getElementById(item.slug)
+          .closest('li')
+          .classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
+      });
+      // slide out tray on close
+      trayWrapper.classList.remove('gcn_open');
+    }
+    
+    // close tray when user clicks outside the tray
+    document.querySelector(`#${item.slug}-tray-close`).addEventListener('click', function () {
+      close_transition();
+    }.bind(item));
+
+    // close tray when focus leaves the tray
+    window.addEventListener('click', function (e) {
+      if (document.querySelector(`#nav-tray-portal > #${item.slug}-tray`) !== null) {
+        if (!document.getElementById(`${item.slug}-tray`)?.contains(e.target) && (document.getElementById('main').contains(e.target) || !document.getElementById(`${item.slug}-item`).contains(e.target))) {
+          close_transition();
+        }
+      }
+    });
+
+    // close tray with escape key when the tray is open
+    document.addEventListener("keydown", function(event) {
+      const key = event.key;
+      if (key === 'Escape') {
+        close_transition();
+      }
+    });
+  };
 
   globalCustomNav.glbl_tray_content = (item) => {
     const tray_content_id = `${item.slug}-tray`;
@@ -472,50 +510,6 @@
     // handle callback
     globalCustomNav.handle_tray_cb(item, '.tray-with-space-for-global-nav div.gcn-loading-tray-cb-svg', 'afterbegin', false);
   }
-
-  globalCustomNav.glbl_tray_close = item => {
-    // close tray when user clicks outside the tray
-    document.querySelector(`#${item.slug}-tray-close`).addEventListener('click', function () {
-      const trayWrapper = document.querySelector('.gcn_tray-wrapper');
-        trayWrapper.addEventListener('transitionend', () => {
-        // remove tray after transition if it still exists
-        document.getElementById(`${item.slug}-tray`)?.remove();
-
-        // remove active class on global nav icon on close
-        document
-          .getElementById(item.slug)
-          .closest('li')
-          .classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
-      });
-
-      // slide out tray on close
-      trayWrapper.classList.remove('gcn_open');
-    }.bind(item));
-  };
-
-  globalCustomNav.glbl_tray_focus = item => {
-    // close tray when user clicks outside the tray
-    window.addEventListener('click', function (e) {
-      if (document.querySelector(`#nav-tray-portal > #${item.slug}-tray`) !== null) {
-        if (!document.getElementById(`${item.slug}-tray`)?.contains(e.target) && (document.getElementById('main').contains(e.target) || !document.getElementById(`${item.slug}-item`).contains(e.target))) {
-          const trayWrapper = document.querySelector('.gcn_tray-wrapper');
-          trayWrapper.addEventListener('transitionend', () => {
-            // remove tray after transition if it still exists
-            document.getElementById(`${item.slug}-tray`)?.remove();
-  
-            // remove active class on global nav icon on close
-            document
-              .getElementById(item.slug)
-              .closest('li')
-              .classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
-          });
-  
-          // slide out tray on close
-          trayWrapper.classList.remove('gcn_open');
-        }
-      }
-    });
-  };
 
   // begin custom tray callback support
   globalCustomNav.tray_links_vs_cb = (item, hamb = true) => {
