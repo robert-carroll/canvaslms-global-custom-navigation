@@ -139,7 +139,8 @@
     if (/^icon-[a-z]/.test(item.icon_svg) == true) {
       // instructure icon
       let instuicon = `<div id="${(hamb ? 'rspv-' : '') + `${item.slug}-svg`}" role="presentation">`;
-      instuicon += `<i class="icon-line ${item.icon_svg}${hamb ? ' dUOHu_cVUo' : ''} gcn_inst_menu_icon"></i></div>`;
+      // TODO get brand color, maybe in gcn_inst_rspv_icon 
+      instuicon += `<i class="icon-line ${item.icon_svg}${hamb ? ' css-btbvu3-inlineSVG-svgIcon' : ''} gcn_inst_menu_icon"></i></div>`;
       svg_holder.insertAdjacentHTML('afterbegin', instuicon);
 
     } else if (/^http/.test(item.icon_svg)) {
@@ -198,6 +199,7 @@
     globalCustomNav.watch_burger_tray();
   };
 
+  
 
   // configure opts
   const globalCustomNav_items = [{
@@ -209,6 +211,14 @@
       roles: function () {
         return ['teacher'].some(a => ENV.current_user_roles.includes(a));
       }
+    },
+    {
+      title: 'Custom Context',
+      // example only, host your own, or use icon class
+      icon_svg: 'icon-expand-start',
+      href: '/courses/1234567',
+      target: '',
+      //position: 'before' // default
     },
     {
       title: 'External Icon',

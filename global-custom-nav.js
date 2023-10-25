@@ -13,6 +13,7 @@
       let styles = {
         'i.gcn_inst_menu_icon:before': 'font-size: 32px; width: 32px; line-height: 32px;',
         'i.gcn_inst_menu_icon': 'width: 32px; height: 32px; font-style: bold;',
+        //'i.gcn_inst_rspv_icon': TODO
         '.gcn_icon_svg': 'width: 32px !important; height: 32px !important; font-style: bold;',
         'div.gcn_tray-content': 'display: block !important;',
         'div.gcn_tray-open': 'display: block !important;',
@@ -223,8 +224,8 @@
     if (/^icon-[a-z]/.test(item.icon_svg) == true) {
       // instructure icon
       let instuicon = `<div id="${(hamb ? 'rspv-' : '') + `${item.slug}-svg`}" role="presentation">`;
-      // TODO dUOHu_cVUo is the brand color
-      instuicon += `<i class="icon-line ${item.icon_svg}${hamb ? ' dUOHu_cVUo' : ''} gcn_inst_menu_icon"></i></div>`;
+      // TODO get brand color, maybe in gcn_inst_rspv_icon 
+      instuicon += `<i class="icon-line ${item.icon_svg}${hamb ? ' css-btbvu3-inlineSVG-svgIcon' : ''} gcn_inst_menu_icon"></i></div>`;
       svg_holder.insertAdjacentHTML('afterbegin', instuicon);
 
     } else if (/^http/.test(item.icon_svg)) {
@@ -418,7 +419,6 @@
         // close
         document.getElementById(`${item.slug}-tray`).remove();
         document.getElementById(item.slug).closest('li').classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
-
       } catch (e) {
         console.log(e);
       }
