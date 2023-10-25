@@ -130,7 +130,6 @@
     if (rspv_nav == null && !tray_portal_open) {
       globalCustomNav.glbl_active_class_clear();
       // ensure active class is restored to appropriate icon based on context
-      console.log(globalCustomNav.cfg.context_item)
       document.getElementById(globalCustomNav.cfg.context_item).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
       observer.disconnect();
       globalCustomNav.watch_glbl_tray();
@@ -164,7 +163,8 @@
     const regex = new RegExp(`^${item.href}`);
     if(!hamb && regex.test(window.location.pathname)) {
       globalCustomNav.glbl_active_class_clear();
-      // set active class if icon is current context path
+      // ensure active class is restored to appropriate icon based on context
+      globalCustomNav.cfg.context_item = item.slug;
       document.getElementById(item.slug).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
     }
   };
@@ -361,33 +361,37 @@
     if (!document.querySelector(globalCustomNav.cfg.glbl.nav_selector) && !document.querySelector(globalCustomNav.cfg.rspv.nav_selector)) return;
 
     if (document.querySelector(globalCustomNav.cfg.glbl.nav_selector) !== 'undefined') {
+      // preserve the nav item to restore active class when a tray is closed
+      // handle primary routes, external tools, and custom contexts
+      Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} li`)).forEach(nav => {
+        if(nav.classList.contains(globalCustomNav.cfg.glbl.trayActiveClass) == true) {
+          
+          globalCustomNav.cfg.context_item = nav.querySelector('a').getAttribute('id') || nav.querySelector('a').closest('li').getAttribute('id');
+        }
+      });
+
       globalCustomNav.nav_items = opts;
       globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
-      globalCustomNav.glbl_tray_bind();
+ 
       globalCustomNav.watch_glbl_tray();
     }
     globalCustomNav.watch_burger_tray();
   };
 
+
   globalCustomNav.glbl_active_class_clear = () => {
+    // TODO eval courses active class from custom context
+    // review: secondary opening of courses tray does not have active class, is it cleared or not set?
+    // clicking another default tray resets it
     Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} .${globalCustomNav.cfg.glbl.trayActiveClass}`)).forEach(e => {
       e.classList.toggle(globalCustomNav.cfg.glbl.trayActiveClass);
     });
   }
 
-  globalCustomNav.glbl_tray_bind = () => {
+  globalCustomNav.glbl_tray_toggle = (item, click) => {
     // bind/click on each menu item, if current is custom open
     // if clicked menu item is not custom, close custom trays
     Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} li`)).forEach(nav => {
-      if(nav.classList.contains(globalCustomNav.cfg.glbl.trayActiveClass) == true) {
-        // preserve the nav item to restore active class when a tray is closed
-        // handle primary routes, external tools, and custom contexts
-        // TODO verify? custom context active has to override native tray when native tray is exited... hmmm mutation observer?
-        // ALSO... the tray does not exit when clicking outside, this is true for the native instui (prod/beta/bug?) (true for studio, not true for commons)
-        globalCustomNav.cfg.context_item = nav.querySelector('a').getAttribute('id') || nav.querySelector('a').closest('li').getAttribute('id');
-        console.log(globalCustomNav.cfg.context_item)
-      }
-
       nav.addEventListener('click', function (ne) {
         const regex = new RegExp(item.tidle);
         if (!regex.test(ne.target.closest('a').id)) {
@@ -397,9 +401,6 @@
         }
       })
     });
-  }
-  
-  globalCustomNav.glbl_tray_toggle = (item, click) => {
 
     globalCustomNav.glbl_active_class_clear();
 
@@ -418,7 +419,6 @@
         document.getElementById(`${item.slug}-tray`).remove();
         document.getElementById(item.slug).closest('li').classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
 
-        // TODO Ensure tray active class is restored to appropriate icon based on context
       } catch (e) {
         console.log(e);
       }
@@ -486,8 +486,6 @@
           .getElementById(item.slug)
           .closest('li')
           .classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
-
-        // TODO Ensure active class is restored to appropriate icon based on context
       });
 
       // slide out tray on close
@@ -510,8 +508,6 @@
               .getElementById(item.slug)
               .closest('li')
               .classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
-  
-            // TODO Ensure active class is restored to appropriate icon based on context
           });
   
           // slide out tray on close
@@ -592,7 +588,7 @@
       title: 'Custom Context',
       // example only, host your own, or use icon class
       icon_svg: 'icon-expand-start',
-      href: '/courses/1234567',
+      href: '/courses/101',
       target: '',
       //position: 'before' // default
     },
