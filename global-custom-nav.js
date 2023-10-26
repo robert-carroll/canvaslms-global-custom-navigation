@@ -411,7 +411,6 @@
       globalCustomNav.glbl_tray_content(item);
       click.target.closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
       globalCustomNav.glbl_tray_close(item);
-      //globalCustomNav.glbl_tray_focus(item);
     } else {
       try {
         // close
@@ -538,7 +537,7 @@
     } else if (typeof item.tray.cb !== 'undefined' && typeof item.tray.cb === 'function') {
       tray_html += `<ul class="gcn-loading-tray-cb gcn_link-list">
         <li class="gcn_link-item">
-          <div class="gcn-loading-tray-cb-svg gcn_link-desc"></div>
+          <div dir="${globalCustomNav.cfg.lang_dir}" class="css-11wqaaa-view-spinner gcn-loading-tray-cb-svg gcn_link-desc"></div>
         </li>
       </ul>`;
     }
@@ -547,13 +546,14 @@
 
   globalCustomNav.handle_tray_cb = (item, sel, pos, hamb = true) => {
     if (typeof item.tray.cb !== 'undefined' && typeof item.tray.cb === 'function') {
-      // TODO: not rendering in global tray
-      var loading_svg = `<svg class="eHQDY_cJVF" role="img" aria-labelledby="${(hamb ? 'rspv-' : '') + `${item.slug}-tray-loading_svg`}" focusable="false">
+      // TODO: not rendering
+      var loading_svg = `<svg role="img" aria-labelledby="${(hamb ? 'rspv-' : '') + `${item.slug}-tray-loading_svg`}" focusable="false" class="css-py9me6-spinner__circle">
         <title id="${(hamb ? 'rspv-' : '') + `${item.slug}-tray-loading_svg`}">Loading</title>
         <g role="presentation">
-        <circle class="eHQDY_dTxv" cx="50%" cy="50%" r="1em"></circle>
-        <circle class="eHQDY_eWAY" cx="50%" cy="50%" r="1em"></circle>
-        </g></svg>`;
+          <circle cx="50%" cy="50%" r="1em" class="css-yv4rwb-spinner__circleTrack"></circle>
+          <circle cx="50%" cy="50%" r="1em" class="css-xerh4k-spinner__circleSpin"></circle>
+        </g>
+      </svg>`;
       document.querySelector(sel).insertAdjacentHTML(pos, loading_svg);
 
       item.tray.cb(item);
