@@ -103,23 +103,17 @@ Robert
 
 ## Considerations on Context and Clones
 
-_Restoring active state to current context nav icon_ may result in flavors of the script depending on needs:
-
-  - Icon with link out, doesn't need to handle context
-  - Icons with custom context link, would need to handle context if current path is the nav item
-  - Trays (all feaures) should always handle context
-
-Cloning elements is used to replace jQuery for standard JavaScript
-  - Anything clonable improves forward compatability and reduces copy/paste for elements
-  - This results in less need to copy all the classes
-  - The Global Tray is directly copied in. It is not available to clone.
-
+Final TODOs:
+  - Custom Context ux - ex: course with global icon, should handle icon states when toggling multiple trays
+  ...will create context icon file when that's resolved
+  - Loading SVG for callback trays is not rendering (could swap this out)
+  - Some generated instui classes in use - need to get brand colors or clone these classes
 
 ## Contributions & Feedback
 Always welcome, discuss in the [community](https://community.canvaslms.com/t5/Canvas-Developers-Group/Thread-with-space-for-Global-Custom-Navigation/td-p/583803), or PR's and issues if you enjoy committing.
 
 ## Contributors
-There a snippets and concepts in this code revolving around conversations and contributions by: 
+There are snippets and concepts in this code revolving around conversations and contributions by: 
 - [James](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/105160) mutations/append css/clones
 - [jsimon3](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/685323)  responsive tray
 - [dbrace](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/375810) instui icons
