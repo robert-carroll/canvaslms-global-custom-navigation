@@ -106,8 +106,6 @@ Robert
 Final TODOs:
   - Custom Context ux - ex: course with global icon, should handle icon states when toggling multiple trays
   ...will create context icon file when that's resolved
-  - Loading SVG for callback trays is not rendering (could swap this out)
-  - Some generated instui classes in use - need to get brand colors or clone these classes
 
 ## Contributions & Feedback
 Always welcome, discuss in the [community](https://community.canvaslms.com/t5/Canvas-Developers-Group/Thread-with-space-for-Global-Custom-Navigation/td-p/583803), or PR's and issues if you enjoy committing.
