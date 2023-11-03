@@ -327,8 +327,8 @@
   globalCustomNav.glbl_tray_links = links => {
     var html = `<ul class="gcn_link-list">`;
     links.forEach(link => {
-      html += `<li class="gcn_link-item">
-        <a href="${link.href}" target="_blank" class="gcn_link">${link.title}</a>`;
+      html += `<li class="gcn_link-item" dir="${globalCustomNav.cfg.lang_dir}">
+        <a href="${link.href}" target="_blank" class="gcn_link" dir="${globalCustomNav.cfg.lang_dir}">${link.title}</a>`;
 
       // append link description if set
       html += (!!link.desc && link.desc.length > 1) ? `<div wrap="normal" letter-spacing="normal" class="gcn_link-desc">${link.desc}</div>` : '';
@@ -473,8 +473,7 @@
 
     // close button
     tray_html += `<span class="gcn_close-btn-wrapper">
-      <button id="${tray_content_id}-close" cursor="pointer" type="button" tabindex="0"
-          class="gcn_close-btn">
+      <button id="${tray_content_id}-close" cursor="pointer" type="button" tabindex="0" class="gcn_close-btn" dir="${globalCustomNav.cfg.lang_dir}">
           <i class="icon-solid icon-x" style="padding:0.5rem;"></i><span class="screenreader-only">Close</span>
       </button></span>`;
 
@@ -489,8 +488,8 @@
 
     if (item.tray.footer && item.tray.footer.length > 1) {
       tray_html += `<ul class="gcn_link-list">
-        <li class="gcn_link-item"><hr role="presentation"></li>
-        <li class="gcn_link-item">
+        <li class="gcn_link-item" dir="${globalCustomNav.cfg.lang_dir}"><hr role="presentation"></li>
+        <li class="gcn_link-item" dir="${globalCustomNav.cfg.lang_dir}">
         <a href="${item.href}" class="gcn_link">${item.title}</a></li>
         </ul><br>
         <div wrap="normal" letter-spacing="normal" class="gcn_link-desc">${item.tray.footer}</div>`;
@@ -535,8 +534,8 @@
       }
       // prep for callback
     } else if (typeof item.tray.cb !== 'undefined' && typeof item.tray.cb === 'function') {
-      tray_html += `<ul class="gcn-loading-tray-cb gcn_link-list">
-        <li class="gcn_link-item">
+      tray_html += `<ul class="gcn-loading-tray-cb gcn_link-list" dir="${globalCustomNav.cfg.lang_dir}">
+        <li class="gcn_link-item" dir="${globalCustomNav.cfg.lang_dir}">
           <div dir="${globalCustomNav.cfg.lang_dir}" class="css-11wqaaa-view-spinner gcn-loading-tray-cb-svg gcn_link-desc"></div>
         </li>
       </ul>`;
