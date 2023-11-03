@@ -13,11 +13,12 @@
       let styles = {
         'i.gcn_inst_menu_icon:before': 'font-size: 32px; width: 32px; line-height: 32px;',
         'i.gcn_inst_menu_icon': 'width: 32px; height: 32px; font-style: bold;',
-        //'i.gcn_inst_rspv_icon': TODO
+        'i.gcn_inst_rspv_icon': "color: var(--ic-brand-primary);",
         '.gcn_icon_svg': 'width: 32px !important; height: 32px !important; font-style: bold;',
         'div.gcn_tray-content': 'display: block !important;',
         'div.gcn_tray-open': 'display: block !important;',
         'svg.gcn_tray-closed': 'display: none !important;',
+        'svg.gcn_tray-aodown': 'fill: currentcolor; display: inline-block; overflow: visible; color: inherit; vertical-align: middle; line-height: 1; width: 1em; height: 1em;',
         ".gcn_tray-wrapper":
           "transform: translateZ(0px); transition: 0.5s; opacity: 1; background-color: #FFFFFF; max-height: 100vh; max-width: 100vw; overflow: hidden auto; position: fixed; box-shadow: 0 0.375rem 0.4375rem rgba(0, 0, 0, 0.1), 0 0.625rem 1.75rem rgba(0, 0, 0, 0.25); top: 0; bottom: 0; width: 28em;",
         "[dir='ltr'] .gcn_tray-wrapper": "left: -28em; right: auto;",
@@ -230,8 +231,7 @@
     if (/^icon-[a-z]/.test(item.icon_svg) == true) {
       // instructure icon
       let instuicon = `<div id="${(hamb ? 'rspv-' : '') + `${item.slug}-svg`}" role="presentation">`;
-      // TODO get brand color, maybe in gcn_inst_rspv_icon 
-      instuicon += `<i class="icon-line ${item.icon_svg}${hamb ? ' css-btbvu3-inlineSVG-svgIcon' : ''} gcn_inst_menu_icon"></i></div>`;
+      instuicon += `<i class="icon-line ${item.icon_svg}${hamb ? ' gcn_inst_rspv_icon' : ''} gcn_inst_menu_icon"></i></div>`;
       svg_holder.insertAdjacentHTML('afterbegin', instuicon);
 
     } else if (/^http/.test(item.icon_svg)) {
@@ -356,9 +356,8 @@
       },
       rspv: {
         nav_selector: `span[dir="${lang_dir}"] div[role="dialog"] ul`,
-        // TODO brand colors
         INSTUI_aodown: `<svg name="IconArrowOpenDown" viewBox="0 0 1920 1920" rotate="0" style="width: 1em; height: 1em;" 
-        width="1em" height="1em" aria-hidden="true" role="presentation" focusable="false" class="css-1uh2md0-inlineSVG-svgIcon">
+        width="1em" height="1em" aria-hidden="true" role="presentation" focusable="false" class="gcn_tray-aodown">
         <g role="presentation"><path d="M568.129648 0.0124561278L392 176.142104 1175.86412 960.130789 392 1743.87035 568.129648 1920 1528.24798 960.130789z" 
         fill-rule="evenodd" stroke="none" stroke-width="1" transform="matrix(0 1 1 0 .067 -.067)"></path></g></svg>`
       },
@@ -551,7 +550,6 @@
 
   globalCustomNav.handle_tray_cb = (item, sel, pos, hamb = true) => {
     if (typeof item.tray.cb !== 'undefined' && typeof item.tray.cb === 'function') {
-      // TODO: not rendering
       var loading_svg = `<svg role="img" aria-labelledby="${(hamb ? 'rspv-' : '') + `${item.slug}-tray-loading_svg`}" focusable="false" class="gcn-spinner__circle">
         <title id="${(hamb ? 'rspv-' : '') + `${item.slug}-tray-loading_svg`}">Loading</title>
         <g role="presentation">
