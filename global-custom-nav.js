@@ -48,6 +48,12 @@
         ".gcn_link":
           "outline-color: transparent; outline-offset: 0.25rem; outline-style: solid; outline-width: 0.125rem; transition: outline-color 0.2s ease 0s; vertical-align: baseline; max-width: 100%; overflow: visible;",
         ".gcn_link-desc": "font-size: 0.875rem;",
+        ".gcn-view-spinner": "max-width: 100%; overscroll-behavior: auto; display: inline-block; vertical-align: middle; position: relative; box-sizing: border-box; overflow: hidden; width: 3em; height: 3em;",
+        ".gcn-spinner__circle": "display: block; position: absolute; top: 0px; left: 0px; animation-name: gcn-rotate; animation-duration: 2.25s; animation-iteration-count: infinite; animation-timing-function: linear; width: 3em; height: 3em;",
+        ".gcn-spinner__circleTrack": "stroke: rgb(245, 245, 245); fill: none; stroke-width: 0.375em;",
+        ".gcn-spinner__circleSpin": "fill: none; stroke-linecap: round; animation-name: gcn-morph; animation-duration: 1.75s; animation-iteration-count: infinite; animation-timing-function: ease; stroke-width: 0.375em; stroke-dasharray: 6em; transform-origin: calc(1.5em) calc(1.5em) 0px; stroke: rgb(3, 116, 181);",
+        "@keyframes gcn-rotate": "to { transform: rotate(360deg) }",
+        "@keyframes gcn-morph": "0% { stroke-dashoffset: 190%; } 50% { stroke-dashoffset: 50%; transform: rotate(90deg); } 100% { stroke-dashoffset: 190%; transform: rotate(360deg); }"
       };
       if (typeof styles !== 'undefined' && Object.keys(styles).length > 0) {
         let style = document.createElement('style');
@@ -536,7 +542,7 @@
     } else if (typeof item.tray.cb !== 'undefined' && typeof item.tray.cb === 'function') {
       tray_html += `<ul class="gcn-loading-tray-cb gcn_link-list" dir="${globalCustomNav.cfg.lang_dir}">
         <li class="gcn_link-item" dir="${globalCustomNav.cfg.lang_dir}">
-          <div dir="${globalCustomNav.cfg.lang_dir}" class="css-11wqaaa-view-spinner gcn-loading-tray-cb-svg gcn_link-desc"></div>
+          <div dir="${globalCustomNav.cfg.lang_dir}" class="gcn-view-spinner gcn-loading-tray-cb-svg gcn_link-desc"></div>
         </li>
       </ul>`;
     }
@@ -546,11 +552,11 @@
   globalCustomNav.handle_tray_cb = (item, sel, pos, hamb = true) => {
     if (typeof item.tray.cb !== 'undefined' && typeof item.tray.cb === 'function') {
       // TODO: not rendering
-      var loading_svg = `<svg role="img" aria-labelledby="${(hamb ? 'rspv-' : '') + `${item.slug}-tray-loading_svg`}" focusable="false" class="css-py9me6-spinner__circle">
+      var loading_svg = `<svg role="img" aria-labelledby="${(hamb ? 'rspv-' : '') + `${item.slug}-tray-loading_svg`}" focusable="false" class="gcn-spinner__circle">
         <title id="${(hamb ? 'rspv-' : '') + `${item.slug}-tray-loading_svg`}">Loading</title>
         <g role="presentation">
-          <circle cx="50%" cy="50%" r="1em" class="css-yv4rwb-spinner__circleTrack"></circle>
-          <circle cx="50%" cy="50%" r="1em" class="css-xerh4k-spinner__circleSpin"></circle>
+          <circle cx="50%" cy="50%" r="1em" class="gcn-spinner__circleTrack"></circle>
+          <circle cx="50%" cy="50%" r="1em" class="gcn-spinner__circleSpin"></circle>
         </g>
       </svg>`;
       document.querySelector(sel).insertAdjacentHTML(pos, loading_svg);
