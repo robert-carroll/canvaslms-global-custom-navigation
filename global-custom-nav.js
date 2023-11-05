@@ -320,7 +320,7 @@
       tray_html += globalCustomNav.tray_links_vs_cb(item);
 
       // add default footer link
-      tray_html += `<a href="${item.href}" class="gcn_link">${item.title}</a></li>`;
+      tray_html += `<a href="${item.href}" class="gcn_link" dir="${globalCustomNav.cfg.lang_dir}">${item.title}</a></li>`;
       // append
       tray_content.insertAdjacentHTML('afterbegin', tray_html);
 
@@ -331,7 +331,7 @@
   // end rspv tray
 
   globalCustomNav.glbl_tray_links = links => {
-    var html = `<ul class="gcn_link-list">`;
+    var html = `<ul class="gcn_link-list" dir="${globalCustomNav.cfg.lang_dir}">`;
     links.forEach(link => {
       html += `<li class="gcn_link-item" dir="${globalCustomNav.cfg.lang_dir}">
         <a href="${link.href}" target="_blank" class="gcn_link" dir="${globalCustomNav.cfg.lang_dir}">${link.title}</a>`;
@@ -485,17 +485,17 @@
     // tray content
     tray_html += `<div class="tray-with-space-for-global-nav">
             <div class="gcn_tray-content-wrapper">
-              <h2 class="gcn_tray-heading">${item.title}</h2>
+              <h2 class="gcn_tray-heading" dir="${globalCustomNav.cfg.lang_dir}">${item.title}</h2>
               <hr role="presentation" class="gcn-cb_content">`;
     
     // handle links vs callback
     tray_html += globalCustomNav.tray_links_vs_cb(item, false);
 
     if (item.tray.footer && item.tray.footer.length > 1) {
-      tray_html += `<ul class="gcn_link-list">
+      tray_html += `<ul class="gcn_link-list" dir="${globalCustomNav.cfg.lang_dir}">
         <li class="gcn_link-item" dir="${globalCustomNav.cfg.lang_dir}"><hr role="presentation"></li>
         <li class="gcn_link-item" dir="${globalCustomNav.cfg.lang_dir}">
-        <a href="${item.href}" class="gcn_link">${item.title}</a></li>
+        <a href="${item.href}" class="gcn_link" dir="${globalCustomNav.cfg.lang_dir}">${item.title}</a></li>
         </ul><br>
         <div wrap="normal" letter-spacing="normal" class="gcn_link-desc">${item.tray.footer}</div>`;
     }
