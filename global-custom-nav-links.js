@@ -13,6 +13,7 @@
       let styles = {
         'i.gcn_inst_menu_icon:before': 'font-size: 32px; width: 32px; line-height: 32px;',
         'i.gcn_inst_menu_icon': 'width: 32px; height: 32px; font-style: bold;',
+        'i.gcn_inst_rspv_icon': "color: var(--ic-brand-primary);",
         '.gcn_icon_svg': 'width: 32px !important; height: 32px !important; font-style: bold;',
       };
       if (typeof styles !== 'undefined' && Object.keys(styles).length > 0) {
@@ -139,8 +140,7 @@
     if (/^icon-[a-z]/.test(item.icon_svg) == true) {
       // instructure icon
       let instuicon = `<div id="${(hamb ? 'rspv-' : '') + `${item.slug}-svg`}" role="presentation">`;
-      // TODO get brand color, maybe in gcn_inst_rspv_icon 
-      instuicon += `<i class="icon-line ${item.icon_svg}${hamb ? ' css-btbvu3-inlineSVG-svgIcon' : ''} gcn_inst_menu_icon"></i></div>`;
+      instuicon += `<i class="icon-line ${item.icon_svg}${hamb ? ' gcn_inst_rspv_icon' : ''} gcn_inst_menu_icon"></i></div>`;
       svg_holder.insertAdjacentHTML('afterbegin', instuicon);
 
     } else if (/^http/.test(item.icon_svg)) {
