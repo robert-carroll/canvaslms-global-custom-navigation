@@ -192,6 +192,7 @@
     icon.setAttribute('id', (hamb ? 'rspv-' : '') + `${item.slug}-item`);
     icon.querySelector('svg').parentElement.classList.add((hamb ? 'rspv-' : '') + `svg-${item.tidle}-holder`);
 
+
     const icon_id = (hamb ? 'rspv-' : '') + item.slug;
     if (hamb && is_tray) {
       // button for resp tray
@@ -207,8 +208,8 @@
     }
 
     try {
-      // inst-ui 7 or 8 or global or hamb
-      var icon_text_el = icon.querySelector('span[letter-spacing="normal"]') || (icon.querySelector('.menu-item__text') || icon.querySelector('span[class$="text"]'));
+      // global or hamb
+      var icon_text_el = icon.querySelector('.menu-item__text') || icon.querySelector('span[letter-spacing="normal"]');
       icon_text_el.textContent = item.title;
     } catch (e) {
       console.log(e);
@@ -366,29 +367,24 @@
     }
     if (!document.querySelector(globalCustomNav.cfg.glbl.nav_selector) && !document.querySelector(globalCustomNav.cfg.rspv.nav_selector)) return;
 
+    globalCustomNav.nav_items = opts;
+    globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
+
     if (document.querySelector(globalCustomNav.cfg.glbl.nav_selector) !== 'undefined') {
       // preserve the nav item to restore active class when a tray is closed
       // handle primary routes, external tools, and custom contexts
       Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} li`)).forEach(nav => {
-        if(nav.classList.contains(globalCustomNav.cfg.glbl.trayActiveClass) == true) {
-          
+        if (nav.classList.contains(globalCustomNav.cfg.glbl.trayActiveClass) == true) {
           globalCustomNav.cfg.context_item = nav.querySelector('a').getAttribute('id') || nav.querySelector('a').closest('li').getAttribute('id');
         }
       });
 
-      globalCustomNav.nav_items = opts;
-      globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
- 
       globalCustomNav.watch_glbl_tray();
     }
     globalCustomNav.watch_burger_tray();
   };
 
-
   globalCustomNav.glbl_active_class_clear = () => {
-    // TODO eval courses active class from custom context
-    // review: secondary opening of courses tray does not have active class, is it cleared or not set?
-    // clicking another default tray resets it
     Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} .${globalCustomNav.cfg.glbl.trayActiveClass}`)).forEach(e => {
       e.classList.toggle(globalCustomNav.cfg.glbl.trayActiveClass);
     });
@@ -410,7 +406,7 @@
 
     globalCustomNav.glbl_active_class_clear();
 
-    // toggle'd and tray content is not loaded
+    // toggled and tray content is not loaded
     if (!document.querySelector(`#nav-tray-portal > #${item.slug}-tray`)) {
 
       globalCustomNav.glbl_tray_content(item);
@@ -585,7 +581,7 @@
       title: 'Custom Context',
       // example only, host your own, or use icon class
       icon_svg: 'icon-expand-start',
-      href: '/courses/101',
+      href: '/courses/1234567',
       target: '',
       //position: 'before' // default
     },

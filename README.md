@@ -101,11 +101,9 @@ Robert
 }
 ```
 
-## Considerations on Context and Clones
+## Considerations
 
-Final TODOs:
-  - Custom Context ux - ex: course with global icon, should handle icon states when toggling multiple trays
-  ...will create context icon file when that's resolved
+- refactoring
 
 ## Contributions & Feedback
 Always welcome, discuss in the [community](https://community.canvaslms.com/t5/Canvas-Developers-Group/Thread-with-space-for-Global-Custom-Navigation/td-p/583803), or PR's and issues if you enjoy committing.
@@ -121,4 +119,4 @@ There are snippets and concepts in this code revolving around conversations and 
 - [Code-with-Ski](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/2432278) language direction detection, tray transition and classes
 - threads that have been archived
 - notes from 2020
-- the community for it's feedback
+- the community for its feedback
