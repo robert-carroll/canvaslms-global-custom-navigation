@@ -19,42 +19,34 @@
         'div.gcn_tray-open': 'display: block !important;',
         'svg.gcn_tray-closed': 'display: none !important;',
         'svg.gcn_tray-aodown': 'fill: currentcolor; display: inline-block; overflow: visible; color: inherit; vertical-align: middle; line-height: 1; width: 1em; height: 1em;',
-        ".gcn_tray-wrapper":
-          "transform: translateZ(0px); transition: 0.5s; opacity: 1; background-color: #FFFFFF; max-height: 100vh; max-width: 100vw; overflow: hidden auto; position: fixed; box-shadow: 0 0.375rem 0.4375rem rgba(0, 0, 0, 0.1), 0 0.625rem 1.75rem rgba(0, 0, 0, 0.25); top: 0; bottom: 0; width: 28em;",
+        ".gcn_tray-wrapper": "transform: translateZ(0px); transition: 0.5s; opacity: 1; background-color: #FFFFFF; max-height: 100vh; max-width: 100vw; overflow: hidden auto; position: fixed; box-shadow: 0 0.375rem 0.4375rem rgba(0, 0, 0, 0.1), 0 0.625rem 1.75rem rgba(0, 0, 0, 0.25); top: 0; bottom: 0; width: 28em;",
         "[dir='ltr'] .gcn_tray-wrapper": "left: -28em; right: auto;",
         "[dir='rtl'] .gcn_tray-wrapper": "right: -28em; left: auto;",
         "[dir='ltr'] .gcn_tray-wrapper.gcn_open": "left: 0; right: auto;",
         "[dir='rtl'] .gcn_tray-wrapper.gcn_open": "right: 0; left: auto;",
-        ".gcn_close-btn-wrapper": "position: absolute; top: 0.5rem;",
-        "[dir='ltr'] .gcn_close-btn-wrapper": "left: auto; right: 0.5rem",
-        "[dir='rtl'] .gcn_close-btn-wrapper": "right: auto; left: 0.5rem",
-        ".gcn_close-btn":
-          "box-sizing: border-box; background: none; color: #2D3B45; margin: 0px; padding: 0px; border-radius: 0.25rem; outline: none; border: none; width: auto; cursor: pointer;",
-        ".gcn_close-btn:hover": "background-color: rgba(45, 59, 69, 0.1);",
-        ".gcn_close-btn::before":
-          "position: absolute; pointer-events: none; opacity: 0; content: ''; transform: scale(0.95); transition: all 0.2s ease 0s; top: -0.3125rem; right: -0.3125rem; bottom: -0.3125rem; left: -0.3125rem; border-style: solid; border-color: var(--ic-brand-primary); border-width: 0.125rem; border-radius: 0.5rem; transform: scale(1);",
-        ".gcn_close-btn:focus::before": "opacity: 1;",
-        ".gcn_tray-content-wrapper":
-          "box-sizing: border-box; max-width: 100%; overflow: visible; padding: 1.5rem;",
-        ".gcn_tray-heading":
-          "line-height: 1.125; margin: 0px; font-size: 1.375rem; font-weight: 700; color: inherit; box-sizing: border-box; max-width: 100%; overflow: visible;",
-        ".gcn_list-group-heading":
-          "line-height: 1.125; margin: 0px; font-size: 1rem; font-weight: 700; color: inherit; box-sizing: border-box; max-width: 100%; overflow: visible;",
-        ".gcn_link-list": "margin: 0.75rem 0; list-style-type: none;",
-        ".gcn_list-group-heading + .gcn_link-list": "margin: 0.75rem;",
-        ".gcn_link-item":
-          "margin-top: 0.75rem; margin-bottom: 0.75rem; padding: 0px; max-width: 100%;",
-        ".gcn_link-item:first-of-type": "margin-top: 0;",
-        ".gcn_link:focus": "outline-color: var(--ic-link-color);",
-        ".gcn_link":
-          "outline-color: transparent; outline-offset: 0.25rem; outline-style: solid; outline-width: 0.125rem; transition: outline-color 0.2s ease 0s; vertical-align: baseline; max-width: 100%; overflow: visible;",
-        ".gcn_link-desc": "font-size: 0.875rem;",
-        ".gcn-view-spinner": "max-width: 100%; overscroll-behavior: auto; display: inline-block; vertical-align: middle; position: relative; box-sizing: border-box; overflow: hidden; width: 3em; height: 3em;",
-        ".gcn-spinner__circle": "display: block; position: absolute; top: 0px; left: 0px; animation-name: gcn-rotate; animation-duration: 2.25s; animation-iteration-count: infinite; animation-timing-function: linear; width: 3em; height: 3em;",
-        ".gcn-spinner__circleTrack": "stroke: rgb(245, 245, 245); fill: none; stroke-width: 0.375em;",
-        ".gcn-spinner__circleSpin": "fill: none; stroke-linecap: round; animation-name: gcn-morph; animation-duration: 1.75s; animation-iteration-count: infinite; animation-timing-function: ease; stroke-width: 0.375em; stroke-dasharray: 6em; transform-origin: calc(1.5em) calc(1.5em) 0px; stroke: rgb(3, 116, 181);",
-        "@keyframes gcn-rotate": "to { transform: rotate(360deg) }",
-        "@keyframes gcn-morph": "0% { stroke-dashoffset: 190%; } 50% { stroke-dashoffset: 50%; transform: rotate(90deg); } 100% { stroke-dashoffset: 190%; transform: rotate(360deg); }"
+        ".gcn_tray-close-btn-wrapper": "position: absolute; top: 0.5rem;",
+        "[dir='ltr'] .gcn_tray-close-btn-wrapper": "left: auto; right: 0.5rem",
+        "[dir='rtl'] .gcn_tray-close-btn-wrapper": "right: auto; left: 0.5rem",
+        ".gcn_tray-close-btn": "box-sizing: border-box; background: none; color: #2D3B45; margin: 0px; padding: 0px; border-radius: 0.25rem; outline: none; border: none; width: auto; cursor: pointer;",
+        ".gcn_tray-close-btn:hover": "background-color: rgba(45, 59, 69, 0.1);",
+        ".gcn_tray-close-btn::before": "position: absolute; pointer-events: none; opacity: 0; content: ''; transform: scale(0.95); transition: all 0.2s ease 0s; top: -0.3125rem; right: -0.3125rem; bottom: -0.3125rem; left: -0.3125rem; border-style: solid; border-color: var(--ic-brand-primary); border-width: 0.125rem; border-radius: 0.5rem; transform: scale(1);",
+        ".gcn_tray-close-btn:focus::before": "opacity: 1;",
+        ".gcn_tray-content-wrapper": "box-sizing: border-box; max-width: 100%; overflow: visible; padding: 1.5rem;",
+        ".gcn_tray-heading": "line-height: 1.125; margin: 0px; font-size: 1.375rem; font-weight: 700; color: inherit; box-sizing: border-box; max-width: 100%; overflow: visible;",
+        ".gcn_tray-list-group-heading": "line-height: 1.125; margin: 0px; font-size: 1rem; font-weight: 700; color: inherit; box-sizing: border-box; max-width: 100%; overflow: visible;",
+        ".gcn_tray-view--block-list": "margin: 0.75rem 0; list-style-type: none;",
+        ".gcn_tray-list-group-heading + .gcn_tray-view--block-list": "margin: 0.75rem;",
+        ".gcn_tray-view-listItem": "margin-top: 0.75rem; margin-bottom: 0.75rem; padding: 0px; max-width: 100%;",
+        ".gcn_tray-view-listItem:first-of-type": "margin-top: 0;",
+        ".gcn_tray-view-link:focus": "outline-color: var(--ic-link-color);",
+        ".gcn_tray-view-link": "outline-color: transparent; outline-offset: 0.25rem; outline-style: solid; outline-width: 0.125rem; transition: outline-color 0.2s ease 0s; vertical-align: baseline; max-width: 100%; overflow: visible;",
+        ".gcn_tray-link-desc-text": "font-size: 0.875rem;",
+        ".gcn_tray-view-spinner": "max-width: 100%; overscroll-behavior: auto; display: inline-block; vertical-align: middle; position: relative; box-sizing: border-box; overflow: hidden; width: 3em; height: 3em;",
+        ".gcn_tray-spinner__circle": "display: block; position: absolute; top: 0px; left: 0px; animation-name: gcn-spinner-rotate; animation-duration: 2.25s; animation-iteration-count: infinite; animation-timing-function: linear; width: 3em; height: 3em;",
+        ".gcn_tray-spinner__circleTrack": "stroke: rgb(245, 245, 245); fill: none; stroke-width: 0.375em;",
+        ".gcn_tray-spinner__circleSpin": "fill: none; stroke-linecap: round; animation-name: gcn-spinner-morph; animation-duration: 1.75s; animation-iteration-count: infinite; animation-timing-function: ease; stroke-width: 0.375em; stroke-dasharray: 6em; transform-origin: calc(1.5em) calc(1.5em) 0px; stroke: rgb(3, 116, 181);",
+        "@keyframes gcn-spinner-rotate": "to { transform: rotate(360deg) }",
+        "@keyframes gcn-spinner-morph": "0% { stroke-dashoffset: 190%; } 50% { stroke-dashoffset: 50%; transform: rotate(90deg); } 100% { stroke-dashoffset: 190%; transform: rotate(360deg); }"
       };
       if (typeof styles !== 'undefined' && Object.keys(styles).length > 0) {
         let style = document.createElement('style');
@@ -113,25 +105,31 @@
     if (!portal) {
       if (typeof observer === 'undefined') {
         var obs = new MutationObserver(globalCustomNav.watch_glbl_tray);
-        obs.observe(document.body, { childList: true });
+        obs.observe(document.body, {
+          childList: true
+        });
       }
       return;
     }
     if (typeof observer !== 'undefined') {
-       observer.disconnect();
+      observer.disconnect();
     }
     let tray = new MutationObserver(globalCustomNav.exit_glbl_tray);
-    tray.observe(portal, { 'childList': true });
+    tray.observe(portal, {
+      'childList': true
+    });
   };
-  
+
   globalCustomNav.exit_glbl_tray = (_mtx, observer) => {
     let tray_portal_open = document.querySelector(globalCustomNav.cfg.glbl.tray_portal).children.length ? true : false;
-    let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector.slice(0,-3));
-    
+    let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector.slice(0, -3));
+
     if (rspv_nav != null && tray_portal_open) {
       if (typeof observer === 'undefined') {
         var obs = new MutationObserver(globalCustomNav.exit_glbl_tray);
-        obs.observe(document.body, { childList: true });
+        obs.observe(document.body, {
+          childList: true
+        });
       }
       return;
     }
@@ -167,9 +165,9 @@
     } else {
       target_li.before(icon);
     }
-    
+
     const regex = new RegExp(`^${item.href}`);
-    if(!hamb && regex.test(window.location.pathname)) {
+    if (!hamb && regex.test(window.location.pathname)) {
       globalCustomNav.glbl_active_class_clear();
       // ensure active class is restored to appropriate icon based on context
       globalCustomNav.cfg.context_item = item.slug;
@@ -321,7 +319,7 @@
       tray_html += globalCustomNav.tray_links_vs_cb(item);
 
       // add default footer link
-      tray_html += `<a href="${item.href}" class="gcn_link" dir="${globalCustomNav.cfg.lang_dir}">${item.title}</a></li>`;
+      tray_html += `<a href="${item.href}" class="gcn_tray-view-link" dir="${globalCustomNav.cfg.lang_dir}">${item.title}</a></li>`;
       // append
       tray_content.insertAdjacentHTML('afterbegin', tray_html);
 
@@ -332,13 +330,13 @@
   // end rspv tray
 
   globalCustomNav.glbl_tray_links = links => {
-    var html = `<ul class="gcn_link-list" dir="${globalCustomNav.cfg.lang_dir}">`;
+    var html = `<ul class="gcn_tray-view--block-list" dir="${globalCustomNav.cfg.lang_dir}">`;
     links.forEach(link => {
-      html += `<li class="gcn_link-item" dir="${globalCustomNav.cfg.lang_dir}">
-        <a href="${link.href}" target="_blank" class="gcn_link" dir="${globalCustomNav.cfg.lang_dir}">${link.title}</a>`;
+      html += `<li class="gcn_tray-view-listItem" dir="${globalCustomNav.cfg.lang_dir}">
+        <a href="${link.href}" target="_blank" class="gcn_tray-view-link" dir="${globalCustomNav.cfg.lang_dir}">${link.title}</a>`;
 
       // append link description if set
-      html += (!!link.desc && link.desc.length > 1) ? `<div wrap="normal" letter-spacing="normal" class="gcn_link-desc">${link.desc}</div>` : '';
+      html += (!!link.desc && link.desc.length > 1) ? `<div wrap="normal" letter-spacing="normal" class="gcn_tray-link-desc-text">${link.desc}</div>` : '';
       html += '</li>';
     })
     html += `</ul>`;
@@ -424,9 +422,9 @@
   }
 
   globalCustomNav.glbl_tray_close = item => {
-    function close_transition () {
+    function close_transition() {
       const trayWrapper = document.querySelector('.gcn_tray-wrapper');
-        trayWrapper.addEventListener('transitionend', () => {
+      trayWrapper.addEventListener('transitionend', () => {
         // remove tray after transition if it still exists
         document.getElementById(`${item.slug}-tray`)?.remove();
 
@@ -439,7 +437,7 @@
       // slide out tray on close
       trayWrapper.classList.remove('gcn_open');
     }
-    
+
     // close tray when user clicks outside the tray
     document.querySelector(`#${item.slug}-tray-close`).addEventListener('click', function () {
       close_transition();
@@ -455,7 +453,7 @@
     });
 
     // close tray with escape key when the tray is open
-    document.addEventListener("keydown", function(event) {
+    document.addEventListener("keydown", function (event) {
       const key = event.key;
       if (key === 'Escape') {
         close_transition();
@@ -473,8 +471,8 @@
       <div class="navigation-tray-container ${item.title.toLowerCase()}-tray">`;
 
     // close button
-    tray_html += `<span class="gcn_close-btn-wrapper">
-      <button id="${tray_content_id}-close" cursor="pointer" type="button" tabindex="0" class="gcn_close-btn" dir="${globalCustomNav.cfg.lang_dir}">
+    tray_html += `<span class="gcn_tray-close-btn-wrapper">
+      <button id="${tray_content_id}-close" cursor="pointer" type="button" tabindex="0" class="gcn_tray-close-btn" dir="${globalCustomNav.cfg.lang_dir}">
           <i class="icon-solid icon-x" style="padding:0.5rem;"></i><span class="screenreader-only">Close</span>
       </button></span>`;
 
@@ -483,17 +481,17 @@
             <div class="gcn_tray-content-wrapper">
               <h2 class="gcn_tray-heading" dir="${globalCustomNav.cfg.lang_dir}">${item.title}</h2>
               <hr role="presentation" class="gcn-cb_content">`;
-    
+
     // handle links vs callback
     tray_html += globalCustomNav.tray_links_vs_cb(item, false);
 
     if (item.tray.footer && item.tray.footer.length > 1) {
-      tray_html += `<ul class="gcn_link-list" dir="${globalCustomNav.cfg.lang_dir}">
-        <li class="gcn_link-item" dir="${globalCustomNav.cfg.lang_dir}"><hr role="presentation"></li>
-        <li class="gcn_link-item" dir="${globalCustomNav.cfg.lang_dir}">
-        <a href="${item.href}" class="gcn_link" dir="${globalCustomNav.cfg.lang_dir}">${item.title}</a></li>
+      tray_html += `<ul class="gcn_tray-view--block-list" dir="${globalCustomNav.cfg.lang_dir}">
+        <li class="gcn_tray-view-listItem" dir="${globalCustomNav.cfg.lang_dir}"><hr role="presentation"></li>
+        <li class="gcn_tray-view-listItem" dir="${globalCustomNav.cfg.lang_dir}">
+        <a href="${item.href}" class="gcn_tray-view-link" dir="${globalCustomNav.cfg.lang_dir}">${item.title}</a></li>
         </ul><br>
-        <div wrap="normal" letter-spacing="normal" class="gcn_link-desc">${item.tray.footer}</div>`;
+        <div wrap="normal" letter-spacing="normal" class="gcn_tray-link-desc-text">${item.tray.footer}</div>`;
     }
     tray_html += `</div></div></div></div></div></span></span>`;
 
@@ -501,7 +499,7 @@
     document.getElementById('nav-tray-portal').insertAdjacentHTML('afterbegin', tray_html);
 
     // focus on close button
-    document.querySelector('.gcn_close-btn')?.focus();
+    document.querySelector('.gcn_tray-close-btn')?.focus();
 
     // slide in tray on open
     document.querySelector('.gcn_tray-wrapper').classList.add('gcn_open');
@@ -528,16 +526,16 @@
           tray_html += globalCustomNav.glbl_tray_links(tray_links);
         } else {
           Object.keys(item.tray.links).forEach(group => {
-            tray_html += `<h3 class="gcn_list-group-heading">${group}</h3>`;
+            tray_html += `<h3 class="gcn_tray-list-group-heading">${group}</h3>`;
             tray_html += globalCustomNav.glbl_tray_links(item.tray.links[group]);
           })
         }
       }
       // prep for callback
     } else if (typeof item.tray.cb !== 'undefined' && typeof item.tray.cb === 'function') {
-      tray_html += `<ul class="gcn-loading-tray-cb gcn_link-list" dir="${globalCustomNav.cfg.lang_dir}">
-        <li class="gcn_link-item" dir="${globalCustomNav.cfg.lang_dir}">
-          <div dir="${globalCustomNav.cfg.lang_dir}" class="gcn-view-spinner gcn-loading-tray-cb-svg gcn_link-desc"></div>
+      tray_html += `<ul class="gcn_tray-view--block-list gcn-loading-tray-cb" dir="${globalCustomNav.cfg.lang_dir}">
+        <li class="gcn_tray-view-listItem" dir="${globalCustomNav.cfg.lang_dir}">
+          <div dir="${globalCustomNav.cfg.lang_dir}" class="gcn_tray-view-spinner gcn-loading-tray-cb-svg gcn_tray-link-desc-text"></div>
         </li>
       </ul>`;
     }
@@ -546,11 +544,11 @@
 
   globalCustomNav.handle_tray_cb = (item, sel, pos, hamb = true) => {
     if (typeof item.tray.cb !== 'undefined' && typeof item.tray.cb === 'function') {
-      var loading_svg = `<svg role="img" aria-labelledby="${(hamb ? 'rspv-' : '') + `${item.slug}-tray-loading_svg`}" focusable="false" class="gcn-spinner__circle">
+      var loading_svg = `<svg role="img" aria-labelledby="${(hamb ? 'rspv-' : '') + `${item.slug}-tray-loading_svg`}" focusable="false" class="gcn_tray-spinner__circle">
         <title id="${(hamb ? 'rspv-' : '') + `${item.slug}-tray-loading_svg`}">Loading</title>
         <g role="presentation">
-          <circle cx="50%" cy="50%" r="1em" class="gcn-spinner__circleTrack"></circle>
-          <circle cx="50%" cy="50%" r="1em" class="gcn-spinner__circleSpin"></circle>
+          <circle cx="50%" cy="50%" r="1em" class="gcn_tray-spinner__circleTrack"></circle>
+          <circle cx="50%" cy="50%" r="1em" class="gcn_tray-spinner__circleSpin"></circle>
         </g>
       </svg>`;
       document.querySelector(sel).insertAdjacentHTML(pos, loading_svg);
@@ -768,7 +766,7 @@
       }
     },
   ];
-  
+
   // add items to menu
   globalCustomNav.load(globalCustomNav_items);
 
