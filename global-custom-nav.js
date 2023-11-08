@@ -84,6 +84,19 @@
 
   globalCustomNav.exit_burger_tray = (_mtx, observer) => {
     let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector);
+
+    // handle tray takeover
+    if(rspv_nav && globalCustomNav_takeover_trays.length >= 1) {
+      globalCustomNav_takeover_trays.forEach(to => {
+        let tray_ready = document.querySelector(`div[id^="Expandable"] a[href="/${to.tray}"]`);
+        let tray_action_complete = document.querySelectorAll(`div[id^="Expandable"] a.${to.complete}`);
+
+        if(tray_ready && tray_action_complete.length == 0) {
+          to.actions.rspv();
+        }
+      })
+    }
+
     if (rspv_nav != null) {
       if (typeof observer === 'undefined') {
         var obs = new MutationObserver(globalCustomNav.exit_burger_tray);
@@ -106,7 +119,7 @@
       if (typeof observer === 'undefined') {
         var obs = new MutationObserver(globalCustomNav.watch_glbl_tray);
         obs.observe(document.body, {
-          childList: true
+          childList: true,
         });
       }
       return;
@@ -116,13 +129,26 @@
     }
     let tray = new MutationObserver(globalCustomNav.exit_glbl_tray);
     tray.observe(portal, {
-      'childList': true
+      childList: true,
+      subtree: true
     });
   };
 
   globalCustomNav.exit_glbl_tray = (_mtx, observer) => {
     let tray_portal_open = document.querySelector(globalCustomNav.cfg.glbl.tray_portal).children.length ? true : false;
     let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector.slice(0, -3));
+    
+    // handle tray takeover
+    if(tray_portal_open && rspv_nav && globalCustomNav_takeover_trays.length >= 1) {
+      globalCustomNav_takeover_trays.forEach(to => {
+        let tray_ready = document.querySelector(`#nav-tray-portal a[href="/${to.tray}"]`);
+        let tray_action_complete = document.querySelectorAll(`#nav-tray-portal a.${to.complete}`);
+
+        if(tray_ready && tray_action_complete.length == 0) {
+          to.actions.glbl();
+        }
+      })
+    }
 
     if (rspv_nav != null && tray_portal_open) {
       if (typeof observer === 'undefined') {
@@ -766,6 +792,68 @@
       }
     },
   ];
+
+  // configure moar
+  // todo handle roles within takeovers
+  const globalCustomNav_takeover_trays = [{
+    tray: 'accounts',
+    complete: 'gcn-admin-tray-sub-account-links',
+    actions: {
+      glbl: function () { 
+        let tray_last_li = document.querySelector(`#nav-tray-portal ul li:last-child`);
+        // create a new element
+        let subacctray_li = document.createElement('li');
+        subacctray_li.id = 'adm-tray-subacctray';
+        // dynamically grab the class set from the closest LI
+        // for continuity and maybe future proof some Canvas updates
+        subacctray_li.className = tray_last_li.getAttribute('class');
+        
+        // sideways import for myself
+        let subacctray_html = localStorage.getItem(location.host+'_subacc_tray') || '';
+        
+        // append html to tray
+        tray_last_li.parentNode
+            .insertBefore(subacctray_li, tray_last_li.nextSibling)
+            .insertAdjacentHTML('beforeend', subacctray_html);
+
+        document.querySelector(`#nav-tray-portal a[href="/accounts"]`).classList.add('gcn-admin-tray-sub-account-links');
+      },
+      rspv: function () {
+        let account_items = document.querySelector(`div[id^="Expandable"] a[href="/accounts"]`).closest('ul').children;
+        let tray_last_li = account_items[account_items.length - 1];
+        let subacctray_li = document.createElement('li');
+        subacctray_li.id = 'rspv-adm-tray-subacctray';
+        // dynamically grab the class set from the closest LI
+        // for continuity and maybe future proof some Canvas updates
+        subacctray_li.className = tray_last_li.getAttribute('class');
+        
+        // sideways import for myself
+        let subacctray_html = localStorage.getItem(location.host+'_subacc_tray') || '';
+        
+        // append html to tray
+        tray_last_li.parentNode
+            .insertBefore(subacctray_li, tray_last_li.nextSibling)
+            .insertAdjacentHTML('beforeend', subacctray_html);
+
+        document.querySelector(`div[id^="Expandable"] a[href="/accounts"]`).classList.add('gcn-admin-tray-sub-account-links');
+      }
+    }
+  },{
+    tray: 'courses',
+    complete: 'gcn-move-all-courses',
+    actions: {
+      glbl: function () {
+        document.querySelector('#nav-tray-portal h2[class$="-view-heading"]').after(document.querySelector(`#nav-tray-portal a[href="/courses"]`).closest('ul'));
+        document.querySelector(`#nav-tray-portal a[href="/courses"]`).classList.add('gcn-move-all-courses');
+      },
+      rspv: function () {
+        let course_items = document.querySelector(`div[id^="Expandable"] a[href="/courses"]`).closest('ul').children;
+        course_items[0].before(course_items[course_items.length - 1]);
+        document.querySelector(`div[id^="Expandable"] a[href="/courses"]`).classList.add('gcn-move-all-courses');
+      }
+    }
+  }
+];
 
   // add items to menu
   globalCustomNav.load(globalCustomNav_items);
