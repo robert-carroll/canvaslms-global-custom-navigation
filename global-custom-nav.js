@@ -86,9 +86,13 @@
     let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector);
 
     // handle tray takeover
-    if(rspv_nav && globalCustomNav_takeover_trays.length >= 1) {
-      globalCustomNav_takeover_trays.forEach(to => {
-        let tray_ready = document.querySelector(`div[id^="Expandable"] a[href="/${to.tray}"]`);
+    if(rspv_nav && globalCustomNav.tray_takeovers.length >= 1) {
+
+      // console.log(Array.from(document.querySelectorAll(`button[aria-controls^="Expandable"]`)).map(e => e.innerText))
+      // Array.from(document.querySelectorAll(`button[aria-controls^="Expandable"]`)).map(e => e.closest('div').querySelector('div[id^="Expandable"]'))
+
+      globalCustomNav.tray_takeovers.forEach(to => {
+        let tray_ready = document.querySelector(`div[id^="Expandable"] ${to.target}`);
         let tray_action_complete = document.querySelectorAll(`div[id^="Expandable"] a.${to.complete}`);
 
         if(tray_ready && tray_action_complete.length == 0) {
@@ -139,9 +143,12 @@
     let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector.slice(0, -3));
     
     // handle tray takeover
-    if(tray_portal_open && rspv_nav && globalCustomNav_takeover_trays.length >= 1) {
-      globalCustomNav_takeover_trays.forEach(to => {
-        let tray_ready = document.querySelector(`#nav-tray-portal a[href="/${to.tray}"]`);
+    if(tray_portal_open && rspv_nav && globalCustomNav.tray_takeovers.length >= 1) {
+
+      // console.log(document.querySelector('#nav-tray-portal h2[class$="-view-heading"]').innerText)
+
+      globalCustomNav.tray_takeovers.forEach(to => {
+        let tray_ready = document.querySelector(`#nav-tray-portal ${to.target}`);
         let tray_action_complete = document.querySelectorAll(`#nav-tray-portal a.${to.complete}`);
 
         if(tray_ready && tray_action_complete.length == 0) {
@@ -160,8 +167,8 @@
       return;
     }
     if (rspv_nav == null && !tray_portal_open) {
-      globalCustomNav.glbl_active_class_clear();
       // ensure active class is restored to appropriate icon based on context
+      globalCustomNav.glbl_active_class_clear();
       document.getElementById(globalCustomNav.cfg.context_item).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
       observer.disconnect();
       globalCustomNav.watch_glbl_tray();
@@ -372,6 +379,7 @@
   globalCustomNav.load = (opts) => {
     const lang_dir = document.querySelector('html').getAttribute('dir') ?? 'ltr';
     globalCustomNav.cfg = {
+      lang_dir: lang_dir,
       context_item: '',
       glbl: {
         nav_selector: '#menu',
@@ -387,11 +395,13 @@
         fill-rule="evenodd" stroke="none" stroke-width="1" transform="matrix(0 1 1 0 .067 -.067)"></path></g></svg>`
       },
       nav_items: [],
-      lang_dir: lang_dir
+      tray_takeovers: []
     }
     if (!document.querySelector(globalCustomNav.cfg.glbl.nav_selector) && !document.querySelector(globalCustomNav.cfg.rspv.nav_selector)) return;
 
-    globalCustomNav.nav_items = opts;
+    globalCustomNav.tray_takeovers = opts.takeovers;
+
+    globalCustomNav.nav_items = opts.nav_items;
     globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
 
     if (document.querySelector(globalCustomNav.cfg.glbl.nav_selector) !== 'undefined') {
@@ -796,10 +806,11 @@
   // configure moar
   // todo handle roles within takeovers
   const globalCustomNav_takeover_trays = [{
-    tray: 'accounts',
+    tray: 'admin',
+    target: 'a[href="/accounts"]',
     complete: 'gcn-admin-tray-sub-account-links',
     actions: {
-      glbl: function () { 
+      glbl: function () {
         let tray_last_li = document.querySelector(`#nav-tray-portal ul li:last-child`);
         // create a new element
         let subacctray_li = document.createElement('li');
@@ -807,14 +818,14 @@
         // dynamically grab the class set from the closest LI
         // for continuity and maybe future proof some Canvas updates
         subacctray_li.className = tray_last_li.getAttribute('class');
-        
+
         // sideways import for myself
-        let subacctray_html = localStorage.getItem(location.host+'_subacc_tray') || '';
-        
+        let subacctray_html = localStorage.getItem(location.host + '_subacc_tray') || '';
+
         // append html to tray
         tray_last_li.parentNode
-            .insertBefore(subacctray_li, tray_last_li.nextSibling)
-            .insertAdjacentHTML('beforeend', subacctray_html);
+          .insertBefore(subacctray_li, tray_last_li.nextSibling)
+          .insertAdjacentHTML('beforeend', subacctray_html);
 
         document.querySelector(`#nav-tray-portal a[href="/accounts"]`).classList.add('gcn-admin-tray-sub-account-links');
       },
@@ -826,20 +837,21 @@
         // dynamically grab the class set from the closest LI
         // for continuity and maybe future proof some Canvas updates
         subacctray_li.className = tray_last_li.getAttribute('class');
-        
+
         // sideways import for myself
-        let subacctray_html = localStorage.getItem(location.host+'_subacc_tray') || '';
-        
+        let subacctray_html = localStorage.getItem(location.host + '_subacc_tray') || '';
+
         // append html to tray
         tray_last_li.parentNode
-            .insertBefore(subacctray_li, tray_last_li.nextSibling)
-            .insertAdjacentHTML('beforeend', subacctray_html);
+          .insertBefore(subacctray_li, tray_last_li.nextSibling)
+          .insertAdjacentHTML('beforeend', subacctray_html);
 
         document.querySelector(`div[id^="Expandable"] a[href="/accounts"]`).classList.add('gcn-admin-tray-sub-account-links');
       }
     }
-  },{
+  }, {
     tray: 'courses',
+    target: 'a[href="/courses"]',
     complete: 'gcn-move-all-courses',
     actions: {
       glbl: function () {
@@ -852,10 +864,13 @@
         document.querySelector(`div[id^="Expandable"] a[href="/courses"]`).classList.add('gcn-move-all-courses');
       }
     }
-  }
-];
+  }];
 
-  // add items to menu
-  globalCustomNav.load(globalCustomNav_items);
+  const globalCustomNav_opts = {
+    nav_items: globalCustomNav_items,
+    takeovers: globalCustomNav_takeover_trays
+  }
+  // load custom nav options
+  globalCustomNav.load(globalCustomNav_opts);
 
 })();
