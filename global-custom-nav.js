@@ -86,19 +86,20 @@
     let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector);
 
     // handle tray takeover
-    if(rspv_nav && globalCustomNav.tray_takeovers.length >= 1) {
+    if(rspv_nav && Object.keys(globalCustomNav.takeovers).length >= 1) {
+      if(document.querySelectorAll(`button[aria-controls^="Expandable"][aria-expanded="true"]`)) {
 
-      // console.log(Array.from(document.querySelectorAll(`button[aria-controls^="Expandable"]`)).map(e => e.innerText))
-      // Array.from(document.querySelectorAll(`button[aria-controls^="Expandable"]`)).map(e => e.closest('div').querySelector('div[id^="Expandable"]'))
+        let expanded = document.querySelectorAll(`button[aria-controls^="Expandable"][aria-expanded="true"]`)
+        Array.from(expanded).forEach(e => {
+          let tray_to = e.innerText.toLowerCase();
+          let tray_ready = document.querySelector(`div[id^="Expandable"] ${globalCustomNav.takeovers[tray_to].target}`);
+          let tray_action_complete = document.querySelectorAll(`div[id^="Expandable"] a.${globalCustomNav.takeovers[tray_to].complete}`);
 
-      globalCustomNav.tray_takeovers.forEach(to => {
-        let tray_ready = document.querySelector(`div[id^="Expandable"] ${to.target}`);
-        let tray_action_complete = document.querySelectorAll(`div[id^="Expandable"] a.${to.complete}`);
-
-        if(tray_ready && tray_action_complete.length == 0) {
-          to.actions.rspv();
-        }
-      })
+          if(tray_ready && tray_action_complete.length == 0) {
+            globalCustomNav.takeovers[tray_to].actions.rspv();
+          }
+        })
+      }
     }
 
     if (rspv_nav != null) {
@@ -143,18 +144,16 @@
     let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector.slice(0, -3));
     
     // handle tray takeover
-    if(tray_portal_open && rspv_nav && globalCustomNav.tray_takeovers.length >= 1) {
-
-      // console.log(document.querySelector('#nav-tray-portal h2[class$="-view-heading"]').innerText)
-
-      globalCustomNav.tray_takeovers.forEach(to => {
-        let tray_ready = document.querySelector(`#nav-tray-portal ${to.target}`);
-        let tray_action_complete = document.querySelectorAll(`#nav-tray-portal a.${to.complete}`);
-
+    if(tray_portal_open && rspv_nav && Object.keys(globalCustomNav.takeovers).length >= 1) {
+      if(document.querySelector('#nav-tray-portal h2[class$="-view-heading"]')) {
+        let tray_to = document.querySelector('#nav-tray-portal h2[class$="-view-heading"]').innerText.toLowerCase();
+        let tray_ready = document.querySelector(`#nav-tray-portal ${globalCustomNav.takeovers[tray_to].target}`);
+        let tray_action_complete = document.querySelectorAll(`#nav-tray-portal a.${globalCustomNav.takeovers[tray_to].complete}`);
+   
         if(tray_ready && tray_action_complete.length == 0) {
-          to.actions.glbl();
+          globalCustomNav.takeovers[tray_to].actions.glbl();
         }
-      })
+      }
     }
 
     if (rspv_nav != null && tray_portal_open) {
@@ -212,9 +211,12 @@
     item.tidle = item.title.replace(/\W/g, '_').toLowerCase();
     item.slug = `global_nav_${item.tidle}_link`;
 
-    // clone and create the icon
+    // clone and create the icon, consider c4e
     const is_tray = item.tray || false;
-    const icon_to_copy = is_tray ? 'Courses' : 'Dashboard';
+    let icon_to_copy = (ENV.K5_USER == true && hamb == true) ? 'Home' : 'Dashboard';
+    if(is_tray) {
+      icon_to_copy = 'Courses';
+    }
     const nav_icon = hamb ? `${globalCustomNav.cfg.rspv.nav_selector} svg[name="Icon${icon_to_copy}"]` : `#global_nav_${icon_to_copy.toLowerCase()}_link`;
     const nav_icon_li = document.querySelector(nav_icon).closest('li');
 
@@ -222,7 +224,6 @@
     var icon = nav_icon_li.cloneNode(true);
     icon.setAttribute('id', (hamb ? 'rspv-' : '') + `${item.slug}-item`);
     icon.querySelector('svg').parentElement.classList.add((hamb ? 'rspv-' : '') + `svg-${item.tidle}-holder`);
-
 
     const icon_id = (hamb ? 'rspv-' : '') + item.slug;
     if (hamb && is_tray) {
@@ -395,11 +396,11 @@
         fill-rule="evenodd" stroke="none" stroke-width="1" transform="matrix(0 1 1 0 .067 -.067)"></path></g></svg>`
       },
       nav_items: [],
-      tray_takeovers: []
+      takeovers: {}
     }
     if (!document.querySelector(globalCustomNav.cfg.glbl.nav_selector) && !document.querySelector(globalCustomNav.cfg.rspv.nav_selector)) return;
 
-    globalCustomNav.tray_takeovers = opts.takeovers;
+    globalCustomNav.takeovers = opts.takeovers || {};
 
     globalCustomNav.nav_items = opts.nav_items;
     globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
@@ -805,70 +806,76 @@
 
   // configure moar
   // todo handle roles within takeovers
-  const globalCustomNav_takeover_trays = [{
-    tray: 'admin',
-    target: 'a[href="/accounts"]',
-    complete: 'gcn-admin-tray-sub-account-links',
-    actions: {
-      glbl: function () {
-        let tray_last_li = document.querySelector(`#nav-tray-portal ul li:last-child`);
-        // create a new element
-        let subacctray_li = document.createElement('li');
-        subacctray_li.id = 'adm-tray-subacctray';
-        // dynamically grab the class set from the closest LI
-        // for continuity and maybe future proof some Canvas updates
-        subacctray_li.className = tray_last_li.getAttribute('class');
+  // takeovers bind the feature into some language specific strings because the responsive Expandable_'s have no reference to the tray title
+  // oddly... experiencing All Accounts and All Courses at the top in beta?
+  const globalCustomNav_tray_takeover = {
+    admin: {
+      target: 'a[href="/accounts"]',
+      complete: 'gcn-admin-tray-sub-account-links',
+      actions: {
+        glbl: function () {
+          console.log(document.querySelector('#nav-tray-portal h2[class$="-view-heading"]'))
+          let tray_last_li = document.querySelector(`#nav-tray-portal ul li:last-child`);
+          // create a new element
+          let subacctray_li = document.createElement('li');
+          subacctray_li.id = 'adm-tray-subacctray';
+          // dynamically grab the class set from the closest LI
+          // for continuity and maybe future proof some Canvas updates
+          subacctray_li.className = tray_last_li.getAttribute('class');
 
-        // sideways import for myself
-        let subacctray_html = localStorage.getItem(location.host + '_subacc_tray') || '';
+          // sideways import for myself
+          let subacctray_html = localStorage.getItem(location.host + '_subacc_tray') || '<ul id="admin-tray-sam"><li>placeholder</li></ul>';
 
-        // append html to tray
-        tray_last_li.parentNode
-          .insertBefore(subacctray_li, tray_last_li.nextSibling)
-          .insertAdjacentHTML('beforeend', subacctray_html);
+          // append html to tray
+          tray_last_li.parentNode
+            .insertBefore(subacctray_li, tray_last_li.nextSibling)
+            .insertAdjacentHTML('beforeend', subacctray_html);
 
-        document.querySelector(`#nav-tray-portal a[href="/accounts"]`).classList.add('gcn-admin-tray-sub-account-links');
-      },
-      rspv: function () {
-        let account_items = document.querySelector(`div[id^="Expandable"] a[href="/accounts"]`).closest('ul').children;
-        let tray_last_li = account_items[account_items.length - 1];
-        let subacctray_li = document.createElement('li');
-        subacctray_li.id = 'rspv-adm-tray-subacctray';
-        // dynamically grab the class set from the closest LI
-        // for continuity and maybe future proof some Canvas updates
-        subacctray_li.className = tray_last_li.getAttribute('class');
+          document.querySelector(`#nav-tray-portal a[href="/accounts"]`).classList.add('gcn-admin-tray-sub-account-links');
+        },
+        rspv: function () {
+          let account_items = document.querySelector(`div[id^="Expandable"] a[href="/accounts"]`).closest('ul').children;
+          let tray_last_li = account_items[account_items.length - 1];
+          let subacctray_li = document.createElement('li');
+          subacctray_li.id = 'rspv-adm-tray-subacctray';
+          // dynamically grab the class set from the closest LI
+          // for continuity and maybe future proof some Canvas updates
+          subacctray_li.className = tray_last_li.getAttribute('class');
 
-        // sideways import for myself
-        let subacctray_html = localStorage.getItem(location.host + '_subacc_tray') || '';
+          // sideways import for myself
+          let subacctray_html = localStorage.getItem(location.host + '_subacc_tray') || '<ul id="rspv-admin-tray-sam"><li>placeholder</li></ul>';
 
-        // append html to tray
-        tray_last_li.parentNode
-          .insertBefore(subacctray_li, tray_last_li.nextSibling)
-          .insertAdjacentHTML('beforeend', subacctray_html);
+          // append html to tray
+          tray_last_li.parentNode
+            .insertBefore(subacctray_li, tray_last_li.nextSibling)
+            .insertAdjacentHTML('beforeend', subacctray_html);
 
-        document.querySelector(`div[id^="Expandable"] a[href="/accounts"]`).classList.add('gcn-admin-tray-sub-account-links');
+          document.querySelector(`div[id^="Expandable"] a[href="/accounts"]`).classList.add('gcn-admin-tray-sub-account-links');
+        }
+      }
+    },
+    courses: {
+      target: 'a[href="/courses"]',
+      complete: 'gcn-move-all-courses',
+      actions: {
+        glbl: function () {
+          document.querySelector('#nav-tray-portal h2[class$="-view-heading"]').after(document.querySelector(`#nav-tray-portal a[href="/courses"]`).closest('ul'));
+          document.querySelector(`#nav-tray-portal a[href="/courses"]`).classList.add('gcn-move-all-courses');
+        },
+        rspv: function () {
+          let course_items = document.querySelector(`div[id^="Expandable"] a[href="/courses"]`).closest('ul').children;
+          course_items[0].before(course_items[course_items.length - 1]);
+          document.querySelector(`div[id^="Expandable"] a[href="/courses"]`).classList.add('gcn-move-all-courses');
+        }
       }
     }
-  }, {
-    tray: 'courses',
-    target: 'a[href="/courses"]',
-    complete: 'gcn-move-all-courses',
-    actions: {
-      glbl: function () {
-        document.querySelector('#nav-tray-portal h2[class$="-view-heading"]').after(document.querySelector(`#nav-tray-portal a[href="/courses"]`).closest('ul'));
-        document.querySelector(`#nav-tray-portal a[href="/courses"]`).classList.add('gcn-move-all-courses');
-      },
-      rspv: function () {
-        let course_items = document.querySelector(`div[id^="Expandable"] a[href="/courses"]`).closest('ul').children;
-        course_items[0].before(course_items[course_items.length - 1]);
-        document.querySelector(`div[id^="Expandable"] a[href="/courses"]`).classList.add('gcn-move-all-courses');
-      }
-    }
-  }];
+  }
+  // consider c4e
+  globalCustomNav_tray_takeover.subjects = globalCustomNav_tray_takeover.courses;
 
   const globalCustomNav_opts = {
     nav_items: globalCustomNav_items,
-    takeovers: globalCustomNav_takeover_trays
+    takeovers: globalCustomNav_tray_takeover
   }
   // load custom nav options
   globalCustomNav.load(globalCustomNav_opts);
