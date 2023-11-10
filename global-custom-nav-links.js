@@ -97,9 +97,12 @@
     item.tidle = item.title.replace(/\W/g, '_').toLowerCase();
     item.slug = `global_nav_${item.tidle}_link`;
 
-    // clone and create the icon
-   
-    const icon_to_copy = 'Dashboard';
+    // clone and create the icon, consider c4e
+    const is_tray = item.tray || false;
+    let icon_to_copy = (ENV.K5_USER == true && hamb == true) ? 'Home' : 'Dashboard';
+    if(is_tray) {
+      icon_to_copy = 'Courses';
+    }
     const nav_icon = hamb ? `${globalCustomNav.cfg.rspv.nav_selector} svg[name="Icon${icon_to_copy}"]` : `#global_nav_${icon_to_copy.toLowerCase()}_link`;
     const nav_icon_li = document.querySelector(nav_icon).closest('li');
 

@@ -400,10 +400,11 @@
     }
     if (!document.querySelector(globalCustomNav.cfg.glbl.nav_selector) && !document.querySelector(globalCustomNav.cfg.rspv.nav_selector)) return;
 
-    globalCustomNav.takeovers = opts.takeovers || {};
-
-    globalCustomNav.nav_items = opts.nav_items;
+    globalCustomNav.nav_items = Array.isArray(opts.nav_items) ? opts.nav_items : opts;
     globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
+
+    if(typeof opts.takeovers === 'object')
+      globalCustomNav.takeovers = opts.takeovers || {};
 
     if (document.querySelector(globalCustomNav.cfg.glbl.nav_selector) !== 'undefined') {
       // preserve the nav item to restore active class when a tray is closed
