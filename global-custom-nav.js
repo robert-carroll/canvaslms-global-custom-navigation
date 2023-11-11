@@ -107,19 +107,19 @@
   globalCustomNav.rspv_tray_takeover = (rspv_nav) => {
     if(rspv_nav && Object.keys(globalCustomNav.takeovers).length >= 1) {
       let expanded = document.querySelectorAll(`button[aria-controls^="Expandable"][aria-expanded="true"]`);
-
-
-      var targets = Object.keys(globalCustomNav.takeovers).map(t => globalCustomNav.takeovers[t].target);
-      targets = targets.filter((i,pos) => targets.indexOf(i) == pos ); 
-      console.log(targets)
-
+      var to_targets = Object.keys(globalCustomNav.takeovers).map(t => [globalCustomNav.takeovers[t].target, t] );
+      let to_mapping = Object.fromEntries(to_targets);
+      let targets = Object.keys(to_mapping);
+  
       if(expanded) {
-        Array.from(expanded).forEach(e => {
-          let tray_to = e.innerText.toLowerCase();
-          let tray_ready = document.querySelector(`div[id^="Expandable"] ${globalCustomNav.takeovers[tray_to].target}`);
-          let tray_action_complete = document.querySelectorAll(`div[id^="Expandable"] a.${globalCustomNav.takeovers[tray_to].complete}`);
-          if(tray_ready && tray_action_complete.length == 0) {
-            globalCustomNav.takeovers[tray_to].actions.rspv();
+        targets.forEach(t => {
+          let tray_ready = document.querySelector(`div[id^="Expandable"] ${t}`);
+          if(tray_ready) {
+            let tray_by_target = to_mapping[t];
+            let tray_action_complete = document.querySelectorAll(`div[id^="Expandable"] a.${globalCustomNav.takeovers[tray_by_target].complete}`);
+            if(tray_action_complete.length == 0) {
+              globalCustomNav.takeovers[tray_by_target].actions.rspv();
+            }
           }
         })
       }
@@ -822,15 +822,8 @@
   ];
 
   // configure moar
-  // actually the admin/accounts, account (user profile) issue that binds us into language
-  // catchment class of tray/expandable is best to stop, checking all risks matching on multiple trays
-  // because these logic are compiled/compressed for production copy/paste ux
-  // the goal is to prevent the end user (the admin) from modifying anything but the config options
   // try these on test, beta is better - will revise soon
   // todo handle roles within takeovers
-  // todo test storing logic by tray title (as is), remapping by target (in takeover handler), and use object key to run callback
-  // maintains goal, allows future changes in takeover handler
-  // 1 of 2 resolved (global uses selector instead of language title)
   const globalCustomNav_tray_takeover = {
     admin: {
       target: 'a[href="/accounts"]',
