@@ -86,21 +86,7 @@
     let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector);
 
     // handle tray takeover
-    if(rspv_nav && Object.keys(globalCustomNav.takeovers).length >= 1) {
-      if(document.querySelectorAll(`button[aria-controls^="Expandable"][aria-expanded="true"]`)) {
-
-        let expanded = document.querySelectorAll(`button[aria-controls^="Expandable"][aria-expanded="true"]`)
-        Array.from(expanded).forEach(e => {
-          let tray_to = e.innerText.toLowerCase();
-          let tray_ready = document.querySelector(`div[id^="Expandable"] ${globalCustomNav.takeovers[tray_to].target}`);
-          let tray_action_complete = document.querySelectorAll(`div[id^="Expandable"] a.${globalCustomNav.takeovers[tray_to].complete}`);
-
-          if(tray_ready && tray_action_complete.length == 0) {
-            globalCustomNav.takeovers[tray_to].actions.rspv();
-          }
-        })
-      }
-    }
+    globalCustomNav.rspv_tray_takeover(rspv_nav);
 
     if (rspv_nav != null) {
       if (typeof observer === 'undefined') {
@@ -117,6 +103,22 @@
       globalCustomNav.watch_burger_tray();
     }
   };
+
+  globalCustomNav.rspv_tray_takeover = (rspv_nav) => {
+    if(rspv_nav && Object.keys(globalCustomNav.takeovers).length >= 1) {
+      let expanded = document.querySelectorAll(`button[aria-controls^="Expandable"][aria-expanded="true"]`);
+      if(expanded) {
+        Array.from(expanded).forEach(e => {
+          let tray_to = e.innerText.toLowerCase();
+          let tray_ready = document.querySelector(`div[id^="Expandable"] ${globalCustomNav.takeovers[tray_to].target}`);
+          let tray_action_complete = document.querySelectorAll(`div[id^="Expandable"] a.${globalCustomNav.takeovers[tray_to].complete}`);
+          if(tray_ready && tray_action_complete.length == 0) {
+            globalCustomNav.takeovers[tray_to].actions.rspv();
+          }
+        })
+      }
+    }
+  }
 
   globalCustomNav.watch_glbl_tray = (_mtx, observer) => {
     let portal = document.querySelector(globalCustomNav.cfg.glbl.tray_portal);
@@ -144,17 +146,7 @@
     let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector.slice(0, -3));
     
     // handle tray takeover
-    if(tray_portal_open && rspv_nav && Object.keys(globalCustomNav.takeovers).length >= 1) {
-      if(document.querySelector('#nav-tray-portal h2[class$="-view-heading"]')) {
-        let tray_to = document.querySelector('#nav-tray-portal h2[class$="-view-heading"]').innerText.toLowerCase();
-        let tray_ready = document.querySelector(`#nav-tray-portal ${globalCustomNav.takeovers[tray_to].target}`);
-        let tray_action_complete = document.querySelectorAll(`#nav-tray-portal a.${globalCustomNav.takeovers[tray_to].complete}`);
-   
-        if(tray_ready && tray_action_complete.length == 0) {
-          globalCustomNav.takeovers[tray_to].actions.glbl();
-        }
-      }
-    }
+    globalCustomNav.glbl_tray_takeover(tray_portal_open, rspv_nav);
 
     if (rspv_nav != null && tray_portal_open) {
       if (typeof observer === 'undefined') {
@@ -173,6 +165,20 @@
       globalCustomNav.watch_glbl_tray();
     }
   };
+
+  globalCustomNav.glbl_tray_takeover = (tray_portal_open, rspv_nav) => {
+    if(tray_portal_open && rspv_nav && Object.keys(globalCustomNav.takeovers).length >= 1) {
+      let tray_title = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} h2[class$="-view-heading"]`);
+      if(tray_title) {
+        let tray_to = tray_title.innerText.toLowerCase();
+        let tray_ready = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} ${globalCustomNav.takeovers[tray_to].target}`);
+        let tray_action_complete = document.querySelectorAll(`${globalCustomNav.cfg.glbl.tray_portal} a.${globalCustomNav.takeovers[tray_to].complete}`);
+        if(tray_ready && tray_action_complete.length == 0) {
+          globalCustomNav.takeovers[tray_to].actions.glbl();
+        }
+      }
+    }
+  }
 
   globalCustomNav.prepare_nav_items = (items, hamb = true) => {
     items.forEach(item => {
@@ -443,7 +449,7 @@
     globalCustomNav.glbl_active_class_clear();
 
     // toggled and tray content is not loaded
-    if (!document.querySelector(`#nav-tray-portal > #${item.slug}-tray`)) {
+    if (!document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} > #${item.slug}-tray`)) {
 
       globalCustomNav.glbl_tray_content(item);
       click.target.closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
@@ -483,7 +489,7 @@
 
     // close tray when focus leaves the tray
     window.addEventListener('click', function (e) {
-      if (document.querySelector(`#nav-tray-portal > #${item.slug}-tray`) !== null) {
+      if (document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} > #${item.slug}-tray`) !== null) {
         if (!document.getElementById(`${item.slug}-tray`)?.contains(e.target) && (document.getElementById('main').contains(e.target) || !document.getElementById(`${item.slug}-item`).contains(e.target))) {
           close_transition();
         }
@@ -808,7 +814,8 @@
   // configure moar
   // todo handle roles within takeovers
   // takeovers bind the feature into some language specific strings because the responsive Expandable_'s have no reference to the tray title
-  // oddly... experiencing All Accounts and All Courses at the top in beta?
+  // torn on whether to target trays or loop through each when toggling Exapandable_'s
+  // try these on test, beta is better - will revise soon
   const globalCustomNav_tray_takeover = {
     admin: {
       target: 'a[href="/accounts"]',
