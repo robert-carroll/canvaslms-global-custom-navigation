@@ -14,11 +14,11 @@ please render some responses.
 Robert
 ```
 
-> ! This is a beta thing, do not use this in production – review _Considerations_
+> ! This is a test thing, do not use this in production – review _Considerations_
 
 ## Features
   - No jQuery
-  - Right To Left language support
+  - All Languages including _Left To Right_ and _Right To Left_
   - Global and Responsive (mobile) navigation icon creation
   - 3 svg options for icon: instructure icons, external svg, inline svg
   - Tray for both Global and Responsive navigation
@@ -27,7 +27,7 @@ Robert
       - grouped (ex; published|unpublished courses)
         - ungrouped in responsive nav tray (ex: responsive courses tray)
   - Role Callback
-  - Tray Callback
+  - Tray Callback or Takeover
 
 ## Tray Callbacks
 
@@ -103,7 +103,10 @@ Robert
 
 ## Considerations
 
-- refactoring
+- still reviewing, but feature complete based on my goals
+  - last is root placement and sub account use
+- need to rewrite the takeovers for beta considering new release from inst
+- probably provide takeovers and callbacks as single files for fundays and userscripts
 
 ## Contributions & Feedback
 Always welcome, discuss in the [community](https://community.canvaslms.com/t5/Canvas-Developers-Group/Thread-with-space-for-Global-Custom-Navigation/td-p/583803), or PR's and issues if you enjoy committing.
@@ -111,7 +114,7 @@ Always welcome, discuss in the [community](https://community.canvaslms.com/t5/Ca
 ## Contributors
 There are snippets and concepts in this code revolving around conversations and contributions by: 
 - [James](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/105160) mutations/append css/clones
-- [jsimon3](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/685323)  responsive tray
+- [jsimon3](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/685323) responsive tray
 - [dbrace](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/375810) instui icons
 - [JACOBSEN_C](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/103689) roles
 - [hechla](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/521056) icon placement
