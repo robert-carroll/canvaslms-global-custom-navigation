@@ -1,7 +1,7 @@
 /**
 // @name        CanvasLMS - Global Custom Navigation
 // @namespace   https://github.com/robert-carroll/canvaslms-global-custom-navigation
-// @description icons only
+// @description icons only, context capable
 //
 **/
 (function () {
@@ -52,6 +52,7 @@
 
   globalCustomNav.exit_burger_tray = (_mtx, observer) => {
     let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector);
+
     if (rspv_nav != null) {
       if (typeof observer === 'undefined') {
         var obs = new MutationObserver(globalCustomNav.exit_burger_tray);
@@ -65,6 +66,49 @@
     if (rspv_nav == null) {
       observer.disconnect();
       globalCustomNav.watch_burger_tray();
+    }
+  };
+
+  globalCustomNav.watch_glbl_tray = (_mtx, observer) => {
+    let portal = document.querySelector(globalCustomNav.cfg.glbl.tray_portal);
+    if (!portal) {
+      if (typeof observer === 'undefined') {
+        var obs = new MutationObserver(globalCustomNav.watch_glbl_tray);
+        obs.observe(document.body, {
+          childList: true,
+        });
+      }
+      return;
+    }
+    if (typeof observer !== 'undefined') {
+      observer.disconnect();
+    }
+    let tray = new MutationObserver(globalCustomNav.exit_glbl_tray);
+    tray.observe(portal, {
+      childList: true,
+      subtree: true
+    });
+  };
+
+  globalCustomNav.exit_glbl_tray = (_mtx, observer) => {
+    let tray_portal_open = document.querySelector(globalCustomNav.cfg.glbl.tray_portal).children.length ? true : false;
+    let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector.slice(0, -3));
+    
+    if (rspv_nav != null && tray_portal_open) {
+      if (typeof observer === 'undefined') {
+        var obs = new MutationObserver(globalCustomNav.exit_glbl_tray);
+        obs.observe(document.body, {
+          childList: true
+        });
+      }
+      return;
+    }
+    if (rspv_nav == null && !tray_portal_open) {
+      // ensure active class is restored to appropriate icon based on context
+      globalCustomNav.glbl_active_class_clear();
+      document.getElementById(globalCustomNav.cfg.context_item).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
+      observer.disconnect();
+      globalCustomNav.watch_glbl_tray();
     }
   };
 
@@ -91,6 +135,14 @@
     } else {
       target_li.before(icon);
     }
+
+    const regex = new RegExp(`^${item.href}`);
+    if (!hamb && regex.test(window.location.pathname)) {
+      globalCustomNav.glbl_active_class_clear();
+      // ensure active class is restored to appropriate icon based on context
+      globalCustomNav.cfg.context_item = item.slug;
+      document.getElementById(item.slug).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
+    }
   };
 
   globalCustomNav.create_nav_icon = (item, hamb = true) => {
@@ -112,10 +164,17 @@
     icon.querySelector('svg').parentElement.classList.add((hamb ? 'rspv-' : '') + `svg-${item.tidle}-holder`);
 
     const icon_id = (hamb ? 'rspv-' : '') + item.slug;
-    icon.querySelector('a').setAttribute('id', icon_id);
-    icon.querySelector('a').href = item.href;
-    if (item.target !== 'undefined' && item.target.includes('_blank', '_self', '_parent')) {
-      icon.querySelector('a').setAttribute('target', item.target);
+    if (hamb && is_tray) {
+      // button for resp tray
+      icon.querySelector('button').setAttribute('id', icon_id);
+      icon.querySelector('button').setAttribute('aria-controls', (hamb ? 'rspv-' : '') + `${item.slug}-tray`);
+      icon.querySelector('div div').setAttribute('id', (hamb ? 'rspv-' : '') + `${item.slug}-tray`);
+    } else {
+      icon.querySelector('a').setAttribute('id', icon_id);
+      icon.querySelector('a').href = item.href;
+      if (item.target !== 'undefined' && item.target.includes('_blank', '_self', '_parent')) {
+        icon.querySelector('a').setAttribute('target', item.target);
+      }
     }
 
     try {
@@ -183,8 +242,10 @@
     const lang_dir = document.querySelector('html').getAttribute('dir') ?? 'ltr';
     globalCustomNav.cfg = {
       lang_dir: lang_dir,
+      context_item: '',
       glbl: {
         nav_selector: '#menu',
+        tray_portal: '#nav-tray-portal',
         menuItemClass: `ic-app-header__menu-list-item`,
         trayActiveClass: `ic-app-header__menu-list-item--active`
       },
@@ -195,14 +256,28 @@
     }
     if (!document.querySelector(globalCustomNav.cfg.glbl.nav_selector) && !document.querySelector(globalCustomNav.cfg.rspv.nav_selector)) return;
 
+    globalCustomNav.nav_items = Array.isArray(opts.nav_items) ? opts.nav_items : opts;
+    globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
+
     if (document.querySelector(globalCustomNav.cfg.glbl.nav_selector) !== 'undefined') {
-      globalCustomNav.nav_items = opts;
-      globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
+      // preserve the nav item to restore active class when a tray is closed
+      // handle primary routes, external tools, and custom contexts
+      Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} li`)).forEach(nav => {
+        if (nav.classList.contains(globalCustomNav.cfg.glbl.trayActiveClass) == true) {
+          globalCustomNav.cfg.context_item = nav.querySelector('a').getAttribute('id') || nav.querySelector('a').closest('li').getAttribute('id');
+        }
+      });
+
+      globalCustomNav.watch_glbl_tray();
     }
     globalCustomNav.watch_burger_tray();
   };
 
-  
+  globalCustomNav.glbl_active_class_clear = () => {
+    Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} .${globalCustomNav.cfg.glbl.trayActiveClass}`)).forEach(e => {
+      e.classList.toggle(globalCustomNav.cfg.glbl.trayActiveClass);
+    });
+  }
 
   // configure opts
   const globalCustomNav_items = [{
@@ -211,53 +286,20 @@
       href: 'https://community.canvaslms.com/',
       target: '_blank',
       position: 1, // can be one of : integer (position after first), 'after' (help or last), 'before' (help or last)
+    },
+    {
+      title: 'Custom Context',
+      // custom context handles active class in global nav
+      icon_svg: 'icon-expand-start',
+      href: '/courses/1234567',
+      target: '',
       roles: function () {
         return ['teacher'].some(a => ENV.current_user_roles.includes(a));
       }
     },
-    {
-      title: 'External Icon',
-      // example only, host your own, or use icon class
-      icon_svg: 'https://raw.githubusercontent.com/instructure/instructure-ui/master/packages/ui-icons/svg/Line/pin.svg',
-      href: 'https://community.canvaslms.com/',
-      target: '_blank',
-      //position: 'before' // default
-    },
-    {
-      title: 'Inline Icon',
-      // example, instructure-ui pin.svg from above
-      icon_svg: `<svg viewBox="0 0 1920 1920" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M1643.272 835.697c-22.024 22.023-57.826 22.023-79.85 0l-20.442-20.442c-.226-.226-.226-.452-.452-.678-.226-.113-.452-.113-.565-.339L1072.806 345.08c-.226-.225-.34-.564-.565-.79-.226-.226-.565-.339-.79-.452l-20.33-20.33c-22.024-22.023-22.024-57.938 0-79.962l83.915-83.802 592.15 592.038-83.914 83.915zm-506.768 305.167c-7.34-8.584-13.44-18.07-21.571-26.09L771.93 771.773c-8.018-8.132-17.506-13.892-26.09-21.12l286.42-286.419 390.437 390.438-286.193 286.193zm-101.42 453.007l-16.49 16.49-742.362-742.25 16.489-16.49c106.73-106.842 292.743-106.842 399.36 0l343.002 343.003c53.309 53.308 82.673 124.235 82.673 199.567 0 75.445-29.364 146.372-82.673 199.68zM1135.035.045L971.272 163.697c-59.295 59.294-62.344 150.776-15.022 216.847L658.876 677.918c-4.066 3.953-6.437 8.81-9.035 13.553-144.565-60.085-322.899-33.656-436.97 80.301l-96.338 96.34 411.106 411.105-511.06 511.059c-22.136 22.023-22.136 57.826 0 79.85 10.956 11.067 25.413 16.602 39.869 16.602s28.913-5.535 39.981-16.603l511.059-511.059 411.106 410.993 96.339-96.339c74.654-74.54 115.764-173.816 115.764-279.529 0-55.115-11.745-108.31-33.091-157.327 2.597-1.92 5.647-3.05 8.018-5.421l300.763-300.763c29.365 20.895 62.456 34.448 96.903 34.448 43.37 0 86.852-16.603 119.83-49.582l163.766-163.764L1135.036.045z" stroke="none" stroke-width="1" fill-rule="evenodd"/></svg>`,
-      href: 'https://community.canvaslms.com/',
-      target: '',
-      position: 'after'
-    },
-    {
-      title: 'Icon with Role Requirements - Faculty',
-      // example icon with role requirement
-      icon_svg: 'icon-educators',
-      href: 'https://community.canvaslms.com/',
-      target: '_blank',
-      position: 'after',
-      roles: function () {
-        var account_role = ['AccountAdmin', 'Staff Admin', 'Support Admin'].some(a => ENV.current_user_types.includes(a));
-        var enrollment_type = ['teacher', 'admin', 'root_admin', 'consortium_admin'].some(a => ENV.current_user_roles.includes(a));
-        return account_role || enrollment_type;
-      }
-    },
-    {
-      title: 'Icon with Role Requirements - Student',
-      // example icon with role requirement
-      icon_svg: 'icon-group',
-      href: 'https://community.canvaslms.com/',
-      target: '_blank',
-      position: 'after',
-      roles: function () {
-        return !['teacher', 'admin', 'root_admin', 'consortium_admin'].some(a => ENV.current_user_roles.includes(a));
-      }
-    },
   ];
-
-  // add items to menu
+  
+  // load custom nav options
   globalCustomNav.load(globalCustomNav_items);
 
 })();
