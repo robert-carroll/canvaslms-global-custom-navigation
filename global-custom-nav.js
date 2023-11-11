@@ -107,6 +107,12 @@
   globalCustomNav.rspv_tray_takeover = (rspv_nav) => {
     if(rspv_nav && Object.keys(globalCustomNav.takeovers).length >= 1) {
       let expanded = document.querySelectorAll(`button[aria-controls^="Expandable"][aria-expanded="true"]`);
+
+
+      var targets = Object.keys(globalCustomNav.takeovers).map(t => globalCustomNav.takeovers[t].target);
+      targets = targets.filter((i,pos) => targets.indexOf(i) == pos ); 
+      console.log(targets)
+
       if(expanded) {
         Array.from(expanded).forEach(e => {
           let tray_to = e.innerText.toLowerCase();
@@ -168,7 +174,10 @@
 
   globalCustomNav.glbl_tray_takeover = (tray_portal_open, rspv_nav) => {
     if(tray_portal_open && rspv_nav && Object.keys(globalCustomNav.takeovers).length >= 1) {
-      let ui_tray = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} div[role="dialog"][aria-label$=" tray"]`).getAttribute('aria-label').replace(' tray', '').toLowerCase();
+
+      let tray_container = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} div.navigation-tray-container`);
+      let ui_tray = [...tray_container.classList].filter(c => c.endsWith('-tray') )[0].toLowerCase().replace('-tray', '');
+      // let ui_tray = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} div[role="dialog"][aria-label$=" tray"]`).getAttribute('aria-label').replace(' tray', '').toLowerCase();
       if(ui_tray) {
         let tray_ready = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} ${globalCustomNav.takeovers[ui_tray].target}`);
         let tray_action_complete = document.querySelectorAll(`${globalCustomNav.cfg.glbl.tray_portal} a.${globalCustomNav.takeovers[ui_tray].complete}`);
