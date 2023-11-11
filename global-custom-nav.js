@@ -168,13 +168,12 @@
 
   globalCustomNav.glbl_tray_takeover = (tray_portal_open, rspv_nav) => {
     if(tray_portal_open && rspv_nav && Object.keys(globalCustomNav.takeovers).length >= 1) {
-      let tray_title = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} h2[class$="-view-heading"]`);
-      if(tray_title) {
-        let tray_to = tray_title.innerText.toLowerCase();
-        let tray_ready = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} ${globalCustomNav.takeovers[tray_to].target}`);
-        let tray_action_complete = document.querySelectorAll(`${globalCustomNav.cfg.glbl.tray_portal} a.${globalCustomNav.takeovers[tray_to].complete}`);
+      let ui_tray = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} div[role="dialog"][aria-label$=" tray"]`).getAttribute('aria-label').replace(' tray', '').toLowerCase();
+      if(ui_tray) {
+        let tray_ready = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} ${globalCustomNav.takeovers[ui_tray].target}`);
+        let tray_action_complete = document.querySelectorAll(`${globalCustomNav.cfg.glbl.tray_portal} a.${globalCustomNav.takeovers[ui_tray].complete}`);
         if(tray_ready && tray_action_complete.length == 0) {
-          globalCustomNav.takeovers[tray_to].actions.glbl();
+          globalCustomNav.takeovers[ui_tray].actions.glbl();
         }
       }
     }
@@ -621,11 +620,13 @@
     },
     {
       title: 'Custom Context',
-      // example only, host your own, or use icon class
+      // custom context handles active class in global nav
       icon_svg: 'icon-expand-start',
       href: '/courses/1234567',
       target: '',
-      //position: 'before' // default
+      roles: function () {
+        return ['user'].some(a => ENV.current_user_roles.includes(a));
+      }
     },
     {
       title: 'External Icon',
@@ -812,10 +813,15 @@
   ];
 
   // configure moar
-  // todo handle roles within takeovers
-  // takeovers bind the feature into some language specific strings because the responsive Expandable_'s have no reference to the tray title
-  // torn on whether to target trays or loop through each when toggling Exapandable_'s
+  // actually the admin/accounts, account (user profile) issue that binds us into language
+  // catchment class of tray/expandable is best to stop, checking all risks matching on multiple trays
+  // because these logic are compiled/compressed for production copy/paste ux
+  // the goal is to prevent the end user (the admin) from modifying anything but the config options
   // try these on test, beta is better - will revise soon
+  // todo handle roles within takeovers
+  // todo test storing logic by tray title (as is), remapping by target (in takeover handler), and use object key to run callback
+  // maintains goal, allows future changes in takeover handler
+  // 1 of 2 resolved (global uses selector instead of language title)
   const globalCustomNav_tray_takeover = {
     admin: {
       target: 'a[href="/accounts"]',
