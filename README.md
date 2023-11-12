@@ -104,7 +104,6 @@ Robert
 ## Considerations
 
 - still reviewing, mostly feature complete based on my goals
-  - missed or lost the active class for courses tray when using context
   - last is root placement and sub account use
 - takeovers adjusted for beta
 - probably provide takeovers and callbacks as single files for fundays and userscripts

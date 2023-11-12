@@ -153,13 +153,18 @@
   };
 
   globalCustomNav.exit_glbl_tray = (_mtx, observer) => {
-    let tray_portal_open = document.querySelector(globalCustomNav.cfg.glbl.tray_portal).children.length ? true : false;
+    let tray_portal_open = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} div.navigation-tray-container`); //document.querySelector(globalCustomNav.cfg.glbl.tray_portal).children.length ? true : false;
     let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector.slice(0, -3));
-    
+
     // handle tray takeover
     globalCustomNav.glbl_tray_takeover(tray_portal_open, rspv_nav);
 
     if (rspv_nav != null && tray_portal_open) {
+      // ensure active class is restored to appropriate icon based on context
+      let ui_tray = [...tray_portal_open.classList].filter(c => c.endsWith('-tray') )[0].toLowerCase().replace('-tray', '');
+      globalCustomNav.glbl_active_class_clear();
+      document.getElementById(`global_nav_${ui_tray}_link`).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
+
       if (typeof observer === 'undefined') {
         var obs = new MutationObserver(globalCustomNav.exit_glbl_tray);
         obs.observe(document.body, {
@@ -526,7 +531,7 @@
       <span class="gcn_tray-wrapper">
       <div role="dialog" aria-label="${item.title} tray">
       <div style="min-height: 100vh;">
-      <div class="navigation-tray-container ${item.title.toLowerCase()}-tray">`;
+      <div class="navigation-tray-container ${item.tidle}-tray">`;
 
     // close button
     tray_html += `<span class="gcn_tray-close-btn-wrapper">
