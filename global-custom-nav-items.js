@@ -1,7 +1,7 @@
 /**
 // @name        CanvasLMS - Global Custom Navigation
 // @namespace   https://github.com/robert-carroll/canvaslms-global-custom-navigation
-// @description icons only
+// @description items only
 //
 **/
 (function () {
