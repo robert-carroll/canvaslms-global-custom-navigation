@@ -156,14 +156,14 @@
     let tray_portal_open = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} div.navigation-tray-container`);
     let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector.slice(0, -3));
 
-    // handle tray takeover
-    globalCustomNav.glbl_tray_takeover(tray_portal_open, rspv_nav);
-
     if (rspv_nav != null && tray_portal_open) {
       // ensure active class is restored to appropriate icon based on context
       let ui_tray = [...tray_portal_open.classList].filter(c => c.endsWith('-tray') )[0].toLowerCase().replace('-tray', '');
       globalCustomNav.glbl_active_class_clear();
       document.getElementById(`global_nav_${ui_tray}_link`).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
+
+      // handle tray takeover
+      globalCustomNav.glbl_tray_takeover();
 
       if (typeof observer === 'undefined') {
         var obs = new MutationObserver(globalCustomNav.exit_glbl_tray);
@@ -182,11 +182,10 @@
     }
   };
 
-  globalCustomNav.glbl_tray_takeover = (tray_portal_open, rspv_nav) => {
+  globalCustomNav.glbl_tray_takeover = () => {
     if(typeof globalCustomNav.takeovers === 'undefined') return;
 
-    if(tray_portal_open && rspv_nav && Object.keys(globalCustomNav.takeovers).length >= 1) {
-
+    //if(tray_portal_open && rspv_nav && Object.keys(globalCustomNav.takeovers).length >= 1) {
       let tray_container = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} div.navigation-tray-container`);
       let ui_tray = [...tray_container.classList].filter(c => c.endsWith('-tray') )[0].toLowerCase().replace('-tray', '');
       if(typeof globalCustomNav.takeovers[ui_tray] === 'object') {
@@ -196,7 +195,7 @@
           globalCustomNav.takeovers[ui_tray].actions.glbl();
         }
       }
-    }
+    // }
   }
 
   globalCustomNav.prepare_nav_items = (items, hamb = true) => {

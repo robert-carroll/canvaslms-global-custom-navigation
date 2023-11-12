@@ -95,7 +95,7 @@
     let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector.slice(0, -3));
     
     if (rspv_nav != null && tray_portal_open) {
-    // ensure active class is restored to appropriate icon based on context
+      // ensure active class is restored to appropriate icon based on context
       let ui_tray = [...tray_portal_open.classList].filter(c => c.endsWith('-tray') )[0].toLowerCase().replace('-tray', '');
       globalCustomNav.glbl_active_class_clear();
       document.getElementById(`global_nav_${ui_tray}_link`).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
