@@ -105,7 +105,10 @@
   };
 
   globalCustomNav.rspv_tray_takeover = (rspv_nav) => {
+    if(typeof globalCustomNav.takeovers === 'undefined') return;
+
     if(rspv_nav && Object.keys(globalCustomNav.takeovers).length >= 1) {
+      // TODO frequently review for catchment class or attribute
       let expanded = document.querySelectorAll(`button[aria-controls^="Expandable"][aria-expanded="true"]`);
       var to_targets = Object.keys(globalCustomNav.takeovers).map(t => [globalCustomNav.takeovers[t].target, t] );
       let to_mapping = Object.fromEntries(to_targets);
@@ -116,9 +119,11 @@
           let tray_ready = document.querySelector(`div[id^="Expandable"] ${t}`);
           if(tray_ready) {
             let tray_by_target = to_mapping[t];
-            let tray_action_complete = document.querySelectorAll(`div[id^="Expandable"] a.${globalCustomNav.takeovers[tray_by_target].complete}`);
-            if(tray_action_complete.length == 0) {
-              globalCustomNav.takeovers[tray_by_target].actions.rspv();
+            if(typeof globalCustomNav.takeovers[tray_by_target] === 'object') {
+              let tray_action_complete = document.querySelectorAll(`div[id^="Expandable"] a.${globalCustomNav.takeovers[tray_by_target].complete}`);
+              if(tray_action_complete.length == 0) {
+                globalCustomNav.takeovers[tray_by_target].actions.rspv();
+              }
             }
           }
         })
@@ -173,12 +178,13 @@
   };
 
   globalCustomNav.glbl_tray_takeover = (tray_portal_open, rspv_nav) => {
+    if(typeof globalCustomNav.takeovers === 'undefined') return;
+
     if(tray_portal_open && rspv_nav && Object.keys(globalCustomNav.takeovers).length >= 1) {
 
       let tray_container = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} div.navigation-tray-container`);
       let ui_tray = [...tray_container.classList].filter(c => c.endsWith('-tray') )[0].toLowerCase().replace('-tray', '');
-      // let ui_tray = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} div[role="dialog"][aria-label$=" tray"]`).getAttribute('aria-label').replace(' tray', '').toLowerCase();
-      if(ui_tray) {
+      if(typeof globalCustomNav.takeovers[ui_tray] === 'object') {
         let tray_ready = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} ${globalCustomNav.takeovers[ui_tray].target}`);
         let tray_action_complete = document.querySelectorAll(`${globalCustomNav.cfg.glbl.tray_portal} a.${globalCustomNav.takeovers[ui_tray].complete}`);
         if(tray_ready && tray_action_complete.length == 0) {
@@ -822,15 +828,13 @@
   ];
 
   // configure moar
-  // try these on test, beta is better - will revise soon
-  // todo handle roles within takeovers
+  // handle roles within takeovers
   const globalCustomNav_tray_takeover = {
-    admin: {
+    accounts: {
       target: 'a[href="/accounts"]',
       complete: 'gcn-admin-tray-sub-account-links',
       actions: {
         glbl: function () {
-          console.log(document.querySelector('#nav-tray-portal h2[class$="-view-heading"]'))
           let tray_last_li = document.querySelector(`#nav-tray-portal ul li:last-child`);
           // create a new element
           let subacctray_li = document.createElement('li');
@@ -875,13 +879,21 @@
       complete: 'gcn-move-all-courses',
       actions: {
         glbl: function () {
-          document.querySelector('#nav-tray-portal h2[class$="-view-heading"]').after(document.querySelector(`#nav-tray-portal a[href="/courses"]`).closest('ul'));
-          document.querySelector(`#nav-tray-portal a[href="/courses"]`).classList.add('gcn-move-all-courses');
+          let all_courses = document.querySelector(`#nav-tray-portal a[href="/courses"]`);
+          // that was deprecated so fast
+          all_courses.insertAdjacentHTML('afterend', ` <i class="icon-line icon-heart"></i>`);
+          all_courses.classList.add('gcn-move-all-courses');
         },
         rspv: function () {
-          let course_items = document.querySelector(`div[id^="Expandable"] a[href="/courses"]`).closest('ul').children;
+          // nudge lifting this too
+          let all_courses = document.querySelector(`div[id^="Expandable"] a[href="/courses"]`);
+          all_courses.innerHTML = all_courses.innerText + ` <i class="icon-line icon-quiz"></i>`;
+          
+          // move all courses to top of rspv tray
+          let course_items = all_courses.closest('ul').children;
           course_items[0].before(course_items[course_items.length - 1]);
-          document.querySelector(`div[id^="Expandable"] a[href="/courses"]`).classList.add('gcn-move-all-courses');
+
+          all_courses.classList.add('gcn-move-all-courses');
         }
       }
     }
