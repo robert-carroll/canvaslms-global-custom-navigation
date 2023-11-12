@@ -153,7 +153,7 @@
   };
 
   globalCustomNav.exit_glbl_tray = (_mtx, observer) => {
-    let tray_portal_open = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} div.navigation-tray-container`); //document.querySelector(globalCustomNav.cfg.glbl.tray_portal).children.length ? true : false;
+    let tray_portal_open = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} div.navigation-tray-container`);
     let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector.slice(0, -3));
 
     // handle tray takeover
@@ -452,24 +452,23 @@
   }
 
   globalCustomNav.glbl_tray_toggle = (item, click) => {
-    // bind/click on each menu item, if current is custom open
-    // if clicked menu item is not custom, close custom trays
-    Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} li`)).forEach(nav => {
-      nav.addEventListener('click', function (ne) {
-        const regex = new RegExp(item.tidle);
-        if (!regex.test(ne.target.closest('a').id)) {
-          if (document.getElementById(`${item.slug}-tray`)) {
-            document.getElementById(`${item.slug}-tray`).remove();
-          }
-        }
-      })
-    });
-
-    globalCustomNav.glbl_active_class_clear();
+    // mutation observer over mess
+    // // bind/click on each menu item, if current is custom open
+    // // if clicked menu item is not custom, close custom trays
+    // Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} li`)).forEach(nav => {
+    //   nav.addEventListener('click', function (ne) {
+    //     const regex = new RegExp(item.tidle);
+    //     if (!regex.test(ne.target.closest('a').id)) {
+    //       if (document.getElementById(`${item.slug}-tray`)) {
+    //         document.getElementById(`${item.slug}-tray`).remove();
+    //       }
+    //     }
+    //   })
+    // });
+    // globalCustomNav.glbl_active_class_clear();
 
     // toggled and tray content is not loaded
     if (!document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} > #${item.slug}-tray`)) {
-
       globalCustomNav.glbl_tray_content(item);
       click.target.closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
       globalCustomNav.glbl_tray_close(item);

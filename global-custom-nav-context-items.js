@@ -91,7 +91,7 @@
   };
 
   globalCustomNav.exit_glbl_tray = (_mtx, observer) => {
-    let tray_portal_open = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} div.navigation-tray-container`); //document.querySelector(globalCustomNav.cfg.glbl.tray_portal).children.length ? true : false;
+    let tray_portal_open = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} div.navigation-tray-container`);
     let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector.slice(0, -3));
     
     if (rspv_nav != null && tray_portal_open) {
