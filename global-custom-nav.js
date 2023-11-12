@@ -472,15 +472,18 @@
       globalCustomNav.glbl_tray_content(item);
       click.target.closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
       globalCustomNav.glbl_tray_close(item);
-    } else {
-      try {
-        // close
-        document.getElementById(`${item.slug}-tray`).remove();
-        document.getElementById(item.slug).closest('li').classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
-      } catch (e) {
-        console.log(e);
-      }
     }
+    // trust the transition; TY! mrski007
+    // else {
+    //   try {
+    //     // close
+    //     console.log('close')
+    //     document.getElementById(`${item.slug}-tray`).remove();
+    //     document.getElementById(item.slug).closest('li').classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    // }
   }
 
   globalCustomNav.glbl_tray_close = item => {
