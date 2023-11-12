@@ -648,6 +648,16 @@
       }
     },
     {
+      title: 'Custom Account Context',
+      // custom context handles active class in global nav
+      icon_svg: 'icon-ruler',
+      href: '/accounts/self',
+      target: '',
+      roles: function () {
+        return ['admin'].some(a => ENV.current_user_roles.includes(a));
+      }
+    },
+    {
       title: 'External Icon',
       // example only, host your own, or use icon class
       icon_svg: 'https://raw.githubusercontent.com/instructure/instructure-ui/master/packages/ui-icons/svg/Line/pin.svg',
