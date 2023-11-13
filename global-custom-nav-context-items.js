@@ -31,10 +31,10 @@
   const globalCustomNav = {};
 
   globalCustomNav.watch_burger_tray = (_mtx, observer) => {
-    let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector);
-    if (!rspv_nav) {
+    let portal = document.querySelector(globalCustomNav.cfg.rspv.tray_portal);
+    if (!portal) {
       if (typeof observer === 'undefined') {
-        var obs = new MutationObserver(globalCustomNav.watch_burger_tray);
+        let obs = new MutationObserver(globalCustomNav.watch_burger_tray);
         obs.observe(document.body, {
           childList: true,
           subtree: true
@@ -42,8 +42,7 @@
       }
       return;
     }
-
-    if (rspv_nav != null && (document.querySelector('.mobile-header-hamburger').offsetParent != null)) {
+    if (portal != null && (document.querySelector('.mobile-header-hamburger').offsetParent != null)) {
       observer.disconnect();
       globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, true);
       globalCustomNav.exit_burger_tray();
@@ -51,11 +50,14 @@
   };
 
   globalCustomNav.exit_burger_tray = (_mtx, observer) => {
-    let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector);
+    let tray_portal_open = document.querySelector(globalCustomNav.cfg.rspv.tray_portal);
 
-    if (rspv_nav != null) {
+    if (tray_portal_open) {
+      // handle tray takeover
+      globalCustomNav.rspv_tray_takeover();
+
       if (typeof observer === 'undefined') {
-        var obs = new MutationObserver(globalCustomNav.exit_burger_tray);
+        let obs = new MutationObserver(globalCustomNav.exit_burger_tray);
         obs.observe(document.body, {
           childList: true,
           subtree: true
@@ -63,7 +65,7 @@
       }
       return;
     }
-    if (rspv_nav == null) {
+    if (!tray_portal_open) {
       observer.disconnect();
       globalCustomNav.watch_burger_tray();
     }
@@ -83,8 +85,8 @@
     if (typeof observer !== 'undefined') {
       observer.disconnect();
     }
-    let tray = new MutationObserver(globalCustomNav.exit_glbl_tray);
-    tray.observe(portal, {
+    let watch = new MutationObserver(globalCustomNav.exit_glbl_tray);
+    watch.observe(portal, {
       childList: true,
       subtree: true
     });
@@ -92,13 +94,13 @@
 
   globalCustomNav.exit_glbl_tray = (_mtx, observer) => {
     let tray_portal_open = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} div.navigation-tray-container`);
-    let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector.slice(0, -3));
-    
-    if (rspv_nav != null && tray_portal_open) {
-      // ensure active class is restored to appropriate icon based on context
-      let ui_tray = [...tray_portal_open.classList].filter(c => c.endsWith('-tray') )[0].toLowerCase().replace('-tray', '');
-      globalCustomNav.glbl_active_class_clear();
-      document.getElementById(`global_nav_${ui_tray}_link`).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
+
+    if (tray_portal_open) {
+      let ui_tray = [...tray_portal_open.classList].filter(c => c.endsWith('-tray'))[0].toLowerCase().replace('-tray', '');
+      globalCustomNav.glbl_ensure_active_class(`global_nav_${ui_tray}_link`);
+
+      // handle tray takeover
+      globalCustomNav.glbl_tray_takeover();
 
       if (typeof observer === 'undefined') {
         var obs = new MutationObserver(globalCustomNav.exit_glbl_tray);
@@ -108,10 +110,8 @@
       }
       return;
     }
-    if (rspv_nav == null && !tray_portal_open) {
-      // ensure active class is restored to appropriate icon based on context
-      globalCustomNav.glbl_active_class_clear();
-      document.getElementById(globalCustomNav.cfg.context_item).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
+    if (!tray_portal_open) {
+      globalCustomNav.glbl_ensure_active_class(globalCustomNav.cfg.context_item);
       observer.disconnect();
       globalCustomNav.watch_glbl_tray();
     }
@@ -128,12 +128,12 @@
   };
 
   globalCustomNav.append_item = (item, icon, hamb = true) => {
-    const target_ul = hamb ? globalCustomNav.cfg.rspv.nav_selector : globalCustomNav.cfg.glbl.nav_selector;
+    const target_ul = hamb ? globalCustomNav.cfg.rspv.tray_portal : globalCustomNav.cfg.glbl.nav_selector;
     const target_li = document.querySelector(`${target_ul} li:last-child`);
     // nav item placement
     if (item.position !== 'undefined' && typeof item.position === 'number') {
       // positioned
-      var sel = (hamb == true ? globalCustomNav.cfg.rspv.nav_selector : globalCustomNav.cfg.glbl.nav_selector) + ` > li:nth-of-type(${item.position})`;
+      var sel = (hamb == true ? globalCustomNav.cfg.rspv.tray_portal : globalCustomNav.cfg.glbl.nav_selector) + ` > li:nth-of-type(${item.position})`;
       document.querySelector(sel).after(icon);
     } else if (item.position !== 'undefined' && item.position == 'after') {
       target_li.after(icon);
@@ -143,10 +143,8 @@
 
     const regex = new RegExp(`^${item.href}`);
     if (!hamb && regex.test(window.location.pathname)) {
-      globalCustomNav.glbl_active_class_clear();
-      // ensure active class is restored to appropriate icon based on context
       globalCustomNav.cfg.context_item = item.slug;
-      document.getElementById(item.slug).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
+      globalCustomNav.glbl_ensure_active_class(globalCustomNav.cfg.context_item);
     }
   };
 
@@ -157,10 +155,10 @@
     // clone and create the icon, consider c4e
     const is_tray = item.tray || false;
     let icon_to_copy = (ENV.K5_USER == true && hamb == true) ? 'Home' : 'Dashboard';
-    if(is_tray) {
+    if (is_tray) {
       icon_to_copy = 'Courses';
     }
-    const nav_icon = hamb ? `${globalCustomNav.cfg.rspv.nav_selector} svg[name="Icon${icon_to_copy}"]` : `#global_nav_${icon_to_copy.toLowerCase()}_link`;
+    const nav_icon = hamb ? `${globalCustomNav.cfg.rspv.tray_portal} svg[name="Icon${icon_to_copy}"]` : `#global_nav_${icon_to_copy.toLowerCase()}_link`;
     const nav_icon_li = document.querySelector(nav_icon).closest('li');
 
     // replace contents
@@ -255,11 +253,16 @@
         trayActiveClass: `ic-app-header__menu-list-item--active`
       },
       rspv: {
-        nav_selector: `span[dir="${lang_dir}"] div[role="dialog"] ul`
+        tray_portal: `span[dir="${lang_dir}"] div[role="dialog"] ul`,
+        INSTUI_aodown: `<svg name="IconArrowOpenDown" viewBox="0 0 1920 1920" rotate="0" style="width: 1em; height: 1em;" 
+        width="1em" height="1em" aria-hidden="true" role="presentation" focusable="false" class="gcn_tray-aodown">
+        <g role="presentation"><path d="M568.129648 0.0124561278L392 176.142104 1175.86412 960.130789 392 1743.87035 568.129648 1920 1528.24798 960.130789z" 
+        fill-rule="evenodd" stroke="none" stroke-width="1" transform="matrix(0 1 1 0 .067 -.067)"></path></g></svg>`
       },
-      nav_items: []
+      nav_items: [],
+      takeovers: {}
     }
-    if (!document.querySelector(globalCustomNav.cfg.glbl.nav_selector) && !document.querySelector(globalCustomNav.cfg.rspv.nav_selector)) return;
+    if (!document.querySelector(globalCustomNav.cfg.glbl.nav_selector) && !document.querySelector(globalCustomNav.cfg.rspv.tray_portal)) return;
 
     globalCustomNav.nav_items = Array.isArray(opts.nav_items) ? opts.nav_items : opts;
     globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
@@ -278,10 +281,12 @@
     globalCustomNav.watch_burger_tray();
   };
 
-  globalCustomNav.glbl_active_class_clear = () => {
+  globalCustomNav.glbl_ensure_active_class = (item) => {
+    // ensure active class is restored to appropriate icon based on context
     Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} .${globalCustomNav.cfg.glbl.trayActiveClass}`)).forEach(e => {
       e.classList.toggle(globalCustomNav.cfg.glbl.trayActiveClass);
     });
+    document.getElementById(item).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
   }
 
   // configure opts
@@ -303,7 +308,7 @@
       }
     },
   ];
-  
+
   // load custom nav options
   globalCustomNav.load(globalCustomNav_items);
 
