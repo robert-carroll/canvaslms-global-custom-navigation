@@ -378,9 +378,9 @@
   };
   // end rspv tray
 
-  globalCustomNav.glbl_tray_links = links => {
+  globalCustomNav.tray_links = items => {
     var html = `<ul class="gcn_tray-view--block-list" dir="${globalCustomNav.cfg.lang_dir}">`;
-    links.forEach(link => {
+    items.forEach(link => {
       html += `<li class="gcn_tray-view-listItem" dir="${globalCustomNav.cfg.lang_dir}">
         <a href="${link.href}" target="_blank" class="gcn_tray-view-link" dir="${globalCustomNav.cfg.lang_dir}">${link.title}</a>`;
 
@@ -557,22 +557,20 @@
   globalCustomNav.tray_links_vs_cb = (item, hamb = true) => {
     var tray_html = '';
     // append links if set
-    if (typeof item.tray.links !== 'undefined') {
-      var tray_links = [];
-      if (Array.isArray(item.tray.links)) {
+    if (typeof item.tray.items !== 'undefined') {
+      if (Array.isArray(item.tray.items)) {
 
-        tray_html += globalCustomNav.glbl_tray_links(item.tray.links);
+        tray_html += globalCustomNav.tray_links(item.tray.items);
 
-      } else if (typeof item.tray.links === 'object') {
+      } else if (typeof item.tray.items === 'object') {
 
         if (hamb) {
-          var groups = Object.values(item.tray.links);
-          tray_links = groups[0].concat(groups[1]);
-          tray_html += globalCustomNav.glbl_tray_links(tray_links);
+          var groups = Object.values(item.tray.items);
+          tray_html += globalCustomNav.tray_links(groups[0].concat(groups[1]));
         } else {
-          Object.keys(item.tray.links).forEach(group => {
+          Object.keys(item.tray.items).forEach(group => {
             tray_html += `<h3 class="gcn_tray-list-group-heading">${group}</h3>`;
-            tray_html += globalCustomNav.glbl_tray_links(item.tray.links[group]);
+            tray_html += globalCustomNav.tray_links(item.tray.items[group]);
           })
         }
       }
@@ -657,7 +655,7 @@
       //position: 'before', // default
       tray: {
         footer: 'Optional footer text, put whatever you want here, or leave it blank.',
-        links: [{
+        items: [{
             href: 'http://www.example.com/your-library',
             title: 'Library',
             desc: 'Optional text description'
@@ -683,7 +681,7 @@
       position: 'before', // default
       tray: {
         footer: 'Optional footer text, put whatever you want here, or leave it blank.',
-        links: {
+        items: {
           'Published': [{
               href: 'http://www.example.com/your-library',
               title: 'Library',
@@ -770,7 +768,7 @@
       tray: {
         footer: 'Optional footer text, put whatever you want here, or leave it blank.',
         cb: function (item) {
-          var links = [{
+          var items = [{
               href: 'http://www.example.com/your-library',
               title: 'Library',
               desc: 'Optional text description'
@@ -785,8 +783,8 @@
               desc: 'Optional text description'
             }
           ];
-          var tray_links = globalCustomNav.glbl_tray_links(links);
-          globalCustomNav.append_cb_content(item, tray_links);
+          var list_html = globalCustomNav.tray_links(items);
+          globalCustomNav.append_cb_content(item, list_html);
         }
       }
     },
