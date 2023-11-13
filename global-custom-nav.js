@@ -444,6 +444,20 @@
   }
 
   globalCustomNav.glbl_tray_toggle = (item, click) => {
+    // bind/click on each menu item, if current is custom open
+    // if clicked menu item is not custom, close custom trays
+    // ensures the continuity of clicking and closing trays remains endless
+    Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} li`)).forEach(nav => {
+      nav.addEventListener('click', function (ne) {
+        const regex = new RegExp(item.tidle);
+        if (!regex.test(ne.target.closest('a').id)) {
+          if (document.getElementById(`${item.slug}-tray`)) {
+            document.getElementById(`${item.slug}-tray`).remove();
+          }
+        }
+      })
+    });
+
     // toggled and tray content is not loaded
     if (!document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} > #${item.slug}-tray`)) {
       globalCustomNav.glbl_tray_content(item);
