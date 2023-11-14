@@ -145,6 +145,9 @@
     if (typeof observer !== 'undefined') {
       observer.disconnect();
     }
+
+    globalCustomNav.glbl_ensure_active_class(globalCustomNav.cfg.context_item);
+
     let watch = new MutationObserver(globalCustomNav.exit_glbl_tray);
     watch.observe(portal, {
       childList: true,
@@ -623,7 +626,7 @@
       title: 'Custom Context',
       // custom context handles active class in global nav
       icon_svg: 'icon-expand-start',
-      href: '/courses/1234567',
+      href: '/courses/101',
       target: '',
       roles: function () {
         return ['user'].some(a => ENV.current_user_roles.includes(a));

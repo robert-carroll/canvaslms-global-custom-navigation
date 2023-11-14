@@ -82,6 +82,9 @@
     if (typeof observer !== 'undefined') {
       observer.disconnect();
     }
+
+    globalCustomNav.glbl_ensure_active_class(globalCustomNav.cfg.context_item);
+
     let watch = new MutationObserver(globalCustomNav.exit_glbl_tray);
     watch.observe(portal, {
       childList: true,

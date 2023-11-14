@@ -103,7 +103,7 @@ Robert
 
 ## Considerations
 
-- ...resolving custom context when using themes vs dev console
+- ensuring requirements
 - still reviewing, mostly feature complete based on my goals
   - last is root placement and sub account use
 - takeovers adjusted for beta
