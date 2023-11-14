@@ -209,6 +209,7 @@ svg.gcn_tray-aodown {
   font-size: 0.875rem;
 }
 
+/* instui spinner for callback trays */
 .gcn_tray-view-spinner {
   max-width: 100%;
   overscroll-behavior: auto;
@@ -273,3 +274,4 @@ svg.gcn_tray-aodown {
     stroke-dashoffset: 190%;
     transform: rotate(360deg);
   }
+}
