@@ -53,9 +53,6 @@
     let tray_portal_open = document.querySelector(globalCustomNav.cfg.rspv.tray_portal);
 
     if (tray_portal_open) {
-      // handle tray takeover
-      globalCustomNav.rspv_tray_takeover();
-
       if (typeof observer === 'undefined') {
         let obs = new MutationObserver(globalCustomNav.exit_burger_tray);
         obs.observe(document.body, {
@@ -98,9 +95,6 @@
     if (tray_portal_open) {
       let ui_tray = [...tray_portal_open.classList].filter(c => c.endsWith('-tray'))[0].toLowerCase().replace('-tray', '');
       globalCustomNav.glbl_ensure_active_class(`global_nav_${ui_tray}_link`);
-
-      // handle tray takeover
-      globalCustomNav.glbl_tray_takeover();
 
       if (typeof observer === 'undefined') {
         var obs = new MutationObserver(globalCustomNav.exit_glbl_tray);
@@ -153,11 +147,7 @@
     item.slug = `global_nav_${item.tidle}_link`;
 
     // clone and create the icon, consider c4e
-    const is_tray = item.tray || false;
     let icon_to_copy = (ENV.K5_USER == true && hamb == true) ? 'Home' : 'Dashboard';
-    if (is_tray) {
-      icon_to_copy = 'Courses';
-    }
     const nav_icon = hamb ? `${globalCustomNav.cfg.rspv.tray_portal} svg[name="Icon${icon_to_copy}"]` : `#global_nav_${icon_to_copy.toLowerCase()}_link`;
     const nav_icon_li = document.querySelector(nav_icon).closest('li');
 
@@ -167,18 +157,11 @@
     icon.querySelector('svg').parentElement.classList.add((hamb ? 'rspv-' : '') + `svg-${item.tidle}-holder`);
 
     const icon_id = (hamb ? 'rspv-' : '') + item.slug;
-    if (hamb && is_tray) {
-      // button for resp tray
-      icon.querySelector('button').setAttribute('id', icon_id);
-      icon.querySelector('button').setAttribute('aria-controls', (hamb ? 'rspv-' : '') + `${item.slug}-tray`);
-      icon.querySelector('div div').setAttribute('id', (hamb ? 'rspv-' : '') + `${item.slug}-tray`);
-    } else {
-      icon.querySelector('a').setAttribute('id', icon_id);
-      icon.querySelector('a').href = item.href;
-      if (item.target !== 'undefined' && item.target.includes('_blank', '_self', '_parent')) {
-        icon.querySelector('a').setAttribute('target', item.target);
-      }
-    }
+    icon.querySelector('a').setAttribute('id', icon_id);
+    icon.querySelector('a').href = item.href;
+    if (item.target !== 'undefined' && item.target.includes('_blank', '_self', '_parent')) {
+      icon.querySelector('a').setAttribute('target', item.target);
+    }    
 
     try {
       // global or hamb
@@ -259,13 +242,9 @@
         <g role="presentation"><path d="M568.129648 0.0124561278L392 176.142104 1175.86412 960.130789 392 1743.87035 568.129648 1920 1528.24798 960.130789z" 
         fill-rule="evenodd" stroke="none" stroke-width="1" transform="matrix(0 1 1 0 .067 -.067)"></path></g></svg>`
       },
-      nav_items: [],
-      takeovers: {}
+      nav_items: []
     }
     if (!document.querySelector(globalCustomNav.cfg.glbl.nav_selector) && !document.querySelector(globalCustomNav.cfg.rspv.tray_portal)) return;
-
-    globalCustomNav.nav_items = Array.isArray(opts.nav_items) ? opts.nav_items : opts;
-    globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
 
     if (document.querySelector(globalCustomNav.cfg.glbl.nav_selector) !== 'undefined') {
       // preserve the nav item to restore active class when a tray is closed
@@ -275,6 +254,10 @@
           globalCustomNav.cfg.context_item = nav.querySelector('a').getAttribute('id') || nav.querySelector('a').closest('li').getAttribute('id');
         }
       });
+
+      // prepare after context preserved
+      globalCustomNav.nav_items = Array.isArray(opts.nav_items) ? opts.nav_items : opts;
+      globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
 
       globalCustomNav.watch_glbl_tray();
     }

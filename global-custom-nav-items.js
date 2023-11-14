@@ -31,10 +31,10 @@
   const globalCustomNav = {};
 
   globalCustomNav.watch_burger_tray = (_mtx, observer) => {
-    let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector);
-    if (!rspv_nav) {
+    let portal = document.querySelector(globalCustomNav.cfg.rspv.tray_portal);
+    if (!portal) {
       if (typeof observer === 'undefined') {
-        var obs = new MutationObserver(globalCustomNav.watch_burger_tray);
+        let obs = new MutationObserver(globalCustomNav.watch_burger_tray);
         obs.observe(document.body, {
           childList: true,
           subtree: true
@@ -42,8 +42,7 @@
       }
       return;
     }
-
-    if (rspv_nav != null && (document.querySelector('.mobile-header-hamburger').offsetParent != null)) {
+    if (portal != null && (document.querySelector('.mobile-header-hamburger').offsetParent != null)) {
       observer.disconnect();
       globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, true);
       globalCustomNav.exit_burger_tray();
@@ -51,10 +50,11 @@
   };
 
   globalCustomNav.exit_burger_tray = (_mtx, observer) => {
-    let rspv_nav = document.querySelector(globalCustomNav.cfg.rspv.nav_selector);
-    if (rspv_nav != null) {
+    let tray_portal_open = document.querySelector(globalCustomNav.cfg.rspv.tray_portal);
+
+    if (tray_portal_open) {
       if (typeof observer === 'undefined') {
-        var obs = new MutationObserver(globalCustomNav.exit_burger_tray);
+        let obs = new MutationObserver(globalCustomNav.exit_burger_tray);
         obs.observe(document.body, {
           childList: true,
           subtree: true
@@ -62,7 +62,7 @@
       }
       return;
     }
-    if (rspv_nav == null) {
+    if (!tray_portal_open) {
       observer.disconnect();
       globalCustomNav.watch_burger_tray();
     }
@@ -79,12 +79,12 @@
   };
 
   globalCustomNav.append_item = (item, icon, hamb = true) => {
-    const target_ul = hamb ? globalCustomNav.cfg.rspv.nav_selector : globalCustomNav.cfg.glbl.nav_selector;
+    const target_ul = hamb ? globalCustomNav.cfg.rspv.tray_portal : globalCustomNav.cfg.glbl.nav_selector;
     const target_li = document.querySelector(`${target_ul} li:last-child`);
     // nav item placement
     if (item.position !== 'undefined' && typeof item.position === 'number') {
       // positioned
-      var sel = (hamb == true ? globalCustomNav.cfg.rspv.nav_selector : globalCustomNav.cfg.glbl.nav_selector) + ` > li:nth-of-type(${item.position})`;
+      var sel = (hamb == true ? globalCustomNav.cfg.rspv.tray_portal : globalCustomNav.cfg.glbl.nav_selector) + ` > li:nth-of-type(${item.position})`;
       document.querySelector(sel).after(icon);
     } else if (item.position !== 'undefined' && item.position == 'after') {
       target_li.after(icon);
@@ -98,12 +98,8 @@
     item.slug = `global_nav_${item.tidle}_link`;
 
     // clone and create the icon, consider c4e
-    const is_tray = item.tray || false;
     let icon_to_copy = (ENV.K5_USER == true && hamb == true) ? 'Home' : 'Dashboard';
-    if(is_tray) {
-      icon_to_copy = 'Courses';
-    }
-    const nav_icon = hamb ? `${globalCustomNav.cfg.rspv.nav_selector} svg[name="Icon${icon_to_copy}"]` : `#global_nav_${icon_to_copy.toLowerCase()}_link`;
+    const nav_icon = hamb ? `${globalCustomNav.cfg.rspv.tray_portal} svg[name="Icon${icon_to_copy}"]` : `#global_nav_${icon_to_copy.toLowerCase()}_link`;
     const nav_icon_li = document.querySelector(nav_icon).closest('li');
 
     // replace contents
@@ -189,20 +185,16 @@
         trayActiveClass: `ic-app-header__menu-list-item--active`
       },
       rspv: {
-        nav_selector: `span[dir="${lang_dir}"] div[role="dialog"] ul`
+        tray_portal: `span[dir="${lang_dir}"] div[role="dialog"] ul`
       },
       nav_items: []
     }
-    if (!document.querySelector(globalCustomNav.cfg.glbl.nav_selector) && !document.querySelector(globalCustomNav.cfg.rspv.nav_selector)) return;
+    if (!document.querySelector(globalCustomNav.cfg.glbl.nav_selector) && !document.querySelector(globalCustomNav.cfg.rspv.tray_portal)) return;
 
-    if (document.querySelector(globalCustomNav.cfg.glbl.nav_selector) !== 'undefined') {
-      globalCustomNav.nav_items = opts;
-      globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
-    }
+    globalCustomNav.nav_items = Array.isArray(opts.nav_items) ? opts.nav_items : opts;
+    globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
     globalCustomNav.watch_burger_tray();
   };
-
-  
 
   // configure opts
   const globalCustomNav_items = [{
