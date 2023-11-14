@@ -85,7 +85,7 @@
     let tray_portal_open = document.querySelector(globalCustomNav.cfg.rspv.tray_portal);
 
     if (tray_portal_open) {
-      // handle tray takeover
+
       globalCustomNav.rspv_tray_takeover();
 
       if (typeof observer === 'undefined') {
@@ -104,24 +104,24 @@
   };
 
   globalCustomNav.rspv_tray_takeover = () => {
-    if(typeof globalCustomNav.takeovers === 'undefined') return;
+    if (typeof globalCustomNav.takeovers === 'undefined') return;
 
     let portal = document.querySelector(globalCustomNav.cfg.rspv.tray_portal);
-    if(portal && Object.keys(globalCustomNav.takeovers).length >= 1) {
+    if (portal && Object.keys(globalCustomNav.takeovers).length >= 1) {
       // TODO frequently review for catchment class or attribute
       let expanded = document.querySelectorAll(`button[aria-controls^="Expandable"][aria-expanded="true"]`);
-      var to_targets = Object.keys(globalCustomNav.takeovers).map(t => [globalCustomNav.takeovers[t].target, t] );
+      var to_targets = Object.keys(globalCustomNav.takeovers).map(t => [globalCustomNav.takeovers[t].target, t]);
       let to_mapping = Object.fromEntries(to_targets);
       let targets = Object.keys(to_mapping);
-  
-      if(expanded) {
+
+      if (expanded) {
         targets.forEach(t => {
           let tray_ready = document.querySelector(`div[id^="Expandable"] ${t}`);
-          if(tray_ready) {
+          if (tray_ready) {
             let tray_by_target = to_mapping[t];
-            if(typeof globalCustomNav.takeovers[tray_by_target] === 'object') {
+            if (typeof globalCustomNav.takeovers[tray_by_target] === 'object') {
               let tray_action_complete = document.querySelectorAll(`div[id^="Expandable"] a.${globalCustomNav.takeovers[tray_by_target].complete}`);
-              if(tray_action_complete.length == 0) {
+              if (tray_action_complete.length == 0) {
                 globalCustomNav.takeovers[tray_by_target].actions.rspv();
               }
             }
@@ -162,7 +162,6 @@
       let ui_tray = [...tray_portal_open.classList].filter(c => c.endsWith('-tray'))[0].toLowerCase().replace('-tray', '');
       globalCustomNav.glbl_ensure_active_class(`global_nav_${ui_tray}_link`);
 
-      // handle tray takeover
       globalCustomNav.glbl_tray_takeover();
 
       if (typeof observer === 'undefined') {
@@ -181,14 +180,14 @@
   };
 
   globalCustomNav.glbl_tray_takeover = () => {
-    if(typeof globalCustomNav.takeovers === 'undefined') return;
+    if (typeof globalCustomNav.takeovers === 'undefined') return;
 
     let tray_container = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} div.navigation-tray-container`);
-    let ui_tray = [...tray_container.classList].filter(c => c.endsWith('-tray') )[0].toLowerCase().replace('-tray', '');
-    if(typeof globalCustomNav.takeovers[ui_tray] === 'object') {
+    let ui_tray = [...tray_container.classList].filter(c => c.endsWith('-tray'))[0].toLowerCase().replace('-tray', '');
+    if (typeof globalCustomNav.takeovers[ui_tray] === 'object') {
       let tray_ready = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} ${globalCustomNav.takeovers[ui_tray].target}`);
       let tray_action_complete = document.querySelectorAll(`${globalCustomNav.cfg.glbl.tray_portal} a.${globalCustomNav.takeovers[ui_tray].complete}`);
-      if(tray_ready && tray_action_complete.length == 0) {
+      if (tray_ready && tray_action_complete.length == 0) {
         globalCustomNav.takeovers[ui_tray].actions.glbl();
       }
     }
@@ -252,7 +251,7 @@
     } else {
       icon.querySelector('a').setAttribute('id', icon_id);
       icon.querySelector('a').href = item.href;
-      if (item.target !== 'undefined' && item.target.includes('_blank', '_self', '_parent')) {
+      if (typeof item.target !== 'undefined' && ['_self', '_blank', '_parent', '_top'].includes(item.target)) {
         icon.querySelector('a').setAttribute('target', item.target);
       }
     }
@@ -342,7 +341,6 @@
     tray_content.classList.toggle('gcn_tray-content');
     globalCustomNav.rspv_tray_content(item);
 
-    // toggle arrows
     document.querySelectorAll(`#rspv-${item.slug} svg[name^="IconArrowOpen"]`).forEach(e => {
       e.classList.toggle('gcn_tray-closed');
     });
@@ -352,7 +350,6 @@
     const tray_content = document.querySelector(`#rspv-${item.slug}-tray`),
       tray_icon_id = `#rspv-${item.slug}`;
 
-    // import arrow down
     if (!document.querySelector(`${tray_icon_id} svg[name="IconArrowOpenDown"]`)) {
       let arrow_end = document.querySelector(`${tray_icon_id} svg[name="IconArrowOpenEnd"]`);
       let arrow_class = arrow_end.classList;
@@ -371,7 +368,7 @@
       tray_html += globalCustomNav.tray_links_vs_cb(item);
 
       // add default footer link
-      tray_html += `<a href="${item.href}" class="gcn_tray-view-link" dir="${globalCustomNav.cfg.lang_dir}">${item.title}</a></li>`;
+      tray_html += `<li>${globalCustomNav.link(item)}</li>`;
       // append
       tray_content.insertAdjacentHTML('afterbegin', tray_html);
 
@@ -381,14 +378,26 @@
   };
   // end rspv tray
 
+  globalCustomNav.link = item => {
+    var a = document.createElement('a');
+    a.textContent = item.title;
+    a.href = item.href;
+    a.setAttribute('dir', globalCustomNav.cfg.lang_dir);
+    a.classList.add('gcn_tray-view-link');
+    if (typeof item.target !== 'undefined' && ['_self', '_blank', '_parent', '_top'].includes(item.target)) {
+      a.target = item.target;
+    }
+    return a.outerHTML;
+  }
+
   globalCustomNav.tray_links = items => {
     var html = `<ul class="gcn_tray-view--block-list" dir="${globalCustomNav.cfg.lang_dir}">`;
-    items.forEach(link => {
-      html += `<li class="gcn_tray-view-listItem" dir="${globalCustomNav.cfg.lang_dir}">
-        <a href="${link.href}" target="_blank" class="gcn_tray-view-link" dir="${globalCustomNav.cfg.lang_dir}">${link.title}</a>`;
+    items.forEach(item => {
+      html += `<li class="gcn_tray-view-listItem" dir="${globalCustomNav.cfg.lang_dir}">`;
+      html += globalCustomNav.link(item);
 
       // append link description if set
-      html += (!!link.desc && link.desc.length > 1) ? `<div wrap="normal" letter-spacing="normal" class="gcn_tray-link-desc-text">${link.desc}</div>` : '';
+      html += (!!item.desc && item.desc.length > 1) ? `<div wrap="normal" letter-spacing="normal" class="gcn_tray-link-desc-text">${item.desc}</div>` : '';
       html += '</li>';
     })
     html += `</ul>`;
@@ -426,13 +435,14 @@
           globalCustomNav.cfg.context_item = nav.querySelector('a').getAttribute('id') || nav.querySelector('a').closest('li').getAttribute('id');
         }
       });
-      
+
       // prepare after context preserved
       globalCustomNav.nav_items = Array.isArray(opts.nav_items) ? opts.nav_items : opts;
       globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
-  
-      if(typeof opts.takeovers === 'object')
+
+      if (typeof opts.takeovers === 'object') {
         globalCustomNav.takeovers = opts.takeovers || {};
+      }
 
       globalCustomNav.watch_glbl_tray();
     }
@@ -537,10 +547,9 @@
     if (item.tray.footer && item.tray.footer.length > 1) {
       tray_html += `<ul class="gcn_tray-view--block-list" dir="${globalCustomNav.cfg.lang_dir}">
         <li class="gcn_tray-view-listItem" dir="${globalCustomNav.cfg.lang_dir}"><hr role="presentation"></li>
-        <li class="gcn_tray-view-listItem" dir="${globalCustomNav.cfg.lang_dir}">
-        <a href="${item.href}" class="gcn_tray-view-link" dir="${globalCustomNav.cfg.lang_dir}">${item.title}</a></li>
-        </ul><br>
-        <div wrap="normal" letter-spacing="normal" class="gcn_tray-link-desc-text">${item.tray.footer}</div>`;
+        <li class="gcn_tray-view-listItem" dir="${globalCustomNav.cfg.lang_dir}">`;
+      tray_html += globalCustomNav.link(item);
+      tray_html += `</li></ul><br><div wrap="normal" letter-spacing="normal" class="gcn_tray-link-desc-text">${item.tray.footer}</div>`;
     }
     tray_html += `</div></div></div></div></div></span></span>`;
 
@@ -618,16 +627,56 @@
   const globalCustomNav_items = [{
       title: 'Instructure Icon',
       icon_svg: 'icon-pin',
-      href: 'https://community.canvaslms.com/',
+      href: 'https://instructure.design/#icons-font',
       target: '_blank',
       position: 1, // can be one of : integer (position after first), 'after' (help or last), 'before' (help or last)
+    },
+    {
+      title: 'External Icon',
+      // example only, host your own, or use icon class
+      icon_svg: 'https://raw.githubusercontent.com/instructure/instructure-ui/master/packages/ui-icons/svg/Line/pin.svg',
+      href: 'https://community.canvaslms.com/',
+      target: '_blank',
+      //position: 'before' // default
+    },
+    {
+      title: 'Inline Icon',
+      // example, instructure-ui pin.svg from above
+      icon_svg: `<svg viewBox="0 0 1920 1920" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M1643.272 835.697c-22.024 22.023-57.826 22.023-79.85 0l-20.442-20.442c-.226-.226-.226-.452-.452-.678-.226-.113-.452-.113-.565-.339L1072.806 345.08c-.226-.225-.34-.564-.565-.79-.226-.226-.565-.339-.79-.452l-20.33-20.33c-22.024-22.023-22.024-57.938 0-79.962l83.915-83.802 592.15 592.038-83.914 83.915zm-506.768 305.167c-7.34-8.584-13.44-18.07-21.571-26.09L771.93 771.773c-8.018-8.132-17.506-13.892-26.09-21.12l286.42-286.419 390.437 390.438-286.193 286.193zm-101.42 453.007l-16.49 16.49-742.362-742.25 16.489-16.49c106.73-106.842 292.743-106.842 399.36 0l343.002 343.003c53.309 53.308 82.673 124.235 82.673 199.567 0 75.445-29.364 146.372-82.673 199.68zM1135.035.045L971.272 163.697c-59.295 59.294-62.344 150.776-15.022 216.847L658.876 677.918c-4.066 3.953-6.437 8.81-9.035 13.553-144.565-60.085-322.899-33.656-436.97 80.301l-96.338 96.34 411.106 411.105-511.06 511.059c-22.136 22.023-22.136 57.826 0 79.85 10.956 11.067 25.413 16.602 39.869 16.602s28.913-5.535 39.981-16.603l511.059-511.059 411.106 410.993 96.339-96.339c74.654-74.54 115.764-173.816 115.764-279.529 0-55.115-11.745-108.31-33.091-157.327 2.597-1.92 5.647-3.05 8.018-5.421l300.763-300.763c29.365 20.895 62.456 34.448 96.903 34.448 43.37 0 86.852-16.603 119.83-49.582l163.766-163.764L1135.036.045z" stroke="none" stroke-width="1" fill-rule="evenodd"/></svg>`,
+      href: 'https://community.canvaslms.com/',
+      target: '',
+      position: 'after'
+    },
+    {
+      title: 'Icon with Role Requirements - Faculty',
+      // example icon with role requirement
+      icon_svg: 'icon-educators',
+      href: 'https://community.canvaslms.com/t5/Canvas-Instructor/ct-p/canvas_instructor',
+      target: '_blank',
+      position: 'after',
+      roles: function () {
+        var account_role = ['AccountAdmin', 'Staff Admin', 'Support Admin'].some(a => ENV.current_user_types.includes(a));
+        var enrollment_type = ['teacher', 'admin', 'root_admin', 'consortium_admin'].some(a => ENV.current_user_roles.includes(a));
+        return account_role || enrollment_type;
+      }
+    },
+    {
+      title: 'Icon with Role Requirements - Student',
+      // example icon with role requirement
+      icon_svg: 'icon-group',
+      href: 'https://community.canvaslms.com/t5/Canvas-Student/ct-p/canvas_student',
+      target: '_blank',
+      position: 'after',
+      roles: function () {
+        return !['teacher', 'admin', 'root_admin', 'consortium_admin'].some(a => ENV.current_user_roles.includes(a));
+      }
     },
     {
       title: 'Custom Context',
       // custom context handles active class in global nav
       icon_svg: 'icon-expand-start',
       href: '/courses/101',
-      target: '',
+      target: '_top',
       roles: function () {
         return ['user'].some(a => ENV.current_user_roles.includes(a));
       }
@@ -637,18 +686,10 @@
       // custom context handles active class in global nav
       icon_svg: 'icon-ruler',
       href: '/accounts/self',
-      target: '',
+      target: '_self',
       roles: function () {
         return ['admin'].some(a => ENV.current_user_roles.includes(a));
       }
-    },
-    {
-      title: 'External Icon',
-      // example only, host your own, or use icon class
-      icon_svg: 'https://raw.githubusercontent.com/instructure/instructure-ui/master/packages/ui-icons/svg/Line/pin.svg',
-      href: 'https://community.canvaslms.com/',
-      target: '_blank',
-      //position: 'before' // default
     },
     {
       title: 'Tray with simple list',
@@ -660,18 +701,21 @@
       tray: {
         footer: 'Optional footer text, put whatever you want here, or leave it blank.',
         items: [{
-            href: 'http://www.example.com/your-library',
+            href: 'https://community.canvaslms.com/',
             title: 'Library',
-            desc: 'Optional text description'
+            target: '_top',
+            desc: 'Canvas Community'
           },
           {
-            href: 'http://www.google.com',
-            title: 'Google'
-          },
-          {
-            href: 'http://www.example.com/help-desk',
+            href: 'https://community.canvaslms.com/t5/Canvas-Developers-Group/gh-p/developers',
             title: 'Help Desk',
-            desc: 'Optional text description'
+            target: '_blank'
+          },
+          {
+            href: 'https://instructure.design/#icons-font',
+            title: 'Instructure Icons',
+            target: '_parent',
+            desc: `<i class="icon-line icon-heart icon-solid"></i>`
           }
         ]
       }
@@ -687,33 +731,35 @@
         footer: 'Optional footer text, put whatever you want here, or leave it blank.',
         items: {
           'Published': [{
-              href: 'http://www.example.com/your-library',
+              href: 'https://community.canvaslms.com/',
               title: 'Library',
-              desc: 'Optional text description'
+              target: '_top',
+              desc: 'Canvas Community'
             },
             {
-              href: 'http://www.google.com',
-              title: 'Google'
-            },
-            {
-              href: 'http://www.example.com/help-desk',
+              href: 'https://community.canvaslms.com/t5/Canvas-Developers-Group/gh-p/developers',
               title: 'Help Desk',
-              desc: 'Optional text description'
+              target: '_blank'
+            },
+            {
+              href: 'https://instructure.design/#icons-font',
+              title: 'Instructure Icons',
+              target: '_parent',
+              desc: `<i class="icon-line icon-heart icon-solid"></i>`
             }
           ],
           'Unpublished': [{
-              href: 'http://www.example.com/your-library',
-              title: 'Set 2',
-              desc: 'Optional text description'
+              href: 'https://canvas.instructure.com/doc/api/',
+              title: 'Canvas API',
+              desc: "To get started, you'll want to review the general basics"
             },
             {
-              href: 'http://www.google.com',
-              title: 'Set 2'
+              href: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript',
+              title: 'MDN JavaScript'
             },
             {
-              href: 'http://www.example.com/help-desk',
-              title: 'Set 2',
-              desc: 'Optional text description'
+              href: 'https://developer.mozilla.org/en-US/docs/Web/HTML',
+              title: 'MDN HTML'
             }
           ]
         }
@@ -723,8 +769,8 @@
       title: 'Tray with Callback',
       // example tray with custom callback for content area
       icon_svg: 'icon-integrations',
-      href: '#',
-      target: '_blank',
+      href: 'https://github.com/robert-carroll/canvaslms-global-custom-navigation',
+      // target: '_blank',
       position: 'after',
       tray: {
         footer: 'Optional footer text, put whatever you want here, or leave it blank.',
@@ -762,7 +808,7 @@
       // example tray with custom callback for content area
       icon_svg: 'icon-flag',
       href: '#',
-      target: '_blank',
+      // target: '_blank',
       position: 3,
       roles: function () {
         var account_role = ['AccountAdmin', 'Staff Admin', 'Support Admin'].some(a => ENV.current_user_types.includes(a));
@@ -770,60 +816,31 @@
         return account_role || enrollment_type;
       },
       tray: {
-        footer: 'Optional footer text, put whatever you want here, or leave it blank.',
+        // footer: 'Optional footer text, put whatever you want here, or leave it blank.',
         cb: function (item) {
           var items = [{
-              href: 'http://www.example.com/your-library',
+              href: 'https://community.canvaslms.com/',
               title: 'Library',
-              desc: 'Optional text description'
+              target: '_top',
+              desc: 'Canvas Community'
             },
             {
-              href: 'http://www.google.com',
-              title: 'Google'
-            },
-            {
-              href: 'http://www.example.com/help-desk',
+              href: 'https://community.canvaslms.com/t5/Canvas-Developers-Group/gh-p/developers',
               title: 'Help Desk',
-              desc: 'Optional text description'
+              target: '_blank'
+            },
+            {
+              href: 'https://instructure.design/#icons-font',
+              title: 'Instructure Icons',
+              target: '_parent',
+              desc: `<i class="icon-line icon-heart icon-solid"></i>`
             }
           ];
           var list_html = globalCustomNav.tray_links(items);
           globalCustomNav.append_cb_content(item, list_html);
         }
       }
-    },
-    {
-      title: 'Inline Icon',
-      // example, instructure-ui pin.svg from above
-      icon_svg: `<svg viewBox="0 0 1920 1920" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M1643.272 835.697c-22.024 22.023-57.826 22.023-79.85 0l-20.442-20.442c-.226-.226-.226-.452-.452-.678-.226-.113-.452-.113-.565-.339L1072.806 345.08c-.226-.225-.34-.564-.565-.79-.226-.226-.565-.339-.79-.452l-20.33-20.33c-22.024-22.023-22.024-57.938 0-79.962l83.915-83.802 592.15 592.038-83.914 83.915zm-506.768 305.167c-7.34-8.584-13.44-18.07-21.571-26.09L771.93 771.773c-8.018-8.132-17.506-13.892-26.09-21.12l286.42-286.419 390.437 390.438-286.193 286.193zm-101.42 453.007l-16.49 16.49-742.362-742.25 16.489-16.49c106.73-106.842 292.743-106.842 399.36 0l343.002 343.003c53.309 53.308 82.673 124.235 82.673 199.567 0 75.445-29.364 146.372-82.673 199.68zM1135.035.045L971.272 163.697c-59.295 59.294-62.344 150.776-15.022 216.847L658.876 677.918c-4.066 3.953-6.437 8.81-9.035 13.553-144.565-60.085-322.899-33.656-436.97 80.301l-96.338 96.34 411.106 411.105-511.06 511.059c-22.136 22.023-22.136 57.826 0 79.85 10.956 11.067 25.413 16.602 39.869 16.602s28.913-5.535 39.981-16.603l511.059-511.059 411.106 410.993 96.339-96.339c74.654-74.54 115.764-173.816 115.764-279.529 0-55.115-11.745-108.31-33.091-157.327 2.597-1.92 5.647-3.05 8.018-5.421l300.763-300.763c29.365 20.895 62.456 34.448 96.903 34.448 43.37 0 86.852-16.603 119.83-49.582l163.766-163.764L1135.036.045z" stroke="none" stroke-width="1" fill-rule="evenodd"/></svg>`,
-      href: 'https://community.canvaslms.com/',
-      target: '',
-      position: 'after'
-    },
-    {
-      title: 'Icon with Role Requirements - Faculty',
-      // example icon with role requirement
-      icon_svg: 'icon-educators',
-      href: 'https://community.canvaslms.com/',
-      target: '_blank',
-      position: 'after',
-      roles: function () {
-        var account_role = ['AccountAdmin', 'Staff Admin', 'Support Admin'].some(a => ENV.current_user_types.includes(a));
-        var enrollment_type = ['teacher', 'admin', 'root_admin', 'consortium_admin'].some(a => ENV.current_user_roles.includes(a));
-        return account_role || enrollment_type;
-      }
-    },
-    {
-      title: 'Icon with Role Requirements - Student',
-      // example icon with role requirement
-      icon_svg: 'icon-group',
-      href: 'https://community.canvaslms.com/',
-      target: '_blank',
-      position: 'after',
-      roles: function () {
-        return !['teacher', 'admin', 'root_admin', 'consortium_admin'].some(a => ENV.current_user_roles.includes(a));
-      }
-    },
+    }
   ];
 
   // configure moar
@@ -887,7 +904,7 @@
           // nudge lifting this too
           let all_courses = document.querySelector(`div[id^="Expandable"] a[href="/courses"]`);
           all_courses.innerHTML = all_courses.innerText + ` <i class="icon-line icon-quiz"></i>`;
-          
+
           // move all courses to top of rspv tray
           let course_items = all_courses.closest('ul').children;
           course_items[0].before(course_items[course_items.length - 1]);

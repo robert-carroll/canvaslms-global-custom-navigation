@@ -162,7 +162,7 @@
     const icon_id = (hamb ? 'rspv-' : '') + item.slug;
     icon.querySelector('a').setAttribute('id', icon_id);
     icon.querySelector('a').href = item.href;
-    if (item.target !== 'undefined' && item.target.includes('_blank', '_self', '_parent')) {
+    if (typeof item.target !== 'undefined' && ['_self', '_blank', '_parent', '_top'].includes(item.target)) {
       icon.querySelector('a').setAttribute('target', item.target);
     }    
 
@@ -279,7 +279,7 @@
   const globalCustomNav_items = [{
       title: 'Instructure Icon',
       icon_svg: 'icon-pin',
-      href: 'https://community.canvaslms.com/',
+      href: 'https://instructure.design/#icons-font',
       target: '_blank',
       position: 1, // can be one of : integer (position after first), 'after' (help or last), 'before' (help or last)
     },
@@ -287,12 +287,22 @@
       title: 'Custom Context',
       // custom context handles active class in global nav
       icon_svg: 'icon-expand-start',
-      href: '/courses/1234567',
-      target: '',
+      href: '/courses/101',
+      target: '_top',
       roles: function () {
-        return ['teacher'].some(a => ENV.current_user_roles.includes(a));
+        return ['user'].some(a => ENV.current_user_roles.includes(a));
       }
     },
+    {
+      title: 'Custom Account Context',
+      // custom context handles active class in global nav
+      icon_svg: 'icon-ruler',
+      href: '/accounts/self',
+      target: '_self',
+      roles: function () {
+        return ['admin'].some(a => ENV.current_user_roles.includes(a));
+      }
+    }
   ];
 
   // load custom nav options

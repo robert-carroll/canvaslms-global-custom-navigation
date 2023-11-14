@@ -110,7 +110,7 @@
     const icon_id = (hamb ? 'rspv-' : '') + item.slug;
     icon.querySelector('a').setAttribute('id', icon_id);
     icon.querySelector('a').href = item.href;
-    if (item.target !== 'undefined' && item.target.includes('_blank', '_self', '_parent')) {
+    if (typeof item.target !== 'undefined' && ['_self', '_blank', '_parent', '_top'].includes(item.target)) {
       icon.querySelector('a').setAttribute('target', item.target);
     }
 
@@ -227,7 +227,7 @@
       title: 'Icon with Role Requirements - Faculty',
       // example icon with role requirement
       icon_svg: 'icon-educators',
-      href: 'https://community.canvaslms.com/',
+      href: 'https://community.canvaslms.com/t5/Canvas-Instructor/ct-p/canvas_instructor',
       target: '_blank',
       position: 'after',
       roles: function () {
@@ -240,7 +240,7 @@
       title: 'Icon with Role Requirements - Student',
       // example icon with role requirement
       icon_svg: 'icon-group',
-      href: 'https://community.canvaslms.com/',
+      href: 'https://community.canvaslms.com/t5/Canvas-Student/ct-p/canvas_student',
       target: '_blank',
       position: 'after',
       roles: function () {
