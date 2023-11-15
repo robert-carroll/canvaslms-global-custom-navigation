@@ -27,7 +27,7 @@ Robert
       - grouped (ex; published|unpublished courses)
         - ungrouped in responsive nav tray (ex: responsive courses tray)
   - Role Callback
-  - Tray Callback or Takeover
+  - Tray Callback or Throwback
 
 ## Tray Callbacks
 
