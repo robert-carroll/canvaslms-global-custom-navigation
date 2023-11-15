@@ -166,7 +166,7 @@
       }
     },
     create_nav_icon: (item, hamb = true) => {
-      item.tidle = item.title.replace(/\W/g, '_').toLowerCase();
+      item.tidle = item.title.replace(/\s+/g, '');
       item.slug = `global_nav_${item.tidle}_link`;
 
       // clone and create the icon, consider c4e

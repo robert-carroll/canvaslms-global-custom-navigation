@@ -248,7 +248,7 @@
       }
     },
     create_nav_icon: (item, hamb = true) => {
-      item.tidle = item.title.replace(/\W/g, '_').toLowerCase();
+      item.tidle = item.title.replace(/\s+/g, '');
       item.slug = `global_nav_${item.tidle}_link`;
 
       // clone and create the icon, consider c4e
@@ -694,7 +694,7 @@
       // example only, host your own, or use icon class
       icon_svg: 'icon-paperclip',
       href: 'https://community.canvaslms.com/',
-      target: '_blank',
+      target: '_self',
       //position: 'before', // default
       tray: {
         footer: 'Optional footer text, put whatever you want here, or leave it blank.',
@@ -723,7 +723,7 @@
       // example tray, with custom link list
       icon_svg: 'icon-heart',
       href: 'https://community.canvaslms.com/',
-      target: '_blank',
+      target: '_self',
       position: 'before', // default
       tray: {
         footer: 'Optional footer text, put whatever you want here, or leave it blank.',
