@@ -85,35 +85,28 @@
         width="1em" height="1em" aria-hidden="true" role="presentation" focusable="false" class="gcn_tray-aodown">
         <g role="presentation"><path d="M568.129648 0.0124561278L392 176.142104 1175.86412 960.130789 392 1743.87035 568.129648 1920 1528.24798 960.130789z" 
         fill-rule="evenodd" stroke="none" stroke-width="1" transform="matrix(0 1 1 0 .067 -.067)"></path></g></svg>`
-      }
+      },
+      targets: ['_self', '_blank', '_parent', '_top']
     },
     load: (opts) => {
       if (!document.querySelector(globalCustomNav.cfg.glbl.nav_selector) && !document.querySelector(globalCustomNav.cfg.rspv.tray_portal)) return;
 
-      globalCustomNav.dir = document.querySelector('html').getAttribute('dir') ?? 'ltr';
-
-      globalCustomNav.opts = Array.isArray(opts.nav_items) ? opts.nav_items : opts;
-
-      if (typeof opts.takeovers === 'object') {
-        globalCustomNav.takeovers = opts.takeovers || {};
-      }
-
       if (document.querySelector(globalCustomNav.cfg.glbl.nav_selector) !== 'undefined') {
-        // preserve the nav item to restore active class when a tray is closed
-        // handle primary routes, external tools, and custom contexts
-        var active_context = document.querySelector(`${globalCustomNav.cfg.glbl.nav_selector} li.ic-app-header__menu-list-item--active a`);
-        globalCustomNav.cfg.context_item = active_context.id || active_context.closest('li').id;
 
-        // prepare after context preserved
+        globalCustomNav.dir = document.querySelector('html').getAttribute('dir') ?? 'ltr';
+        globalCustomNav.opts = [];
         globalCustomNav.nav_items = Array.isArray(opts.nav_items) ? opts.nav_items : opts;
-        globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
-
         if (typeof opts.takeovers === 'object') {
           globalCustomNav.takeovers = opts.takeovers || {};
         }
 
-        globalCustomNav.watch_glbl_tray();
+        // preserve the nav item to restore active class when a tray is closed
+        // handle primary routes, external tools, and custom contexts
+        var active_context = document.querySelector(`${globalCustomNav.cfg.glbl.nav_selector} li.${globalCustomNav.cfg.glbl.trayActiveClass} a`);
+        globalCustomNav.cfg.context_item = active_context.id || active_context.closest('li').id;
+        globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
       }
+      globalCustomNav.watch_glbl_tray();
       globalCustomNav.watch_burger_tray();
     },
     watch_burger_tray: (_mtx, observer) => {
@@ -128,7 +121,6 @@
         }
         return;
       }
-
       if (portal && (document.querySelector('.mobile-header-hamburger').offsetParent != null)) {
         observer.disconnect();
         globalCustomNav.exit_burger_tray();
@@ -219,37 +211,19 @@
         const user_gets_item = (typeof item.roles === 'undefined') || item.roles();
         if (user_gets_item) {
           globalCustomNav.create_nav_icon(item, hamb);
+          if (item.tray) {
+            globalCustomNav.tray(item, hamb);
+          }
         }
       });
-    },
-    append_item: (item, icon, hamb = true) => {
-      const target_ul = hamb ? globalCustomNav.cfg.rspv.tray_portal : globalCustomNav.cfg.glbl.nav_selector;
-      const target_li = document.querySelector(`${target_ul} li:last-child`);
-      // nav item placement
-      if (item.position !== 'undefined' && typeof item.position === 'number') {
-        // positioned
-        const position = (hamb == true ? globalCustomNav.cfg.rspv.tray_portal : globalCustomNav.cfg.glbl.nav_selector) + ` > li:nth-of-type(${item.position})`;
-        document.querySelector(position).after(icon);
-      } else if (item.position !== 'undefined' && item.position == 'after') {
-        target_li.after(icon);
-      } else {
-        target_li.before(icon);
-      }
-
-      const regex = new RegExp(`^${item.href}`);
-      if (!hamb && regex.test(window.location.pathname)) {
-        globalCustomNav.cfg.context_item = item.slug;
-        globalCustomNav.glbl_ensure_active_class(globalCustomNav.cfg.context_item);
-      }
     },
     create_nav_icon: (item, hamb = true) => {
       item.tidle = item.title.replace(/\s+/g, '');
       item.slug = `global_nav_${item.tidle}_link`;
 
       // clone and create the icon, consider c4e
-      const is_tray = item.tray || false;
       let icon_to_copy = (ENV.K5_USER == true && hamb == true) ? 'Home' : 'Dashboard';
-      if (is_tray) {
+      if (item.tray) {
         icon_to_copy = 'Courses';
       }
       const nav_icon = hamb ? `${globalCustomNav.cfg.rspv.tray_portal} svg[name="Icon${icon_to_copy}"]` : `#global_nav_${icon_to_copy.toLowerCase()}_link`;
@@ -261,7 +235,7 @@
       icon.querySelector('svg').parentElement.classList.add((hamb ? 'rspv-' : '') + `svg-${item.tidle}-holder`);
 
       const icon_id = (hamb ? 'rspv-' : '') + item.slug;
-      if (hamb && is_tray) {
+      if (hamb && item.tray) {
         // button for resp tray
         icon.querySelector('button').setAttribute('id', icon_id);
         icon.querySelector('button').setAttribute('aria-controls', (hamb ? 'rspv-' : '') + `${item.slug}-tray`);
@@ -269,7 +243,7 @@
       } else {
         icon.querySelector('a').setAttribute('id', icon_id);
         icon.querySelector('a').href = item.href;
-        if (typeof item.target !== 'undefined' && ['_self', '_blank', '_parent', '_top'].includes(item.target)) {
+        if (typeof item.target !== 'undefined' && globalCustomNav.cfg.targets.includes(item.target)) {
           icon.querySelector('a').setAttribute('target', item.target);
         }
       }
@@ -302,8 +276,8 @@
         instuicon += `<i class="icon-line ${item.icon_svg}${hamb ? ' gcn_inst_rspv_icon' : ''} gcn_inst_menu_icon"></i></div>`;
         svg_holder.insertAdjacentHTML('afterbegin', instuicon);
 
-      } else if (/^http/.test(item.icon_svg)) {
-        // externally hosted svg, you must handle cors policies locally
+      } else if (/^https/.test(item.icon_svg)) {
+        // externally hosted svg, you must handle cors policies yourself
         fetch(item.icon_svg, {
             mode: 'cors',
             method: 'GET',
@@ -331,11 +305,27 @@
           icon.querySelector('svg').classList.add(c);
         })
       }
+      item.icon = icon;
+      globalCustomNav.append_item(item, hamb);
+    },
+    append_item: (item, hamb = true) => {
+      const target_ul = hamb ? globalCustomNav.cfg.rspv.tray_portal : globalCustomNav.cfg.glbl.nav_selector;
+      const target_li = document.querySelector(`${target_ul} li:last-child`);
+      // nav item placement
+      if (item.position !== 'undefined' && typeof item.position === 'number') {
+        // positioned
+        const position = (hamb == true ? globalCustomNav.cfg.rspv.tray_portal : globalCustomNav.cfg.glbl.nav_selector) + ` > li:nth-of-type(${item.position})`;
+        document.querySelector(position).after(item.icon);
+      } else if (item.position !== 'undefined' && item.position == 'after') {
+        target_li.after(item.icon);
+      } else {
+        target_li.before(item.icon);
+      }
 
-      globalCustomNav.append_item(item, icon, hamb);
-
-      if (is_tray) {
-        globalCustomNav.tray(item, hamb);
+      const regex = new RegExp(`^${item.href}`);
+      if (!hamb && regex.test(window.location.pathname)) {
+        globalCustomNav.cfg.context_item = item.slug;
+        globalCustomNav.glbl_ensure_active_class(globalCustomNav.cfg.context_item);
       }
     },
     tray: (item, hamb) => {
@@ -356,7 +346,7 @@
       a.href = item.href;
       a.setAttribute('dir', globalCustomNav.dir);
       a.classList.add('gcn_tray-view-link');
-      if (typeof item.target !== 'undefined' && ['_self', '_blank', '_parent', '_top'].includes(item.target)) {
+      if (typeof item.target !== 'undefined' && globalCustomNav.cfg.targets.includes(item.target)) {
         a.target = item.target;
       }
       return a.outerHTML;
@@ -625,7 +615,7 @@
       position: 1, // can be one of : integer (position after first), 'after' (help or last), 'before' (help or last)
     },
     {
-      title: 'External Icon',
+      title: 'Hosted Icon',
       // example only, host your own, or use icon class
       icon_svg: 'https://raw.githubusercontent.com/instructure/instructure-ui/master/packages/ui-icons/svg/Line/pin.svg',
       href: 'https://community.canvaslms.com/',
@@ -912,7 +902,8 @@
 
   const globalCustomNav_opts = {
     nav_items: globalCustomNav_items,
-    takeovers: globalCustomNav_tray_takeover
+    takeovers: globalCustomNav_tray_takeover,
+    another: 1
   };
   // load custom nav options
   globalCustomNav.load(globalCustomNav_opts);

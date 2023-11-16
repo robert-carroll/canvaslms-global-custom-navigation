@@ -39,22 +39,26 @@
         trayActiveClass: `ic-app-header__menu-list-item--active`
       },
       rspv: {
-        tray_portal: `span[dir="${(document.querySelector('html').getAttribute('dir') ?? 'ltr')}"] div[role="dialog"] ul`,
-        tray_container: 'div[class$="-tray__content"]'
+        tray_portal: `span[dir="${(document.querySelector('html').getAttribute('dir') ?? 'ltr')}"] div[role="dialog"] ul`
       }
     },
     load: (opts) => {
       if (!document.querySelector(globalCustomNav.cfg.glbl.nav_selector) && !document.querySelector(globalCustomNav.cfg.rspv.tray_portal)) return;
 
-      globalCustomNav.dir = document.querySelector('html').getAttribute('dir') ?? 'ltr';
-
       if (document.querySelector(globalCustomNav.cfg.glbl.nav_selector) !== 'undefined') {
 
-        // prepare after context preserved
+        globalCustomNav.dir = document.querySelector('html').getAttribute('dir') ?? 'ltr';
+        globalCustomNav.opts = [];
         globalCustomNav.nav_items = Array.isArray(opts.nav_items) ? opts.nav_items : opts;
-        globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
+        if (typeof opts.takeovers === 'object') {
+          globalCustomNav.takeovers = opts.takeovers || {};
+        }
 
-        globalCustomNav.watch_glbl_tray();
+        // preserve the nav item to restore active class when a tray is closed
+        // handle primary routes, external tools, and custom contexts
+        var active_context = document.querySelector(`${globalCustomNav.cfg.glbl.nav_selector} li.${globalCustomNav.cfg.glbl.trayActiveClass} a`);
+        globalCustomNav.cfg.context_item = active_context.id || active_context.closest('li').id;
+        globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
       }
       globalCustomNav.watch_burger_tray();
     },
@@ -70,6 +74,7 @@
         }
         return;
       }
+
       if (portal && (document.querySelector('.mobile-header-hamburger').offsetParent != null)) {
         observer.disconnect();
         globalCustomNav.exit_burger_tray();
@@ -99,44 +104,6 @@
         globalCustomNav.watch_burger_tray();
       }
     },
-    watch_glbl_tray: (_mtx, observer) => {
-      const portal = document.querySelector(globalCustomNav.cfg.glbl.tray_portal);
-      if (!portal) {
-        if (typeof observer === 'undefined') {
-          const obs = new MutationObserver(globalCustomNav.watch_glbl_tray);
-          obs.observe(document.body, {
-            childList: true,
-          });
-        }
-        return;
-      }
-      if (typeof observer !== 'undefined') {
-        observer.disconnect();
-      }
-
-      const watch = new MutationObserver(globalCustomNav.exit_glbl_tray);
-      watch.observe(portal, {
-        childList: true,
-        subtree: true
-      });
-    },
-    exit_glbl_tray: (_mtx, observer) => {
-      const tray_portal_open = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} div.${globalCustomNav.cfg.glbl.tray_container}`);
-
-      if (tray_portal_open) {
-        if (typeof observer === 'undefined') {
-          const obs = new MutationObserver(globalCustomNav.exit_glbl_tray);
-          obs.observe(document.body, {
-            childList: true
-          });
-        }
-        return;
-      }
-      if (!tray_portal_open) {
-        observer.disconnect();
-        globalCustomNav.watch_glbl_tray();
-      }
-    },
     prepare_nav_items: (items, hamb = true) => {
       items.forEach(item => {
         // if roles for the current item are not set, the user can see it, otherwise
@@ -145,25 +112,6 @@
           globalCustomNav.create_nav_icon(item, hamb);
         }
       });
-    },
-    append_item: (item, icon, hamb = true) => {
-      const target_ul = hamb ? globalCustomNav.cfg.rspv.tray_portal : globalCustomNav.cfg.glbl.nav_selector;
-      const target_li = document.querySelector(`${target_ul} li:last-child`);
-      // nav item placement
-      if (item.position !== 'undefined' && typeof item.position === 'number') {
-        // positioned
-        const position = (hamb == true ? globalCustomNav.cfg.rspv.tray_portal : globalCustomNav.cfg.glbl.nav_selector) + ` > li:nth-of-type(${item.position})`;
-        document.querySelector(position).after(icon);
-      } else if (item.position !== 'undefined' && item.position == 'after') {
-        target_li.after(icon);
-      } else {
-        target_li.before(icon);
-      }
-
-      const regex = new RegExp(`^${item.href}`);
-      if (!hamb && regex.test(window.location.pathname)) {
-        globalCustomNav.cfg.context_item = item.slug;
-      }
     },
     create_nav_icon: (item, hamb = true) => {
       item.tidle = item.title.replace(/\s+/g, '');
@@ -214,8 +162,8 @@
         instuicon += `<i class="icon-line ${item.icon_svg}${hamb ? ' gcn_inst_rspv_icon' : ''} gcn_inst_menu_icon"></i></div>`;
         svg_holder.insertAdjacentHTML('afterbegin', instuicon);
 
-      } else if (/^http/.test(item.icon_svg)) {
-        // externally hosted svg, you must handle cors policies locally
+      } else if (/^https/.test(item.icon_svg)) {
+        // externally hosted svg, you must handle cors policies yourself
         fetch(item.icon_svg, {
             mode: 'cors',
             method: 'GET',
@@ -243,8 +191,28 @@
           icon.querySelector('svg').classList.add(c);
         })
       }
+      item.icon = icon;
+      globalCustomNav.append_item(item, hamb);
+    },
+    append_item: (item, hamb = true) => {
+      const target_ul = hamb ? globalCustomNav.cfg.rspv.tray_portal : globalCustomNav.cfg.glbl.nav_selector;
+      const target_li = document.querySelector(`${target_ul} li:last-child`);
+      // nav item placement
+      if (item.position !== 'undefined' && typeof item.position === 'number') {
+        // positioned
+        const position = (hamb == true ? globalCustomNav.cfg.rspv.tray_portal : globalCustomNav.cfg.glbl.nav_selector) + ` > li:nth-of-type(${item.position})`;
+        document.querySelector(position).after(item.icon);
+      } else if (item.position !== 'undefined' && item.position == 'after') {
+        target_li.after(item.icon);
+      } else {
+        target_li.before(item.icon);
+      }
 
-      globalCustomNav.append_item(item, icon, hamb);
+      const regex = new RegExp(`^${item.href}`);
+      if (!hamb && regex.test(window.location.pathname)) {
+        globalCustomNav.cfg.context_item = item.slug;
+        globalCustomNav.glbl_ensure_active_class(globalCustomNav.cfg.context_item);
+      }
     }
   };
 
@@ -257,7 +225,7 @@
       position: 1, // can be one of : integer (position after first), 'after' (help or last), 'before' (help or last)
     },
     {
-      title: 'External Icon',
+      title: 'Hosted Icon',
       // example only, host your own, or use icon class
       icon_svg: 'https://raw.githubusercontent.com/instructure/instructure-ui/master/packages/ui-icons/svg/Line/pin.svg',
       href: 'https://community.canvaslms.com/',
