@@ -96,8 +96,8 @@
         globalCustomNav.dir = document.querySelector('html').getAttribute('dir') ?? 'ltr';
         globalCustomNav.opts = [];
         globalCustomNav.nav_items = Array.isArray(opts.nav_items) ? opts.nav_items : opts;
-        if (typeof opts.takeovers === 'object') {
-          globalCustomNav.takeovers = opts.takeovers || {};
+        if (typeof opts.throwbacks === 'object') {
+          globalCustomNav.throwbacks = opts.throwbacks || {};
         }
 
         // preserve the nav item to restore active class when a tray is closed
@@ -136,7 +136,7 @@
         // TODO stops sub account duplicates, prevents previous placements
         tray_portal_open.classList.add('rspv-global-custom-nav');
 
-        globalCustomNav.rspv_tray_takeover();
+        globalCustomNav.rspv_tray_throwback();
 
         if (typeof observer === 'undefined') {
           const obs = new MutationObserver(globalCustomNav.exit_burger_tray);
@@ -183,7 +183,7 @@
         let ui_tray = [...tray_portal_open.classList].filter(c => c.endsWith('-tray'))[0].replace('-tray', '');
         globalCustomNav.glbl_ensure_active_class(`global_nav_${ui_tray}_link`);
 
-        globalCustomNav.glbl_tray_takeover();
+        globalCustomNav.glbl_tray_throwback();
 
         if (typeof observer === 'undefined') {
           const obs = new MutationObserver(globalCustomNav.exit_glbl_tray);
@@ -564,27 +564,27 @@
         document.querySelector(`#rspv-${item.slug}-tray .gcn-loading-tray-cb`).remove();
       }
     },
-    glbl_tray_takeover: () => {
-      if (typeof globalCustomNav.takeovers === 'undefined') return;
+    glbl_tray_throwback: () => {
+      if (typeof globalCustomNav.throwbacks === 'undefined') return;
 
       const tray_container = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} div.${globalCustomNav.cfg.glbl.tray_container}`);
       let ui_tray = [...tray_container.classList].filter(c => c.endsWith('-tray'))[0].replace('-tray', '');
-      if (typeof globalCustomNav.takeovers[ui_tray] === 'object') {
-        let tray_ready = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} ${globalCustomNav.takeovers[ui_tray].target}`);
-        let tray_action_complete = document.querySelectorAll(`${globalCustomNav.cfg.glbl.tray_portal} a.${globalCustomNav.takeovers[ui_tray].complete}`);
+      if (typeof globalCustomNav.throwbacks[ui_tray] === 'object') {
+        let tray_ready = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} ${globalCustomNav.throwbacks[ui_tray].target}`);
+        let tray_action_complete = document.querySelectorAll(`${globalCustomNav.cfg.glbl.tray_portal} a.${globalCustomNav.throwbacks[ui_tray].complete}`);
         if (tray_ready && tray_action_complete.length == 0) {
-          globalCustomNav.takeovers[ui_tray].actions.glbl();
+          globalCustomNav.throwbacks[ui_tray].actions.glbl();
         }
       }
     },
-    rspv_tray_takeover: () => {
-      if (typeof globalCustomNav.takeovers === 'undefined') return;
+    rspv_tray_throwback: () => {
+      if (typeof globalCustomNav.throwbacks === 'undefined') return;
 
       const portal = document.querySelector(globalCustomNav.cfg.rspv.tray_portal);
-      if (portal && Object.keys(globalCustomNav.takeovers).length >= 1) {
+      if (portal && Object.keys(globalCustomNav.throwbacks).length >= 1) {
         // TODO frequently review for catchment class or attribute
         let expanded = document.querySelectorAll(`button[aria-controls^="Expandable"][aria-expanded="true"]`);
-        let to_targets = Object.keys(globalCustomNav.takeovers).map(t => [globalCustomNav.takeovers[t].target, t]);
+        let to_targets = Object.keys(globalCustomNav.throwbacks).map(t => [globalCustomNav.throwbacks[t].target, t]);
         let to_mapping = Object.fromEntries(to_targets);
         let targets = Object.keys(to_mapping);
 
@@ -593,10 +593,10 @@
             let tray_ready = document.querySelector(`div[id^="Expandable"] ${t}`);
             if (tray_ready) {
               let tray_by_target = to_mapping[t];
-              if (typeof globalCustomNav.takeovers[tray_by_target] === 'object') {
-                let tray_action_complete = document.querySelectorAll(`div[id^="Expandable"] a.${globalCustomNav.takeovers[tray_by_target].complete}`);
+              if (typeof globalCustomNav.throwbacks[tray_by_target] === 'object') {
+                let tray_action_complete = document.querySelectorAll(`div[id^="Expandable"] a.${globalCustomNav.throwbacks[tray_by_target].complete}`);
                 if (tray_action_complete.length == 0) {
-                  globalCustomNav.takeovers[tray_by_target].actions.rspv();
+                  globalCustomNav.throwbacks[tray_by_target].actions.rspv();
                 }
               }
             }
@@ -827,8 +827,8 @@
   ];
 
   // configure moar
-  // handle roles within takeovers
-  const globalCustomNav_tray_takeover = {
+  // handle roles within throwbacks
+  const globalCustomNav_tray_throwback = {
     accounts: {
       target: 'a[href="/accounts"]',
       complete: 'gcn-admin-tray-sub-account-links',
@@ -898,11 +898,11 @@
     }
   };
   // consider c4e
-  globalCustomNav_tray_takeover.subjects = globalCustomNav_tray_takeover.courses;
+  globalCustomNav_tray_throwback.subjects = globalCustomNav_tray_throwback.courses;
 
   const globalCustomNav_opts = {
     nav_items: globalCustomNav_items,
-    takeovers: globalCustomNav_tray_takeover,
+    throwbacks: globalCustomNav_tray_throwback,
     another: 1
   };
   // load custom nav options
