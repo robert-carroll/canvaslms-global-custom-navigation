@@ -1,7 +1,7 @@
 /**
 // @name        CanvasLMS - Global Custom Navigation
 // @namespace   https://github.com/robert-carroll/canvaslms-global-custom-navigation
-// @description one global nav hack, maybe?
+// @description one global nav tool, maybe?
 //
 **/
 
@@ -101,11 +101,8 @@
       if (document.querySelector(globalCustomNav.cfg.glbl.nav_selector) !== 'undefined') {
         // preserve the nav item to restore active class when a tray is closed
         // handle primary routes, external tools, and custom contexts
-        Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} li`)).forEach(nav => {
-          if (nav.classList.contains(globalCustomNav.cfg.glbl.trayActiveClass) == true) {
-            globalCustomNav.cfg.context_item = nav.querySelector('a').getAttribute('id') || nav.querySelector('a').closest('li').getAttribute('id');
-          }
-        });
+        var active_context = document.querySelector(`${globalCustomNav.cfg.glbl.nav_selector} li.ic-app-header__menu-list-item--active a`);
+        globalCustomNav.cfg.context_item = active_context.id || active_context.closest('li').id;
 
         // prepare after context preserved
         globalCustomNav.nav_items = Array.isArray(opts.nav_items) ? opts.nav_items : opts;
@@ -116,8 +113,6 @@
         }
 
         globalCustomNav.watch_glbl_tray();
-        // context on load, from themes
-        globalCustomNav.glbl_ensure_active_class(globalCustomNav.cfg.context_item);
       }
       globalCustomNav.watch_burger_tray();
     },
@@ -180,7 +175,8 @@
         observer.disconnect();
       }
 
-      // 
+      globalCustomNav.glbl_ensure_active_class(globalCustomNav.cfg.context_item);
+      //
 
       const watch = new MutationObserver(globalCustomNav.exit_glbl_tray);
       watch.observe(portal, {
@@ -192,7 +188,7 @@
       const tray_portal_open = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} div.${globalCustomNav.cfg.glbl.tray_container}`);
 
       if (tray_portal_open) {
-        let ui_tray = [...tray_portal_open.classList].filter(c => c.endsWith('-tray'))[0].toLowerCase().replace('-tray', '');
+        let ui_tray = [...tray_portal_open.classList].filter(c => c.endsWith('-tray'))[0].replace('-tray', '');
         globalCustomNav.glbl_ensure_active_class(`global_nav_${ui_tray}_link`);
 
         globalCustomNav.glbl_tray_takeover();
@@ -206,17 +202,16 @@
         return;
       }
       if (!tray_portal_open) {
-        globalCustomNav.glbl_ensure_active_class(globalCustomNav.cfg.context_item);
         observer.disconnect();
         globalCustomNav.watch_glbl_tray();
       }
     },
-    glbl_ensure_active_class: item => {
+    glbl_ensure_active_class: context_item => {
       // ensure active class is restored to appropriate icon based on context
       Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} .${globalCustomNav.cfg.glbl.trayActiveClass}`)).forEach(e => {
         e.classList.toggle(globalCustomNav.cfg.glbl.trayActiveClass);
       });
-      document.getElementById(item).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
+      document.getElementById(context_item).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
     },
     prepare_nav_items: (items, hamb = true) => {
       items.forEach(item => {
@@ -583,7 +578,7 @@
       if (typeof globalCustomNav.takeovers === 'undefined') return;
 
       const tray_container = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} div.${globalCustomNav.cfg.glbl.tray_container}`);
-      let ui_tray = [...tray_container.classList].filter(c => c.endsWith('-tray'))[0].toLowerCase().replace('-tray', '');
+      let ui_tray = [...tray_container.classList].filter(c => c.endsWith('-tray'))[0].replace('-tray', '');
       if (typeof globalCustomNav.takeovers[ui_tray] === 'object') {
         let tray_ready = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} ${globalCustomNav.takeovers[ui_tray].target}`);
         let tray_action_complete = document.querySelectorAll(`${globalCustomNav.cfg.glbl.tray_portal} a.${globalCustomNav.takeovers[ui_tray].complete}`);
