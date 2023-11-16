@@ -45,9 +45,9 @@
         trayActiveClass: `ic-app-header__menu-list-item--active`
       },
       rspv: {
-        tray_portal: `span[dir="${(document.querySelector('html').getAttribute('dir') ?? 'ltr')}"] div[role="dialog"] ul`,
-        tray_container: 'div[class$="-tray__content"]'
-      }
+        tray_portal: `span[dir="${(document.querySelector('html').getAttribute('dir') ?? 'ltr')}"] div[role="dialog"] ul`
+      },
+      targets: ['_self', '_blank', '_parent', '_top']
     },
     load: (opts) => {
       if (!document.querySelector(globalCustomNav.cfg.glbl.nav_selector) && !document.querySelector(globalCustomNav.cfg.rspv.tray_portal)) return;
@@ -192,7 +192,7 @@
       const icon_id = (hamb ? 'rspv-' : '') + item.slug;
       icon.querySelector('a').setAttribute('id', icon_id);
       icon.querySelector('a').href = item.href;
-      if (typeof item.target !== 'undefined' && ['_self', '_blank', '_parent', '_top'].includes(item.target)) {
+      if (typeof item.target !== 'undefined' && globalCustomNav.cfg.targets.includes(item.target)) {
         icon.querySelector('a').setAttribute('target', item.target);
       }
 
