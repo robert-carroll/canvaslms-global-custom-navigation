@@ -36,10 +36,11 @@
       context_item: '',
       glbl: {
         nav_selector: '#menu',
-        trayActiveClass: `ic-app-header__menu-list-item--active`
+        trayActiveClass: `ic-app-header__menu-list-item--active`,
       },
       rspv: {
-        tray_portal: `span[dir="${(document.querySelector('html').getAttribute('dir') ?? 'ltr')}"] div[role="dialog"] ul`
+        tray_portal: `span[dir="${(document.querySelector('html').getAttribute('dir') ?? 'ltr')}"] div[role="dialog"] ul`,
+        tray_container: 'div[class$="-tray__content"]'
       },
       targets: ['_self', '_blank', '_parent', '_top']
     },
@@ -51,9 +52,6 @@
         globalCustomNav.dir = document.querySelector('html').getAttribute('dir') ?? 'ltr';
         globalCustomNav.opts = [];
         globalCustomNav.nav_items = Array.isArray(opts.nav_items) ? opts.nav_items : opts;
-        if (typeof opts.takeovers === 'object') {
-          globalCustomNav.takeovers = opts.takeovers || {};
-        }
 
         // preserve the nav item to restore active class when a tray is closed
         // handle primary routes, external tools, and custom contexts
@@ -65,6 +63,8 @@
     },
     watch_burger_tray: (_mtx, observer) => {
       const portal = document.querySelector(globalCustomNav.cfg.rspv.tray_portal);
+      const tray_action_complete = document.querySelector('div.rspv-global-custom-nav');
+
       if (!portal) {
         if (typeof observer === 'undefined') {
           const obs = new MutationObserver(globalCustomNav.watch_burger_tray);
@@ -75,21 +75,17 @@
         }
         return;
       }
-
-      if (portal && (document.querySelector('.mobile-header-hamburger').offsetParent != null)) {
+      if (portal != null && (document.querySelector('.mobile-header-hamburger').offsetParent != null) && !tray_action_complete) {
         observer.disconnect();
+        globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, true);
+        document.querySelector(globalCustomNav.cfg.rspv.tray_container).classList.add('rspv-global-custom-nav');
         globalCustomNav.exit_burger_tray();
       }
     },
     exit_burger_tray: (_mtx, observer) => {
-      const tray_portal_open = document.querySelector(globalCustomNav.cfg.rspv.tray_container);
-      const tray_action_complete = document.querySelector('div.rspv-global-custom-nav');
+      const tray_portal_open = document.querySelector(globalCustomNav.cfg.rspv.tray_portal);
 
-      if (tray_portal_open && !tray_action_complete) {
- 
-        globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, true);
-        // TODO stops sub account duplicates, prevents previous placements
-        tray_portal_open.classList.add('rspv-global-custom-nav');
+      if (tray_portal_open) {
 
         if (typeof observer === 'undefined') {
           const obs = new MutationObserver(globalCustomNav.exit_burger_tray);
@@ -110,7 +106,15 @@
         // if roles for the current item are not set, the user can see it, otherwise
         const user_gets_item = (typeof item.roles === 'undefined') || item.roles();
         if (user_gets_item) {
+
           globalCustomNav.create_nav_icon(item, hamb);
+
+          // append high contrast icon
+          
+          globalCustomNav.append_item(item, hamb);
+          if (item.tray) {
+            globalCustomNav.tray(item, hamb);
+          }
         }
       });
     },
@@ -193,7 +197,7 @@
         })
       }
       item.icon = icon;
-      globalCustomNav.append_item(item, hamb);
+      return;
     },
     append_item: (item, hamb = true) => {
       const target_ul = hamb ? globalCustomNav.cfg.rspv.tray_portal : globalCustomNav.cfg.glbl.nav_selector;

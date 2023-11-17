@@ -111,6 +111,8 @@
     },
     watch_burger_tray: (_mtx, observer) => {
       const portal = document.querySelector(globalCustomNav.cfg.rspv.tray_portal);
+      const tray_action_complete = document.querySelector('div.rspv-global-custom-nav');
+
       if (!portal) {
         if (typeof observer === 'undefined') {
           const obs = new MutationObserver(globalCustomNav.watch_burger_tray);
@@ -121,20 +123,17 @@
         }
         return;
       }
-      if (portal && (document.querySelector('.mobile-header-hamburger').offsetParent != null)) {
+      if (portal != null && (document.querySelector('.mobile-header-hamburger').offsetParent != null) && !tray_action_complete) {
         observer.disconnect();
+        globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, true);
+        document.querySelector(globalCustomNav.cfg.rspv.tray_container).classList.add('rspv-global-custom-nav');
         globalCustomNav.exit_burger_tray();
       }
     },
     exit_burger_tray: (_mtx, observer) => {
-      const tray_portal_open = document.querySelector(globalCustomNav.cfg.rspv.tray_container);
-      const tray_action_complete = document.querySelector('div.rspv-global-custom-nav');
+      const tray_portal_open = document.querySelector(globalCustomNav.cfg.rspv.tray_portal);
 
-      if (tray_portal_open && !tray_action_complete) {
-
-        globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, true);
-        // TODO stops sub account duplicates, prevents previous placements
-        tray_portal_open.classList.add('rspv-global-custom-nav');
+      if (tray_portal_open) {
 
         globalCustomNav.rspv_tray_throwback();
 
@@ -210,7 +209,12 @@
         // if roles for the current item are not set, the user can see it, otherwise
         const user_gets_item = (typeof item.roles === 'undefined') || item.roles();
         if (user_gets_item) {
+          
           globalCustomNav.create_nav_icon(item, hamb);
+
+          // append high contrast icon
+          
+          globalCustomNav.append_item(item, hamb);
           if (item.tray) {
             globalCustomNav.tray(item, hamb);
           }
@@ -306,7 +310,7 @@
         })
       }
       item.icon = icon;
-      globalCustomNav.append_item(item, hamb);
+      return;
     },
     append_item: (item, hamb = true) => {
       const target_ul = hamb ? globalCustomNav.cfg.rspv.tray_portal : globalCustomNav.cfg.glbl.nav_selector;
