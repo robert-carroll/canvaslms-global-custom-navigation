@@ -6,14 +6,12 @@
 **/
 
 (function () {
-  // handle css, if you aren't loading .css to themes
+  // handle css, if you aren't adding .css to themes
   if (document.querySelectorAll('[data-global-custom-nav-css="set"]').length == 0) {
     let styles = {
       // for item icons
-      'i.gcn_inst_menu_icon:before': 'font-size: 32px; width: 32px; line-height: 32px;',
-      'i.gcn_inst_menu_icon': 'width: 32px; height: 32px; font-style: bold;',
-      'i.gcn_inst_rspv_icon': "color: var(--ic-brand-primary);",
-      '.gcn_icon_svg': 'width: 32px !important; height: 32px !important; font-style: bold;'
+      'i.gcn_inst_menu_icon:before': 'font-size: 1.625rem;',
+      'i.gcn_inst_rspv_icon': 'color: var(--ic-brand-primary);',
     };
     if (typeof styles !== 'undefined' && Object.keys(styles).length > 0) {
       let style = document.createElement('style');
@@ -149,13 +147,10 @@
 
       // prepare for svg
       const svg_holder = icon.querySelector((hamb ? '.rspv-svg' : '.svg') + `-${item.tidle}-holder`);
-      let svg_class;
-      if (hamb == true) {
-        svg_class = icon.querySelector('svg').classList;
-      } else {
+      icon.querySelector('svg').classList.remove('ic-icon-svg--dashboard', 'svg-icon-home');
+      let svg_class = icon.querySelector('svg').classList;
+      if (!hamb) {
         icon.classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
-        //var svg_class = icon.querySelector('svg').classList;
-        svg_class = ['ic-icon-svg', 'menu-item__icon', 'ic-icon-svg--apps', 'ic-icon-svg-custom-tray', 'gcn_icon_svg'];
       }
       // remove cloned svg
       icon.querySelector('svg').remove();
