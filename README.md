@@ -106,8 +106,8 @@ Robert
 - ensuring requirements
 - still reviewing, mostly feature complete based on my goals
   - last is root placement and sub account use
-- takeovers adjusted for beta
-- probably provide takeovers and callbacks as single files for fundays and userscripts
+- throwbacks adjusted for beta
+- probably provide throwbacks and callbacks as single files for fundays and userscripts
 
 ## Contributions & Feedback
 Always welcome, discuss in the [community](https://community.canvaslms.com/t5/Canvas-Developers-Group/Thread-with-space-for-Global-Custom-Navigation/td-p/583803), or PR's and issues if you enjoy committing.
