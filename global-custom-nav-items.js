@@ -148,7 +148,7 @@
       // prepare for svg
       const svg_holder = icon.querySelector((hamb ? '.rspv-svg' : '.svg') + `-${item.tidle}-holder`);
       icon.querySelector('svg').classList.remove('ic-icon-svg--dashboard', 'svg-icon-home');
-      let svg_class = icon.querySelector('svg').classList;
+      let svg_class = [...icon.querySelector('svg').classList];
       if (!hamb) {
         icon.classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
       }
@@ -177,19 +177,15 @@
           .then(svg => {
             svg_holder.insertAdjacentHTML('afterbegin', svg);
             icon.querySelector('svg').setAttribute('id', (hamb ? 'rspv-' : '') + `${item.slug}-svg`);
-            svg_class.forEach(c => {
-              icon.querySelector('svg').classList.add(c);
-            })
+            icon.querySelector('svg').classList.add(...svg_class);
           })
           .catch(console.error.bind(console));
 
       } else if (/^<svg/.test(item.icon_svg)) {
         // inline/script svg
         svg_holder.insertAdjacentHTML('afterbegin', item.icon_svg);
-        icon.querySelector('svg').setAttribute('id', `rspv-${item.slug}-svg`);
-        svg_class.forEach(c => {
-          icon.querySelector('svg').classList.add(c);
-        })
+        icon.querySelector('svg').setAttribute('id', (hamb ? 'rspv-' : '') + `${item.slug}-svg`);
+        icon.querySelector('svg').classList.add(...svg_class);
       }
       item.icon = icon;
       return;
