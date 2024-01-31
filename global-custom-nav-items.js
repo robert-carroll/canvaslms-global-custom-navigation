@@ -31,7 +31,7 @@
   // continue if curious
   const globalCustomNav = {  
     cfg: {
-      context_item: '',
+      //context_item: '',
       glbl: {
         nav_selector: '#menu',
         trayActiveClass: `ic-app-header__menu-list-item--active`,
@@ -53,8 +53,8 @@
 
         // preserve the nav item to restore active class when a tray is closed
         // handle primary routes, external tools, and custom contexts
-        var active_context = document.querySelector(`${globalCustomNav.cfg.glbl.nav_selector} li.${globalCustomNav.cfg.glbl.trayActiveClass} a`);
-        globalCustomNav.cfg.context_item = active_context.id || active_context.closest('li').id;
+        // var active_context = document.querySelector(`${globalCustomNav.cfg.glbl.nav_selector} li.${globalCustomNav.cfg.glbl.trayActiveClass} a`);
+        // globalCustomNav.cfg.context_item = active_context.id || active_context.closest('li').id;
         globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
       }
       globalCustomNav.watch_burger_tray();
@@ -207,7 +207,7 @@
       const regex = new RegExp(`^${item.href}`);
       if (!hamb && regex.test(window.location.pathname)) {
         globalCustomNav.cfg.context_item = item.slug;
-        globalCustomNav.glbl_ensure_active_class(globalCustomNav.cfg.context_item);
+        //globalCustomNav.glbl_ensure_active_class(globalCustomNav.cfg.context_item);
       }
     }
   };

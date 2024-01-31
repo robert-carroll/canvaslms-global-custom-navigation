@@ -57,11 +57,12 @@
         globalCustomNav.opts = [];
         globalCustomNav.nav_items = Array.isArray(opts.nav_items) ? opts.nav_items : opts;
 
-
         // preserve the nav item to restore active class when a tray is closed
         // handle primary routes, external tools, and custom contexts
         var active_context = document.querySelector(`${globalCustomNav.cfg.glbl.nav_selector} li.${globalCustomNav.cfg.glbl.trayActiveClass} a`);
-        globalCustomNav.cfg.context_item = active_context.id || active_context.closest('li').id;
+        if(active_context) {
+          globalCustomNav.cfg.context_item = active_context.id || active_context.closest('li').id;
+        }
         globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
       }
       globalCustomNav.watch_glbl_tray();
@@ -152,7 +153,9 @@
       }
     },
     glbl_ensure_active_class: context_item => {
-      // ensure active class is restored to appropriate icon based on context
+      // if no active context is set
+      if(!context_item) return;
+      // otherwise ensure active class is restored to appropriate icon based on context
       Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} .${globalCustomNav.cfg.glbl.trayActiveClass}`)).forEach(e => {
         e.classList.toggle(globalCustomNav.cfg.glbl.trayActiveClass);
       });
