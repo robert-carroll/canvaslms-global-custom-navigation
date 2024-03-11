@@ -50,11 +50,6 @@
         globalCustomNav.dir = document.querySelector('html').getAttribute('dir') ?? 'ltr';
         globalCustomNav.opts = [];
         globalCustomNav.nav_items = Array.isArray(opts.nav_items) ? opts.nav_items : opts;
-
-        // preserve the nav item to restore active class when a tray is closed
-        // handle primary routes, external tools, and custom contexts
-        // var active_context = document.querySelector(`${globalCustomNav.cfg.glbl.nav_selector} li.${globalCustomNav.cfg.glbl.trayActiveClass} a`);
-        // globalCustomNav.cfg.context_item = active_context.id || active_context.closest('li').id;
         globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
       }
       globalCustomNav.watch_burger_tray();
@@ -106,8 +101,6 @@
         if (user_gets_item) {
 
           globalCustomNav.create_nav_icon(item, hamb);
-
-          // append high contrast icon
           
           globalCustomNav.append_item(item, hamb);
           if (item.tray) {
@@ -117,7 +110,8 @@
       });
     },
     create_nav_icon: (item, hamb = true) => {
-      item.tidle = item.title.replace(/\s+/g, '');
+      // create a DOM safe string from the title for the id, or replace it with a random string if regex returns an empty string
+      item.tidle = item.title.replace(/[\W_]+/g,'') || Math.random().toString(18).slice(2);
       item.slug = `global_nav_${item.tidle}_link`;
 
       // clone and create the icon, consider c4e
@@ -137,13 +131,10 @@
         icon.querySelector('a').setAttribute('target', item.target);
       }
 
-      try {
-        // global or hamb
-        var icon_text = icon.querySelector('.menu-item__text') || icon.querySelector('span[letter-spacing="normal"]');
-        icon_text.textContent = item.title;
-      } catch (e) {
-        console.log(e);
-      }
+      // get the text for the cloned nav item, global or hamb
+      var icon_text = icon.querySelector('.menu-item__text') || icon.querySelector('span[letter-spacing="normal"]');
+      // set the clones text to the item text
+      icon_text.textContent = item.title;
 
       // prepare for svg
       const svg_holder = icon.querySelector((hamb ? '.rspv-svg' : '.svg') + `-${item.tidle}-holder`);
@@ -207,7 +198,6 @@
       const regex = new RegExp(`^${item.href}`);
       if (!hamb && regex.test(window.location.pathname)) {
         globalCustomNav.cfg.context_item = item.slug;
-        //globalCustomNav.glbl_ensure_active_class(globalCustomNav.cfg.context_item);
       }
     }
   };

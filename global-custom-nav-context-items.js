@@ -168,8 +168,6 @@
         if (user_gets_item) {
 
           globalCustomNav.create_nav_icon(item, hamb);
-
-          // append high contrast icon
           
           globalCustomNav.append_item(item, hamb);
           if (item.tray) {
@@ -179,7 +177,8 @@
       });
     },
     create_nav_icon: (item, hamb = true) => {
-      item.tidle = item.title.replace(/\s+/g, '');
+      // create a DOM safe string from the title for the id, or replace it with a random string if regex returns an empty string
+      item.tidle = item.title.replace(/[\W_]+/g,'') || Math.random().toString(18).slice(2);
       item.slug = `global_nav_${item.tidle}_link`;
 
       // clone and create the icon, consider c4e
@@ -199,13 +198,10 @@
         icon.querySelector('a').setAttribute('target', item.target);
       }
 
-      try {
-        // global or hamb
-        var icon_text = icon.querySelector('.menu-item__text') || icon.querySelector('span[letter-spacing="normal"]');
-        icon_text.textContent = item.title;
-      } catch (e) {
-        console.log(e);
-      }
+      // get the text for the cloned nav item, global or hamb
+      var icon_text = icon.querySelector('.menu-item__text') || icon.querySelector('span[letter-spacing="normal"]');
+      // set the clones text to the item text
+      icon_text.textContent = item.title;
 
       // prepare for svg
       const svg_holder = icon.querySelector((hamb ? '.rspv-svg' : '.svg') + `-${item.tidle}-holder`);

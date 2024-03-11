@@ -39,9 +39,10 @@
       ".gcn_tray-view-link:focus": "outline-color: var(--ic-link-color);",
       ".gcn_tray-view-link": "outline-color: transparent; outline-offset: 0.25rem; outline-style: solid; outline-width: 0.125rem; transition: outline-color 0.2s ease 0s; vertical-align: baseline; max-width: 100%; overflow: visible;",
       ".gcn_tray-link-desc-text": "font-size: 0.875rem;",
-      // for custom tray callbacks
+      // for callback trays and throwbacks
       ".gcn_tray-view-spinner": "max-width: 100%; overscroll-behavior: auto; display: inline-block; vertical-align: middle; position: relative; box-sizing: border-box; overflow: hidden; width: 3em; height: 3em;",
       ".gcn_tray-spinner__circle": "display: block; position: absolute; top: 0px; left: 0px; animation-name: gcn-spinner-rotate; animation-duration: 2.25s; animation-iteration-count: infinite; animation-timing-function: linear; width: 3em; height: 3em;",
+      ".gcn_tray_throwback-spinner__circle": "display: block; animation-name: gcn-spinner-rotate; animation-duration: 2.25s; animation-iteration-count: infinite; animation-timing-function: linear; width: 3em; height: 3em;",
       ".gcn_tray-spinner__circleTrack": "stroke: rgb(245, 245, 245); fill: none; stroke-width: 0.375em;",
       ".gcn_tray-spinner__circleSpin": "fill: none; stroke-linecap: round; animation-name: gcn-spinner-morph; animation-duration: 1.75s; animation-iteration-count: infinite; animation-timing-function: ease; stroke-width: 0.375em; stroke-dasharray: 6em; transform-origin: calc(1.5em) calc(1.5em) 0px; stroke: rgb(3, 116, 181);",
       "@keyframes gcn-spinner-rotate": "to { transform: rotate(360deg) }",
@@ -214,7 +215,11 @@
           
           globalCustomNav.create_nav_icon(item, hamb);
 
-          // append high contrast icon
+          if (!!item.high_contrast && item.high_contrast == true) {
+            if(ENV.use_high_contrast != true) return;
+            globalCustomNav.append_high_contrast(item);
+            return;
+          }
           
           globalCustomNav.append_item(item, hamb);
           if (item.tray) {
@@ -224,7 +229,8 @@
       });
     },
     create_nav_icon: (item, hamb = true) => {
-      item.tidle = item.title.replace(/\s+/g, '');
+      // create a DOM safe string from the title for the id, or replace it with a random string if regex returns an empty string
+      item.tidle = item.title.replace(/[\W_]+/g,'') || Math.random().toString(18).slice(2);
       item.slug = `global_nav_${item.tidle}_link`;
 
       // clone and create the icon, consider c4e
@@ -234,6 +240,16 @@
       }
       const nav_icon = hamb ? `${globalCustomNav.cfg.rspv.tray_portal} svg[name="Icon${icon_to_copy}"]` : `#global_nav_${icon_to_copy.toLowerCase()}_link`;
       const nav_icon_li = document.querySelector(nav_icon).closest('li');
+
+      // handle custom high contrast logos
+      if (!!item.high_contrast && item.high_contrast == true) {
+        // get the text for the cloned nav item, global or hamb
+        var dashboard_icon_text = nav_icon_li.querySelector('.menu-item__text') || nav_icon_li.querySelector('span[letter-spacing="normal"]');
+        item.dashboard_icon_text = dashboard_icon_text.innerText;
+        // done here
+        return;  
+      }
+      // continue for custom nav items
 
       // replace contents
       const icon = nav_icon_li.cloneNode(true);
@@ -254,13 +270,10 @@
         }
       }
 
-      try {
-        // global or hamb
-        var icon_text = icon.querySelector('.menu-item__text') || icon.querySelector('span[letter-spacing="normal"]');
-        icon_text.textContent = item.title;
-      } catch (e) {
-        console.log(e);
-      }
+      // get the text for the cloned nav item, global or hamb
+      var icon_text = icon.querySelector('.menu-item__text') || icon.querySelector('span[letter-spacing="normal"]');
+      // set the clones text to the item text
+      icon_text.textContent = item.title;
 
       // prepare for svg
       const svg_holder = icon.querySelector((hamb ? '.rspv-svg' : '.svg') + `-${item.tidle}-holder`);
@@ -326,6 +339,51 @@
         globalCustomNav.cfg.context_item = item.slug;
         globalCustomNav.glbl_ensure_active_class(globalCustomNav.cfg.context_item);
       }
+    },
+    append_high_contrast: item => {
+      // create style sheet if not already set
+      if (document.querySelectorAll('[data-global-custom-nav-css="set"]').length == 0) {
+        let style = document.createElement('style');
+        style.setAttribute('data-global-custom-nav-css', 'set');
+        document.head.appendChild(style);
+      }
+      // update style sheet with logomark override
+      var style_sheet = document.querySelector('[data-global-custom-nav-css]').sheet;
+
+      // responsive/mobile high contrast logos, single and consortiums
+      if(!!item.rspv && !item.rspv.logo_svg) {
+        item.rspv.logo_svg = item.rspv.cdn + item.rspv.logos[window.location.host.split('.')[0]];
+      } 
+      style_sheet.insertRule(`.ic-brand-mobile-global-nav-logo { background-image:url(${item.rspv.logo_svg}) !important; }`, style_sheet.cssRules.length);
+
+      // prevent readding when changing view between mobile and desktop - add only once
+      if(document.querySelector('.gcn-high-contrast-glbl')) return;
+
+      // global high contrast logos, single and consortiums
+      if(!!item.glbl && !item.glbl.logo_svg) {
+        item.glbl.logo_svg = item.glbl.cdn 
+          + (typeof item.glbl.logos === 'function' ? item.glbl.logos() : item.glbl.logos[window.location.host.split('.')[0]]);
+      }
+      style_sheet.insertRule(`.ic-app-header__logomark { background-image:url(${item.glbl.logo_svg}) !important; }`, style_sheet.cssRules.length);
+
+      // wrapper for global nav header logo
+      var div = document.createElement('div');
+      div.setAttribute('style', 'background-color: transparent');
+      div.classList.add('ic-app-header__logomark-container', 'gcn-high-contrast-glbl');
+
+      // screenreader dashboard text
+      var span = document.createElement('span');
+      span.setAttribute('class', 'screenreader-only');
+      span.textContent = item.dashboard_icon_text;
+
+      // logo link
+      var a = document.createElement('a');
+      a.href = 'https://' + window.location.host;
+      a.setAttribute('dir', globalCustomNav.dir);
+      a.classList.add('ic-app-header__logomark');
+      a.appendChild(span);
+      div.appendChild(a);
+      document.querySelector('div.ic-app-header__main-navigation').prepend(div);
     },
     tray: (item, hamb) => {
       // bind tray to nav item
@@ -901,8 +959,7 @@
 
   const globalCustomNav_opts = {
     nav_items: globalCustomNav_items,
-    throwbacks: globalCustomNav_tray_throwback,
-    another: 1
+    throwbacks: globalCustomNav_tray_throwback
   };
   // load custom nav options
   globalCustomNav.load(globalCustomNav_opts);
