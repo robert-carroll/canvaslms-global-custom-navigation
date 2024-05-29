@@ -2,19 +2,7 @@
 
 This version of the Global Custom Navigation shuffles it all together.
 
-```
-Hello Global Canvas Community,
-
-For your review:
-
-An attempt at resolving a robust set of requests (really, responsible requirements),
-before refactoring, 
-please render some responses.
-
-Robert
-```
-
-> ! This is a beta thing, do not use this in production – review _Considerations_
+> `!` Always review and test in beta before deploying to production
 
 ## Features
   - No jQuery
@@ -28,89 +16,34 @@ Robert
         - ungrouped in responsive nav tray (ex: responsive courses tray)
   - Role Callback
   - Tray Callback or Throwback
+  - Custom High Contrast Logo considerations
 
-## Tray Callbacks
+## Navigation Item Settings & Setup
 
-- should handle promise to load content after tray is available
-- should probably be navigation/links
-- should insert html to be placed into the portal after load
-- alternatively, use `glbl_tray_links()` to render links
+The files in the _js/_ directory are ready for use. They include mostly minified versions with examples included for configuring options.
 
-## Role Callbacks
+The files in the _css/_ directory for the associated features can be added to your Themes CSS file.
 
-- return `boolean`
-- probably favor `ENV` over `API`, unless you want to cache the result in `localStorage` for better ux
-  - Otherwise, users will be waiting for navigation with each page load
+## Docs
+Some guides on how to setup and configure features and customizations:
+- [/docs/nav-items.md](/docs/nav-items.md) - setup simple navigation items
+- [/docs/nav-tray-with-links.md](/docs/nav-tray-with-links.md) - setup custom trays with links
+- [/docs/custom-callback-trays.md](/docs/custom-callback-trays.md) - setup custom trays with custom callback content
+- [/docs/custom-tray-throwbacks.md](/docs/custom-tray-throwbacks.md) - setup throwbacks the modify or add content to a Canvas tray
+- [/docs/high-contrast-logos.md](/docs/high-contrast-logos.md) - handle branding logos for high contrast mode
 
-## Navigation Item Settings
-
-### Icons
-```js
-{
-  title: 'Instructure Icon',
-  icon_svg: 'icon-pin',
-  href: 'https://community.canvaslms.com/',
-  target: '_blank',
-  // can be one of : integer (position after first), 'after' (help or last), 'before' (help or last)
-  position: 1, 
-  // optional roles callback
-  roles: function () {}, 
-}
-```
-### Link Trays
-```js
-{
-  title: 'Tray with Links',
-  icon_svg: 'icon-paperclip',
-  href: 'https://community.canvaslms.com/',
-  target: '_blank',
-  position: 'before' // default
-  tray: {
-    footer: 'Optional footer text, put whatever you want here, or leave it blank.',
-    links: [{
-        href: 'http://www.example.com/your-library',
-        title: 'Library',
-        desc: 'Optional text description'
-      },
-      {
-        href: 'http://www.google.com',
-        title: 'Google'
-      },
-      {
-        href: 'http://www.example.com/help-desk',
-        title: 'Help Desk',
-        desc: 'Optional text description'
-      }
-    ]
-  }
-}
-```
-
-### Callback Trays
-```js
-{
-  title: 'Callback Tray',
-  icon_svg: 'icon-integrations',
-  href: '#',
-  // target: '_blank',
-  position: 'after',
-  // optional tray
-  tray: {
-    footer: // optional tray footer,
-    cb: function (item) {}
-}
-```
-
-## Considerations
-
-- ensuring requirements
-- still reviewing, mostly feature complete based on my goals
-  - last is root placement and sub account use
-- throwbacks adjusted for beta
-- probably provide throwbacks and callbacks as single files for fundays and userscripts
+## Development & Testing Files
+The files in the root of this repo are for testing and development:
+- `global-custom-nav.js` includes all features with examples
+- `global-custom-nav-items.js` only handles and includes examples basic navigation item icons
+- `global-custom-nav-context-items.js` nav items only that handle global nav active class context
+  - active class context refers to a _course_ or _account_, and when the user is within that Canvas route, the item icon will show the active class and apear selected.
 
 ## Contributions & Feedback
 Always welcome, discuss in the [community](https://community.canvaslms.com/t5/Canvas-Developers-Group/Thread-with-space-for-Global-Custom-Navigation/td-p/583803), or PR's and issues if you enjoy committing.
+
+## _Custom_ Contributions
+There are directories in this repository for Custom Callbacks (for custom trays) and Custom Throwbacks. If you or your institution develop one and would like it shared for others to use, please consider adding it to this repository and those directories. This will provide examples, and allow others to utilize and support them as well as make them easier to find. You could also place a forwarding link if you host it in your repository.
 
 ## Contributors
 There are snippets and concepts in this code revolving around conversations and contributions by: 
