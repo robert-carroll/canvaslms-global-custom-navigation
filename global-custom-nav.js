@@ -93,8 +93,11 @@
       if (document.querySelector(globalCustomNav.cfg.glbl.nav_selector) !== 'undefined') {
 
         globalCustomNav.dir = document.querySelector('html').getAttribute('dir') ?? 'ltr';
-        globalCustomNav.opts = [];
-        globalCustomNav.nav_items = Array.isArray(opts.nav_items) ? opts.nav_items : opts;
+        // accept nav items, or default to empty
+        if (opts.nav_items !== 'undefined' && Array.isArray(opts.nav_items)) {
+          globalCustomNav.nav_items = opts.nav_items || [];
+        }
+        // accept throwbacks, or default to empty
         if (typeof opts.throwbacks === 'object') {
           globalCustomNav.throwbacks = opts.throwbacks || {};
         }
@@ -207,7 +210,7 @@
       });
       document.getElementById(context_item).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
     },
-    prepare_nav_items: (items, hamb = true) => {
+    prepare_nav_items: (items = [], hamb = true) => {
       items.forEach(item => {
         // if roles for the current item are not set, the user can see it, otherwise
         const user_gets_item = (typeof item.roles === 'undefined') || item.roles();
@@ -628,7 +631,7 @@
       let ui_tray = [...tray_container.classList].filter(c => c.endsWith('-tray'))[0].replace('-tray', '');
       if (typeof globalCustomNav.throwbacks[ui_tray] === 'object') {
         let tray_ready = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} ${globalCustomNav.throwbacks[ui_tray].target}`);
-        let tray_action_complete = document.querySelectorAll(`${globalCustomNav.cfg.glbl.tray_portal} a.${globalCustomNav.throwbacks[ui_tray].complete}`);
+        let tray_action_complete = document.querySelectorAll(`${globalCustomNav.cfg.glbl.tray_portal} a.${globalCustomNav.throwbacks[ui_tray].actions.complete}`);
         if (tray_ready && tray_action_complete.length == 0) {
           globalCustomNav.throwbacks[ui_tray].actions.glbl();
         }
@@ -651,7 +654,7 @@
             if (tray_ready) {
               let tray_by_target = to_mapping[t];
               if (typeof globalCustomNav.throwbacks[tray_by_target] === 'object') {
-                let tray_action_complete = document.querySelectorAll(`div[id^="Expandable"] a.${globalCustomNav.throwbacks[tray_by_target].complete}`);
+                let tray_action_complete = document.querySelectorAll(`div[id^="Expandable"] a.${globalCustomNav.throwbacks[tray_by_target].actions.complete}`);
                 if (tray_action_complete.length == 0) {
                   globalCustomNav.throwbacks[tray_by_target].actions.rspv();
                 }
@@ -887,69 +890,70 @@
   // handle roles within throwbacks
   const globalCustomNav_tray_throwback = {
     accounts: {
+      // add quick navigation links for the admin tray accounts
       target: 'a[href="/accounts"]',
-      complete: 'gcn-admin-tray-sub-account-links',
       actions: {
-        glbl: function () {
-          let tray_last_li = document.querySelector(`#nav-tray-portal ul li:last-child`);
-          // create a new element
-          let subacctray_li = document.createElement('li');
-          subacctray_li.id = 'adm-tray-subacctray';
-          // dynamically grab the class set from the closest LI
-          // for continuity and maybe future proof some Canvas updates
-          subacctray_li.className = tray_last_li.getAttribute('class');
-
-          // sideways import for myself
-          let subacctray_html = localStorage.getItem(location.host + '_subacc_tray') || '<ul id="admin-tray-sam"><li>placeholder</li></ul>';
-
-          // append html to tray
-          tray_last_li.parentNode
-            .insertBefore(subacctray_li, tray_last_li.nextSibling)
-            .insertAdjacentHTML('beforeend', subacctray_html);
-
-          document.querySelector(`#nav-tray-portal a[href="/accounts"]`).classList.add('gcn-admin-tray-sub-account-links');
+        // class to stop the observer when the tray is updated
+        complete: 'gcn-admin-tray-quick-nav',
+        // add some quick navigation links to each account
+        add: function(accounts) {
+          let dir = document.querySelector('html').getAttribute('dir') ?? 'ltr';
+          let float = dir = 'ltr' ? 'right' : 'left';
+          let opts = {
+            'users': '<i class="icon-line icon-user" aria-hidden="true" />',
+            'settings': '<i class="icon-line icon-settings" aria-hidden="true" />',
+            'settings#tab-announcements': '<i class="icon-line icon-announcement" aria-hidden="true" />'
+          }
+          accounts.forEach(a => {
+            for(let o in opts) {
+              let add = document.createElement('a');
+              add.innerHTML = opts[o];
+              add.href = a.href + '/' + o;
+              add.setAttribute('dir', dir);
+              add.style = `float: ${float};`;
+              a.after(add);
+            }
+          });
         },
+        // for global nav tray
+        glbl: function () {
+          // add links to accounts list
+          this.add(document.querySelectorAll('div.accounts-tray ul a[href^="/accounts/"]'));
+          // mark this throwback complete
+          document.querySelector(`#nav-tray-portal a[href="/accounts"]`).classList.add(this.complete);
+        },
+        // for responsive nav tray
         rspv: function () {
-          let account_items = document.querySelector(`div[id^="Expandable"] a[href="/accounts"]`).closest('ul').children;
-          let tray_last_li = account_items[account_items.length - 1];
-          let subacctray_li = document.createElement('li');
-          subacctray_li.id = 'rspv-adm-tray-subacctray';
-          // dynamically grab the class set from the closest LI
-          // for continuity and maybe future proof some Canvas updates
-          subacctray_li.className = tray_last_li.getAttribute('class');
-
-          // sideways import for myself
-          let subacctray_html = localStorage.getItem(location.host + '_subacc_tray') || '<ul id="rspv-admin-tray-sam"><li>placeholder</li></ul>';
-
-          // append html to tray
-          tray_last_li.parentNode
-            .insertBefore(subacctray_li, tray_last_li.nextSibling)
-            .insertAdjacentHTML('beforeend', subacctray_html);
-
-          document.querySelector(`div[id^="Expandable"] a[href="/accounts"]`).classList.add('gcn-admin-tray-sub-account-links');
+          // add links to accounts list
+          this.add(document.querySelectorAll(`div[id^="Expandable"] a[href^="/accounts/"]`));
+          // mark this throwback complete
+          document.querySelector(`div[id^="Expandable"] a[href="/accounts"]`).classList.add(this.complete);
         }
       }
     },
     courses: {
+      // adds a heart icon to the All Courses link, it's at the top!
       target: 'a[href="/courses"]',
-      complete: 'gcn-move-all-courses',
       actions: {
+        // class to stop the observer when the tray is updated
+        complete: 'gcn-heart-all-courses',
+        // for global nav tray
         glbl: function () {
+          // identify the courses link
           let all_courses = document.querySelector(`#nav-tray-portal a[href="/courses"]`);
-          // that was deprecated so fast
+          // update the element HTML with an icon
           all_courses.insertAdjacentHTML('afterend', ` <i class="icon-line icon-heart"></i>`);
-          all_courses.classList.add('gcn-move-all-courses');
+          // mark this throwback complete
+          all_courses.classList.add(this.complete);
         },
+        // for responsive nav tray
         rspv: function () {
-          // nudge lifting this too
+          // identify the courses link
           let all_courses = document.querySelector(`div[id^="Expandable"] a[href="/courses"]`);
-          all_courses.innerHTML = all_courses.innerText + ` <i class="icon-line icon-quiz"></i>`;
-
-          // move all courses to top of rspv tray
-          let course_items = all_courses.closest('ul').children;
-          course_items[0].before(course_items[course_items.length - 1]);
-
-          all_courses.classList.add('gcn-move-all-courses');
+          // update the element HTML with an icon
+          all_courses.innerHTML = all_courses.innerText + ` <i class="icon-line icon-heart"></i>`;
+          // mark this throwback complete
+          all_courses.classList.add(this.complete);
         }
       }
     }

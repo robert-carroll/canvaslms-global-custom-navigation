@@ -195,7 +195,7 @@ svg.gcn_tray-aodown {
   font-size: 0.875rem;
 }
 
-/* instui spinner for callback trays */
+/* instui spinner for callback trays and throwbacks */
 .gcn_tray-view-spinner {
   max-width: 100%;
   overscroll-behavior: auto;
@@ -213,6 +213,16 @@ svg.gcn_tray-aodown {
   position: absolute;
   top: 0px;
   left: 0px;
+  animation-name: gcn-spinner-rotate;
+  animation-duration: 2.25s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  width: 3em;
+  height: 3em;
+}
+
+.gcn_tray_throwback-spinner__circle {
+  display: block;
   animation-name: gcn-spinner-rotate;
   animation-duration: 2.25s;
   animation-iteration-count: infinite;
