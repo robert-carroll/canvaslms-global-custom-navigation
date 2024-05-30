@@ -1,0 +1,66 @@
+/**
+// @name        Admin Tray Sub Account Nav Throwback for Global Custom Navigation
+// @namespace   https://github.com/robert-carroll/canvaslms-global-custom-navigation
+// @description css for Admin Tray Sub Account Nav Throwback
+//
+**/
+
+/* requires global-custom-nav.css */
+
+/* admin sub account tray */
+ul#gcn-admin-tray-san,
+ul#gcn-admin-tray-san ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+input#gcn-admin-tray-san-search {
+  width: 95%;
+}
+
+[dir='ltr'] ul#gcn-admin-tray-san ul {
+  margin-left: 5px;
+  border-left: 1px dotted #ccc;
+  padding-left: 5px;
+}
+
+[dir='rtl'] ul#gcn-admin-tray-san ul {
+  margin-right: 5px;
+  border-right: 1px dotted #ccc;
+  padding-right: 5px;
+}
+
+[dir='ltr'] ol#gcn-admin-tray-san-results {
+  border-bottom: 2px solid #ccc;
+  margin: 0;
+  padding-left: 18px;
+  margin-bottom: 4px;
+}
+
+[dir='rtl'] ol#gcn-admin-tray-san-results {
+  border-bottom: 2px solid #ccc;
+  margin: 0;
+  padding-right: 18px;
+  margin-bottom: 4px;
+}
+
+ul.gcn-san-list-open {
+  display: block !important;
+}
+
+[dir='ltr'] a.gcn-san-reload {
+  float: right;
+}
+
+[dir='rtl'] a.gcn-san-reload {
+  float: left;
+}
+
+[dir='ltr'] a.gcn-san-toggle {
+  float: right;
+}
+
+[dir='rtl'] a.gcn-san-toggle {
+  float: left;
+}
