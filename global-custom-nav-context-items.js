@@ -54,7 +54,6 @@
       if (document.querySelector(globalCustomNav.cfg.glbl.nav_selector) !== 'undefined') {
 
         globalCustomNav.dir = document.querySelector('html').getAttribute('dir') ?? 'ltr';
-        globalCustomNav.opts = [];
         globalCustomNav.nav_items = Array.isArray(opts.nav_items) ? opts.nav_items : opts;
 
         // preserve the nav item to restore active class when a tray is closed

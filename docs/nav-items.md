@@ -1,4 +1,3 @@
-
 # Setup options for Global Custom Navigation Items
 
 These are simple navigation item icons with links.
@@ -27,8 +26,9 @@ These are simple navigation item icons with links.
 - Hosted SVG, something you host on your own servers or CDN
   - Requires HTTPS and you must handle CORS policies yourself
 
-
 ## Example Config Options
+
+Basic nav items require [global-custom-nav-items.js](/global-custom-nav-items.js) or minified version [/js/global-custom-nav-items.min.js](/js/global-custom-nav-items.min.js)
 
 ### Basic Config with Instructure Icons
 ```js
@@ -82,8 +82,9 @@ These are simple navigation item icons with links.
   }
 },
 ```
-```js
+
 ### Nav Item for Students
+```js
 {
   title: 'Icon with Role Requirements - Student',
   // example icon with exclusion role requirement for students
@@ -99,7 +100,10 @@ These are simple navigation item icons with links.
 ## Custom Context
 
 ### Course Context
-The following examples require `global-custom-nav-context-items` to work properly
+
+The following examples require [global-custom-nav-context-items.js](/global-custom-nav-context-items.js) or minified version [/js/global-custom-nav-context-items.min.js](/js/global-custom-nav-context-items.min.js)
+
+
 ```js
 {
     title: 'Custom Context',

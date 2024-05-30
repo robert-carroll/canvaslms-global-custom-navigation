@@ -4,6 +4,7 @@
 // @description return a set of linked squares with user course colors
 //
 **/
+
 /*
   title: 
   icon_svg:

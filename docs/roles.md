@@ -16,7 +16,6 @@ if(['teacher','admin'].some(a => ENV.current_user_roles.includes(a))) {
 }
 ```
 
-
 ## Role Callbacks
 
 Roles can now be handled within the nav item config using the `role` property.
@@ -44,7 +43,6 @@ roles: function () {
 ## Tricky Roles
 
 If you have staff in the student role, maybe for Professional Development, depending on the sub account you install this too, employees would see the Student links. Using elimination, instead of inclusion, helps find users that don't have employee roles.
-
 
 ## Students
 ```js

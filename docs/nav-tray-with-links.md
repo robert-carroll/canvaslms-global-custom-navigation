@@ -1,4 +1,3 @@
-
 # Setup options for Global Custom Navigation Trays
 
 Tray configs start with the basic params from [nav-items](/docs/nav-items.md)

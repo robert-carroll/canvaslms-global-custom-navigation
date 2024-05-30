@@ -1,4 +1,4 @@
- ## Setup options for Global Custom Navigation Throwbacks
+# Setup options for Global Custom Navigation Throwbacks
 
  Throwbacks let you modify an existing Canvas Tray, adding new content or functionality to it.
 

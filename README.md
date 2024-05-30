@@ -29,7 +29,7 @@ Some guides on how to setup and configure features and customizations:
 - [/docs/nav-items.md](/docs/nav-items.md) - setup simple navigation items
 - [/docs/nav-tray-with-links.md](/docs/nav-tray-with-links.md) - setup custom trays with links
 - [/docs/custom-callback-trays.md](/docs/custom-callback-trays.md) - setup custom trays with custom callback content
-- [/docs/custom-tray-throwbacks.md](/docs/custom-tray-throwbacks.md) - setup throwbacks the modify or add content to a Canvas tray
+- [/docs/custom-tray-throwbacks.md](/docs/custom-tray-throwbacks.md) - setup throwbacks to modify or add content to a Canvas tray
 - [/docs/high-contrast-logos.md](/docs/high-contrast-logos.md) - handle branding logos for high contrast mode
 
 ## Development & Testing Files
@@ -37,7 +37,7 @@ The files in the root of this repo are for testing and development:
 - `global-custom-nav.js` includes all features with examples
 - `global-custom-nav-items.js` only handles and includes examples basic navigation item icons
 - `global-custom-nav-context-items.js` nav items only that handle global nav active class context
-  - active class context refers to a _course_ or _account_, and when the user is within that Canvas route, the item icon will show the active class and apear selected.
+  - active class context refers to a _course_ or _account_, and when the user is within that Canvas route, the item icon will show the active class and appear selected.
 
 ## Contributions & Feedback
 Always welcome, discuss in the [community](https://community.canvaslms.com/t5/Canvas-Developers-Group/Thread-with-space-for-Global-Custom-Navigation/td-p/583803), or PR's and issues if you enjoy committing.

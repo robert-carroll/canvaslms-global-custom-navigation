@@ -94,13 +94,9 @@
 
         globalCustomNav.dir = document.querySelector('html').getAttribute('dir') ?? 'ltr';
         // accept nav items, or default to empty
-        if (opts.nav_items !== 'undefined' && Array.isArray(opts.nav_items)) {
-          globalCustomNav.nav_items = opts.nav_items || [];
-        }
+        globalCustomNav.nav_items = (opts.nav_items !== 'undefined' && Array.isArray(opts.nav_items)) ? opts.nav_items : [];
         // accept throwbacks, or default to empty
-        if (typeof opts.throwbacks === 'object') {
-          globalCustomNav.throwbacks = opts.throwbacks || {};
-        }
+        globalCustomNav.throwbacks = (typeof opts.throwbacks === 'object') ? opts.throwbacks : {};
 
         // preserve the nav item to restore active class when a tray is closed
         // handle primary routes, external tools, and custom contexts
@@ -210,7 +206,7 @@
       });
       document.getElementById(context_item).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
     },
-    prepare_nav_items: (items = [], hamb = true) => {
+    prepare_nav_items: (items, hamb = true) => {
       items.forEach(item => {
         // if roles for the current item are not set, the user can see it, otherwise
         const user_gets_item = (typeof item.roles === 'undefined') || item.roles();

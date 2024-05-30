@@ -1,4 +1,3 @@
-
 # Setup options for Global Custom Navigation Trays
 
 Callback Trays use the params from [nav-items](/docs/nav-items.md) and [nav-tray-with-links](/docs/nav-tray-with-links.md)
