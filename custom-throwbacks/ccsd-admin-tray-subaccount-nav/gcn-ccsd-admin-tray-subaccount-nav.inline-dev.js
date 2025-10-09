@@ -233,7 +233,9 @@
       };
     
       subaccnav.controls = () => {
-    
+        
+        if(!document.querySelector(`#${subaccnav.container_id} #gcn-admin-tray-san`)) return;
+
         // sub account list expansion
         document.querySelector(`#${subaccnav.container_id} #gcn-admin-tray-san`).addEventListener('click', e => {
           if(!e.target.closest(`#${subaccnav.container_id} a.gcn-san-toggle`)) return;
@@ -489,10 +491,11 @@
         wrapper.dir = document.querySelector('html').getAttribute('dir') ?? 'ltr';
         wrapper.innerHTML = `<hr role="presentation">${san_content}`;
         // append san to tray where desired
-        subaccnav.tray.where.append(wrapper);
-        // throwback complete
-        document.querySelector(subaccnav.tray.mark).classList.add(subaccnav.tray.complete);
-        
+        if(subaccnav.tray.where) { 
+          subaccnav.tray.where.append(wrapper);
+          // throwback complete
+          document.querySelector(subaccnav.tray.mark).classList.add(subaccnav.tray.complete);
+        }
         // enable interaction
         if(subaccnav.html) {
           subaccnav.controls();
