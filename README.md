@@ -40,20 +40,20 @@ The files in the root of this repo are for testing and development:
   - active class context refers to a _course_ or _account_, and when the user is within that Canvas route, the item icon will show the active class and appear selected.
 
 ## Contributions & Feedback
-Always welcome, discuss in the [community](https://community.canvaslms.com/t5/Canvas-Developers-Group/Thread-with-space-for-Global-Custom-Navigation/td-p/583803), or PR's and issues if you enjoy committing.
+Always welcome, discuss in the [community](https://community.instructure.com/en/discussion/583803/thread-with-space-for-global-custom-navigation), or PR's and issues if you enjoy committing.
 
 ## _Custom_ Contributions
 There are directories in this repository for Custom Callbacks (for custom trays) and Custom Throwbacks. If you or your institution develop one and would like it shared for others to use, please consider adding it to this repository and those directories. This will provide examples, and allow others to utilize and support them as well as make them easier to find. You could also place a forwarding link if you host it in your repository.
 
 ## Contributors
 There are snippets and concepts in this code revolving around conversations and contributions by: 
-- [James](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/105160) mutations/append css/clones
-- [jsimon3](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/685323) responsive tray
-- [dbrace](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/375810) instui icons
-- [JACOBSEN_C](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/103689) roles
-- [hechla](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/521056) icon placement
-- [cesbrandt](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/109121) easily readable role conditions
-- [Code-with-Ski](https://community.canvaslms.com/t5/user/viewprofilepage/user-id/2432278) language direction detection, tray transition and classes
+- [James](https://community.instructure.com/en/profile/James) mutations/append css/clones
+- [jsimon3](https://community.instructure.com/en/profile/jsimon3) responsive tray
+- [dbrace](https://community.instructure.com/en/profile/dbrace) instui icons
+- [JACOBSEN_C](https://community.instructure.com/en/profile/JACOBSEN_C) roles
+- [hechla](https://community.instructure.com/en/profile/hechla) icon placement
+- [cesbrandt](https://community.instructure.com/en/profile/cesbrandt) easily readable role conditions
+- [Code-with-Ski](https://community.instructure.com/en/profile/Code-with-Ski) language direction detection, tray transition and classes
 - threads that have been archived
 - notes from 2020
 - the community for its feedback
