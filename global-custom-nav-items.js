@@ -55,7 +55,7 @@
     },
     watch_burger_tray: (_mtx, observer) => {
       const portal = document.querySelector(globalCustomNav.cfg.rspv.tray_portal);
-      const tray_action_complete = document.querySelector('div.rspv-global-custom-nav');
+      const tray_portal_complete = document.querySelector('div.rspv-global-custom-nav');
 
       if (!portal) {
         if (typeof observer === 'undefined') {
@@ -67,7 +67,7 @@
         }
         return;
       }
-      if (portal != null && (document.querySelector('.mobile-header-hamburger').offsetParent != null) && !tray_action_complete) {
+      if (portal != null && (document.querySelector('.mobile-header-hamburger').offsetParent != null) && !tray_portal_complete) {
         observer.disconnect();
         globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, true);
         document.querySelector(globalCustomNav.cfg.rspv.tray_container).classList.add('rspv-global-custom-nav');
