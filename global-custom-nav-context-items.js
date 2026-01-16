@@ -250,15 +250,18 @@
     append_item: (item, hamb = true) => {
       const target_ul = hamb ? globalCustomNav.cfg.rspv.tray_portal : globalCustomNav.cfg.glbl.nav_selector;
       const target_li = document.querySelector(`${target_ul} li:last-child`);
-      // nav item placement
-      if (item.position !== 'undefined' && typeof item.position === 'number') {
-        // positioned
-        const position = (hamb == true ? globalCustomNav.cfg.rspv.tray_portal : globalCustomNav.cfg.glbl.nav_selector) + ` > li:nth-of-type(${item.position})`;
-        document.querySelector(position).after(item.icon);
-      } else if (item.position !== 'undefined' && item.position == 'after') {
-        target_li.after(item.icon);
+      const position_sel = (hamb == true ? globalCustomNav.cfg.rspv.tray_portal : globalCustomNav.cfg.glbl.nav_selector) + ` > li:nth-of-type(${item.position})`;
+      // nav item placement by position
+      if (typeof item.position === 'number' && document.querySelector(position_sel)) {
+					document.querySelector(position_sel).after(item.icon);
       } else {
-        target_li.before(item.icon);
+        if (item.position == 'after') {
+          target_li.after(item.icon);
+        } else {
+          // default to before the last child (usually Help)
+          // unless, visually other items are added after current is placed
+          target_li.before(item.icon);
+        }
       }
 
       const regex = new RegExp(`^${item.href}`);
