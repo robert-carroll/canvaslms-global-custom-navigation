@@ -1,6 +1,7 @@
 # Setup options for Global Custom Navigation Trays
 
-Callback Trays use the params from [nav-items](/docs/nav-items.md) and [nav-tray-with-links](/docs/nav-tray-with-links.md)
+Callback trays are custom naviation trays with a callback for added functionality.
+> Use the properties from [nav-items](/docs/nav-items.md) and [nav-tray-with-links](/docs/nav-tray-with-links.md), with additional `cb` property
 
 ### Tray Callbacks:
 

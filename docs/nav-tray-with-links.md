@@ -1,6 +1,6 @@
 # Setup options for Global Custom Navigation Trays
 
-Tray configs start with the basic params from [nav-items](/docs/nav-items.md)
+Tray configs start with the basic properties from [nav-items](/docs/nav-items.md)
 
 - `tray` object that sets the nav item includes a custom tray
 - `footer` the optional footer text for the tray
