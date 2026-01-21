@@ -68,7 +68,7 @@ accounts: {
     // add some quick navigation links to each account
     add: function(accounts) {
       let dir = document.querySelector('html').getAttribute('dir') ?? 'ltr';
-      let float = dir = 'ltr' ? 'right' : 'left';
+      let float = dir == 'ltr' ? 'right' : 'left';
       let opts = {
         'users': '<i class="icon-line icon-user" aria-hidden="true" />',
         'settings': '<i class="icon-line icon-settings" aria-hidden="true" />',
