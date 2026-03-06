@@ -16,7 +16,7 @@ Collapsed | Expanded | Search
 
 ## Features
 ### localStorage
-- Stored separatelyfor each instance (prod, beta, test)
+- Stored separately for each instance (prod, beta, test)
 - The sub account API results are stored in localStorage for repeated use.
 - If localStorage is empty, account collection starts on page load and does not wait until the tray is opened for initialization.
 
