@@ -45,23 +45,52 @@ Roles, or modifying throwback features for specific user roles should be handled
 
 Throwbacks offer an wide range of customization to Global Navigation, the possibilities and functionality may vary depending on the tray or user (student, instructor, administrator). These examples are provided to help understand the components to make a custom throwback.
 
-Throwbacks consist of:
+### Throwbacks consist of:
 - `target` - the tray and selector (primary link for the tray) that will be modified when opened
 - `actions` - the config and methods used to customize each navigation tray
 - `actions.complete` - the class used to stop the observer when the changes are ready
 - `actions.glbl` - the customization changes when the global (desktop) navigation tray is opened
 - `actions.rspv` - the customization changes when the responsive (mobile) navigation tray is opened
 
-Other methods can used in `actions` to reduce or reuse code, this is shown with the Accounts Throwback example using `add()`
+Other methods can be used in `actions` to reduce or reuse code, this is shown with the Accounts Throwback example using `add()`
+
+### Trouble with Targets:
+
+When choosing the target, it is best to identify a selector that works between both the global and responsive menus. 
+
+Consider the following target selectors will have different results:
+
+
+#### Problematic Selector
+
+```a[href="/accounts"]```
+
+Using the exact match selector for the default link in the tray is problematic for the Admin tray (unlike the Courses tray).
+
+- The Issue: This selector targets the "All Accounts" link. This link is present immediately when the tray opens before the account links.
+
+- The Result: The Mutation Observer and throwback sees this target, marks the task as complete, and attempts to inject the custom links before the actual account list has finished loading, often leading to the custom icons missing on the initial tray opening.
+
+#### Recommended Selector
+
+```a[href^="/accounts/"]```
+
+Using the "starts with" selector is the most reliable method.
+
+- The Logic: This selector ignores the "All Accounts" header and instead looks for the specific sub-account links (which contain IDs, e.g., /accounts/123).
+
+- The Result: The Mutation Observer will continue watching the tray until these specific links are returned from the additional API requests and rendered in the DOM. This ensures your custom navigation items are added only when the tray is fully populated.
+
 
 ### Example Accounts Throwback
 
 This Throwback example will add some quick navigation links to the Admin Tray Accounts list for quickly accessing Account navigation routes.
 
+
 ```js
 accounts: {
   // add quick navigation links for the admin tray accounts for account admins
-  target: 'a[href="/accounts"]',
+  target: 'a[href^="/accounts/"]',
   actions: {
     // class to stop the observer when the tray is updated
     complete: 'gcn-admin-tray-quick-nav',
@@ -107,9 +136,10 @@ accounts: {
 
 This Throwback example will add a heart icon to the All Courses link that is now at the top of the list for everyone!
 
+
 ```js
 courses: {
-  // adds a heart icon to the All Courses link, it's at the top!
+  // adds a heart icon to the All Courses link
   target: 'a[href="/courses"]',
   actions: {
     // class to stop the observer when the tray is updated

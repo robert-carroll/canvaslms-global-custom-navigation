@@ -890,7 +890,10 @@
   const globalCustomNav_tray_throwback = {
     accounts: {
       // add quick navigation links for the admin tray accounts
-      target: 'a[href="/accounts"]',
+      // your action to be triggered on the tray default link
+      // target: 'a[href="/accounts"]',
+      // your action to be triggered when the account links are added to the tray
+      target: 'a[href^="/accounts/"]',
       actions: {
         // class to stop the observer when the tray is updated
         complete: 'gcn-admin-tray-quick-nav',
