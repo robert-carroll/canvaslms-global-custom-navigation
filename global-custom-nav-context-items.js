@@ -122,7 +122,7 @@
         observer.disconnect();
       }
 
-      globalCustomNav.glbl_ensure_active_class(globalCustomNav.cfg.context_item);
+      globalCustomNav.glbl_ensure_active_class();
       // 
 
       const watch = new MutationObserver(globalCustomNav.exit_glbl_tray);
@@ -151,14 +151,17 @@
         globalCustomNav.watch_glbl_tray();
       }
     },
-    glbl_ensure_active_class: context_item => {
-      // if no active context is set
-      if(!context_item) return;
-      // otherwise ensure active class is restored to appropriate icon based on context
-      Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} .${globalCustomNav.cfg.glbl.trayActiveClass}`)).forEach(e => {
-        e.classList.toggle(globalCustomNav.cfg.glbl.trayActiveClass);
+    glbl_ensure_active_class: (context_item = globalCustomNav.cfg.context_item) => {
+      // clear existing active classes to prevent duplicates
+      document.querySelectorAll(`.${globalCustomNav.cfg.glbl.trayActiveClass}`).forEach(el => {
+        el.classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
       });
-      document.getElementById(context_item).closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
+
+      // attempt to find the requested item, fallback to the default context item
+      const nav_item = document.getElementById(context_item) || document.getElementById(globalCustomNav.cfg.context_item);
+
+      // safely apply the active class to the parent <li> if it exists
+      nav_item?.closest('li')?.classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
     },
     prepare_nav_items: (items, hamb = true) => {
       items.forEach(item => {
@@ -262,7 +265,7 @@
       const regex = new RegExp(`^${item.href}`);
       if (!hamb && regex.test(window.location.pathname)) {
         globalCustomNav.cfg.context_item = item.slug;
-        globalCustomNav.glbl_ensure_active_class(globalCustomNav.cfg.context_item);
+        //globalCustomNav.glbl_ensure_active_class();
       }
     }
   };
