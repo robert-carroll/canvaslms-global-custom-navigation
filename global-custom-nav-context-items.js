@@ -165,13 +165,8 @@
         // if roles for the current item are not set, the user can see it, otherwise
         const user_gets_item = (typeof item.roles === 'undefined') || item.roles();
         if (user_gets_item) {
-
           globalCustomNav.create_nav_icon(item, hamb);
-          
           globalCustomNav.append_item(item, hamb);
-          if (item.tray) {
-            globalCustomNav.tray(item, hamb);
-          }
         }
       });
     },

@@ -108,6 +108,7 @@
       }
       globalCustomNav.watch_glbl_tray();
       globalCustomNav.watch_burger_tray();
+      globalCustomNav.tray_handler();
     },
     watch_burger_tray: (_mtx, observer) => {
       const portal = document.querySelector(globalCustomNav.cfg.rspv.tray_portal);
@@ -221,9 +222,6 @@
           }
           
           globalCustomNav.append_item(item, hamb);
-          if (item.tray) {
-            globalCustomNav.tray(item, hamb);
-          }
         }
       });
     },
@@ -387,18 +385,6 @@
       div.appendChild(a);
       document.querySelector('div.ic-app-header__main-navigation').prepend(div);
     },
-    tray: (item, hamb) => {
-      // bind tray to nav item
-      document.querySelector('#' + (hamb ? 'rspv-' : '') + item.slug).addEventListener('click', function (e) {
-        if (hamb) {
-          globalCustomNav.rspv_tray_toggle(this);
-        } else {
-          // prevent default link click on global nav tray item anchor
-          e.preventDefault();
-          globalCustomNav.glbl_tray_toggle(this, e);
-        }
-      }.bind(item));
-    },
     link: item => {
       var a = document.createElement('a');
       a.textContent = item.title;
@@ -463,66 +449,147 @@
         globalCustomNav.handle_tray_cb(item, `#rspv-${item.slug}-tray .gcn-loading-tray-cb-svg`, 'afterbegin');
       }
     },
-    glbl_tray_toggle: (item, click) => {
-      // bind/click on each menu item, if current is custom open
-      // if clicked menu item is not custom, close custom trays
-      // ensures the continuity of clicking and closing trays remains endless
-      Array.from(document.querySelectorAll(`${globalCustomNav.cfg.glbl.nav_selector} li`)).forEach(nav => {
-        nav.addEventListener('click', function (ne) {
-          const regex = new RegExp(item.tidle);
-          if (!regex.test(ne.target.closest('a').id)) {
-            if (document.getElementById(`${item.slug}-tray`)) {
-              document.getElementById(`${item.slug}-tray`).remove();
-            }
-          }
-        })
-      });
+    // unified handler with event delegation for custom tray toggling events
+    // reconciles interactions between native Canvas trays and custom trays
+    // maintains native ui/ux feel and functionality for custom trays
+    tray_handler: () => {
 
-      // toggled and tray content is not loaded
-      if (!document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} > #${item.slug}-tray`)) {
-        globalCustomNav.glbl_tray_content(item);
-        click.target.closest('li').classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
-        globalCustomNav.glbl_tray_close(item);
-      }
-    },
-    glbl_tray_close: item => {
-      function close_transition() {
+      const glbl_tray_close = (slug, restore_focus = true) => {
         const tray_wrapper = document.querySelector('.gcn_tray-wrapper');
+        if (!tray_wrapper || !tray_wrapper.classList.contains('gcn_open')) return;
+
+        // restore focus on nav item when tray closes
+        if (restore_focus) {
+          const tray_nav_anchor = document.getElementById(slug);
+          if (tray_nav_anchor) {
+            if (!tray_nav_anchor.hasAttribute('tabindex')) tray_nav_anchor.setAttribute('tabindex', '0');
+            tray_nav_anchor.focus();
+          }
+        }
+        // handle transition
         tray_wrapper.addEventListener('transitionend', () => {
           // remove tray after transition if it still exists
-          document.getElementById(`${item.slug}-tray`)?.remove();
-
-          // remove active class on global nav icon on close
-          document
-            .getElementById(item.slug)
-            .closest('li')
-            .classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
+          document.getElementById(`${slug}-tray`)?.remove();
         });
-        // slide out tray on close
+        // trigger slide tray on close
         tray_wrapper.classList.remove('gcn_open');
-      }
+      };
 
-      // close tray when user clicks outside the tray
-      document.querySelector(`#${item.slug}-tray-close`).addEventListener('click', function () {
-        close_transition();
-      }.bind(item));
+      document.addEventListener('click', (e) => {
+        const target = e.target;
+        // checks if the click is on a global or responsive nav item
+        const nav_anchor = target.closest(`${globalCustomNav.cfg.glbl.nav_selector} li a, [id^="rspv-"]`);
 
-      // close tray when focus leaves the tray
-      window.addEventListener('click', function (e) {
-        if (document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} > #${item.slug}-tray`) !== null) {
-          if (!document.getElementById(`${item.slug}-tray`)?.contains(e.target) && (document.getElementById('main').contains(e.target) || !document.getElementById(`${item.slug}-item`).contains(e.target))) {
-            close_transition();
+        // reconcile custom vs native trays
+        if (nav_anchor) {
+          const is_rspv = nav_anchor.id.startsWith('rspv-');
+
+          // do nothing for native trays except close any open custom trays
+          // native tray nav items (li) do not have an id
+          // only run for global nav trays because responsive trays don't use this handler for closing
+          if(!is_rspv && nav_anchor.closest('li') && !nav_anchor.closest('li').hasAttribute('id')) {
+            const open_wrapper = document.querySelector('.gcn_open');
+            if (open_wrapper) {
+              const open_slug = open_wrapper.parentElement.id.replace('-tray', '');
+              // pass 'false' to prevent focus stealing from the native tray
+              glbl_tray_close(open_slug, false);
+            }
+            return;
+          }
+
+          // slug for the click
+          const slug = is_rspv ? nav_anchor.id.replace('rspv-', '') : nav_anchor.id;
+          const item = globalCustomNav.nav_items.find(i => i.slug === slug);
+
+          // check if this specific item has custom tray content
+          const has_tray = item && item.tray !== undefined;
+          const open_wrapper = document.querySelector('.gcn_open');
+
+          // handle toggling open/close states for custom trays
+          if (has_tray) {
+            if (!is_rspv) e.preventDefault();
+
+            if (is_rspv) {
+              globalCustomNav.rspv_tray_toggle(item);
+            } else {
+              const is_open = !!document.getElementById(`${item.slug}-tray`);
+              if (!is_open) {
+                // close open trays before opening
+                if (open_wrapper) {
+                  const open_slug = open_wrapper.parentElement.id.replace('-tray', '');
+                  // pass 'false' because we are opening a NEW custom tray 
+                  // and don't want the old nav item to steal focus
+                  glbl_tray_close(open_slug, false);
+                }
+                // generate and append the tray content to tray portal ONLY when opening
+                const tray_html = globalCustomNav.tray_links_vs_cb(item, is_rspv);
+                if (tray_html !== false) {
+                  globalCustomNav.glbl_tray_content(item, tray_html);
+                }
+              } else {
+                // close when reclicking the nav item for the tray
+                // uses default (true) to restore focus
+                glbl_tray_close(slug);
+              }
+            }
+            return;
+          }
+        }
+
+        // handle close button
+        const open_wrapper = document.querySelector('.gcn_open');
+        if (open_wrapper && !nav_anchor) {
+          const tray_container = open_wrapper.parentElement;
+          const slug = tray_container.id.replace('-tray', '');
+          const item = globalCustomNav.nav_items.find(i => i.slug === slug);
+          
+          // close tray when focus leaves the tray
+          // or user clicks the close button
+          // ...a click is only "outside" if it's not the tray 
+          // ...and not the nav item that controls the tray
+          const is_close_btn = target.closest('[id$="-tray-close"]');
+          const is_inside_tray = open_wrapper.contains(target);
+
+          if (is_close_btn || !is_inside_tray) {
+            if (item) {
+              glbl_tray_close(slug);
+            }
           }
         }
       });
 
       // close tray with escape key when the tray is open
-      document.addEventListener('keydown', function (event) {
-        const key = event.key;
-        if (key === 'Escape') {
-          close_transition();
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          const open_wrapper = document.querySelector('.gcn_open');
+          if (open_wrapper) {
+            const slug = open_wrapper.parentElement.id.replace('-tray', '');
+            if (slug) glbl_tray_close(slug);
+          }
         }
       });
+
+      // clear focus and prevent native nav items from stealing focus
+      // when closing a native tray to open a custom tray
+      const global_nav = document.querySelector(globalCustomNav.cfg.glbl.nav_selector);
+      if (global_nav) {
+        global_nav.addEventListener('focus', (e) => {
+          const open_wrapper = document.querySelector('.gcn_open');
+          if (open_wrapper) {
+            const target_li = e.target.closest('li');
+            // if the focused element is a native nav item (lacks a custom id) 
+            // and a custom tray is actively open, intercept it
+            if (target_li && !target_li.hasAttribute('id') && typeof e.target.blur === 'function') {
+              // clear focus from native item
+              e.target.blur();
+              // redirect focus back to our custom tray's close button
+              const close_btn = document.querySelector('.gcn_tray-close-btn');
+              if (close_btn) close_btn.focus();
+            }
+          }
+        // use capture phase to intercept focus before it resolves
+        }, true); 
+      }
     },
     glbl_tray_content: item => {
       const tray_content_id = `${item.slug}-tray`;
@@ -890,9 +957,6 @@
   const globalCustomNav_tray_throwback = {
     accounts: {
       // add quick navigation links for the admin tray accounts
-      // your action to be triggered on the tray default link
-      // target: 'a[href="/accounts"]',
-      // your action to be triggered when the account links are added to the tray
       target: 'a[href^="/accounts/"]',
       actions: {
         // class to stop the observer when the tray is updated
