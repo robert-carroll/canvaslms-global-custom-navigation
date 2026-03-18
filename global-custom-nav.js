@@ -469,12 +469,15 @@
             tray_nav_anchor.focus();
           }
         }
-        // handle transition
+ 
+        // handle transition, wait for the css
         tray_wrapper.addEventListener('transitionend', () => {
           // remove tray after transition if it still exists
           document.getElementById(`${slug}-tray`)?.remove();
-        });
-        // trigger slide tray on close
+          // use { once: true } so the listener cleans itself up immediately
+        }, { once: true });
+        
+        // trigger tray slide on close
         tray_wrapper.classList.remove('gcn_open');
       };
 
