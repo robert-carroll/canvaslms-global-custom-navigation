@@ -31,66 +31,101 @@
   // continue if curious
   const globalCustomNav = {  
     cfg: {
-      //context_item: '',
       glbl: {
         nav_selector: '#menu',
         trayActiveClass: `ic-app-header__menu-list-item--active`,
       },
       rspv: {
-        tray_portal: `span[dir="${(document.querySelector('html').getAttribute('dir') ?? 'ltr')}"] div[role="dialog"] ul`,
-        tray_container: 'div[class$="-tray__content"]'
+        tray_portal: 'div[role="dialog"]:has(.ic-brand-mobile-global-nav-logo) ul',
+        tray_container: 'div[class$="-tray__content"]',
+        keeper: null
       },
       targets: ['_self', '_blank', '_parent', '_top']
     },
     load: (opts) => {
       if (!document.querySelector(globalCustomNav.cfg.glbl.nav_selector) && !document.querySelector(globalCustomNav.cfg.rspv.tray_portal)) return;
 
-      if (document.querySelector(globalCustomNav.cfg.glbl.nav_selector) !== 'undefined') {
+      if (document.querySelector(globalCustomNav.cfg.glbl.nav_selector)) {
 
+        // get the left-to-right or right-to-left direction
         globalCustomNav.dir = document.querySelector('html').getAttribute('dir') ?? 'ltr';
+        // accept nav items, or default to empty
         globalCustomNav.nav_items = Array.isArray(opts.nav_items) ? opts.nav_items : opts;
+        
+        // update the glbl menu with custom nav items
         globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, false);
       }
-      globalCustomNav.watch_burger_tray();
+      globalCustomNav.detect_rspv_portal();
     },
-    watch_burger_tray: (_mtx, observer) => {
+    // the responsive menu monitors the same physical UI space for two distinct phases...
+    // one for the top level nav 'portal' (the space), and one for the second level 'tray' (the menu)
+    detect_rspv_portal: (mtx) => {
+      // if we have mtx, check if the portal is injected
+      if (mtx) {
+        let portal_detected = false;
+        for (const mutation of mtx) {
+          for (const node of mutation.addedNodes) {
+            // check if the added node is an element and if it matches or contains the portal
+            if (node.nodeType === 1) {
+              if (node.matches(globalCustomNav.cfg.rspv.tray_portal) || node.querySelector(globalCustomNav.cfg.rspv.tray_portal)) {
+                portal_detected = true;
+                break;
+              }
+            }
+          }
+          if (portal_detected) break;
+        }
+        
+        // mtx happened but the portal wasn't included, ignore and keep watching
+        if (!portal_detected && !document.querySelector(globalCustomNav.cfg.rspv.tray_portal)) {
+          return; 
+        }
+      }
+
+      // check for the portal and customization state
       const portal = document.querySelector(globalCustomNav.cfg.rspv.tray_portal);
       const tray_portal_complete = document.querySelector('div.rspv-global-custom-nav');
 
+      // there is no portal, start observer
       if (!portal) {
-        if (typeof observer === 'undefined') {
-          const obs = new MutationObserver(globalCustomNav.watch_burger_tray);
-          obs.observe(document.body, {
-            childList: true,
-            subtree: true
-          });
+        if (!globalCustomNav.cfg.rspv.keeper) {
+          // store the observer in the keeper, prevent stacking and hand off
+          // subtree ensures items are added responsive menu opens
+          globalCustomNav.cfg.rspv.keeper = new MutationObserver(globalCustomNav.detect_rspv_portal);
+          globalCustomNav.cfg.rspv.keeper.observe(document.body, { childList: true, subtree: true });
         }
         return;
       }
-      if (portal != null && (document.querySelector('.mobile-header-hamburger').offsetParent != null) && !tray_portal_complete) {
-        observer.disconnect();
+      
+      // portal exists, menu is not yet customized
+      if (portal != null && !tray_portal_complete) {
+        // handoff, stop observing the body once the portal is found
+        if (globalCustomNav.cfg.rspv.keeper) {
+          globalCustomNav.cfg.rspv.keeper.disconnect();
+          globalCustomNav.cfg.rspv.keeper = null;
+        }
+        
+        // add custom menu items
         globalCustomNav.prepare_nav_items(globalCustomNav.nav_items, true);
+        // mark it complete
         document.querySelector(globalCustomNav.cfg.rspv.tray_container).classList.add('rspv-global-custom-nav');
-        globalCustomNav.exit_burger_tray();
+        
+        // handoff for tray functionality
+        globalCustomNav.cfg.rspv.keeper = new MutationObserver(globalCustomNav.watch_rspv_portal);
+        globalCustomNav.cfg.rspv.keeper.observe(document.body, { childList: true, subtree: true });
       }
     },
-    exit_burger_tray: (_mtx, observer) => {
+    watch_rspv_portal: () => {
+      // check for tray portal, handle throwbacks
       const tray_portal_open = document.querySelector(globalCustomNav.cfg.rspv.tray_portal);
-
-      if (tray_portal_open) {
-
-        if (typeof observer === 'undefined') {
-          const obs = new MutationObserver(globalCustomNav.exit_burger_tray);
-          obs.observe(document.body, {
-            childList: true,
-            subtree: true
-          });
-        }
-        return;
-      }
+      
+      // when the portal is not open, handoff back to the portal watcher
       if (!tray_portal_open) {
-        observer.disconnect();
-        globalCustomNav.watch_burger_tray();
+        if (globalCustomNav.cfg.rspv.keeper) {
+          globalCustomNav.cfg.rspv.keeper.disconnect();
+          globalCustomNav.cfg.rspv.keeper = null;
+        }
+        globalCustomNav.detect_rspv_portal();
       }
     },
     prepare_nav_items: (items, hamb = true) => {
@@ -109,7 +144,7 @@
       item.slug = `global_nav_${item.tidle}_link`;
 
       // clone and create the icon, consider c4e
-      const icon_to_copy = (ENV.K5_USER == true && hamb == true) ? 'Home' : 'Dashboard';
+      let icon_to_copy = (ENV.K5_USER == true && hamb == true) ? 'Home' : 'Dashboard';
       const nav_icon = hamb ? `${globalCustomNav.cfg.rspv.tray_portal} svg[name="Icon${icon_to_copy}"]` : `#global_nav_${icon_to_copy.toLowerCase()}_link`;
       const nav_icon_li = document.querySelector(nav_icon).closest('li');
 
