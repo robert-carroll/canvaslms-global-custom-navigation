@@ -146,7 +146,7 @@
       // there is no portal, start observer
       if (!portal) {
         if (!globalCustomNav.cfg.rspv.keeper) {
-          // store the observer in the keeper, prevent stacking and hand off
+          // store the observer in the keeper, prevent stacking and utilize hand off
           // subtree ensures items are added responsive menu opens
           globalCustomNav.cfg.rspv.keeper = new MutationObserver(globalCustomNav.detect_rspv_portal);
           globalCustomNav.cfg.rspv.keeper.observe(document.body, { childList: true, subtree: true });
@@ -468,9 +468,14 @@
     rspv_tray_toggle: item => {
       const tray_content = document.querySelector(`#rspv-${item.slug}-tray`);
 
+      // tray content is empty
+      if (!tray_content.childElementCount)
+        globalCustomNav.rspv_tray_content(item);
+      
+      // toggle tray state (expand/collapse)
       tray_content.classList.toggle('gcn_tray-content');
-      globalCustomNav.rspv_tray_content(item);
 
+      // swap the arrows based on expand/collapse
       document.querySelectorAll(`#rspv-${item.slug} svg[name^="IconArrowOpen"]`).forEach(e => {
         e.classList.toggle('gcn_tray-closed');
       });
@@ -479,6 +484,7 @@
       const tray_content = document.querySelector(`#rspv-${item.slug}-tray`),
         tray_icon_id = `#rspv-${item.slug}`;
 
+      // swap the expand/collapse arrow
       if (!document.querySelector(`${tray_icon_id} svg[name="IconArrowOpenDown"]`)) {
         let arrow_end = document.querySelector(`${tray_icon_id} svg[name="IconArrowOpenEnd"]`);
         arrow_end.parentElement.insertAdjacentHTML('afterbegin', globalCustomNav.cfg.rspv.INSTUI_aodown);
@@ -1023,7 +1029,7 @@
         // add some quick navigation links to each account
         add: function(accounts) {
           let dir = document.querySelector('html').getAttribute('dir') ?? 'ltr';
-          let float = dir = 'ltr' ? 'right' : 'left';
+          let float = dir === 'ltr' ? 'right' : 'left';
           let opts = {
             'users': '<i class="icon-line icon-user" aria-hidden="true" />',
             'settings': '<i class="icon-line icon-settings" aria-hidden="true" />',
