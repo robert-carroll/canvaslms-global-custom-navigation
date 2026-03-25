@@ -12,34 +12,47 @@
       // for item icons
       'i.gcn_inst_menu_icon:before': 'font-size: 1.625rem;',
       'i.gcn_inst_rspv_icon': 'color: var(--ic-brand-primary);',
-      // for trays
-      'div.gcn_tray-content': 'display: block !important;',
-      'div.gcn_tray-open': 'display: block !important;',
-      'svg.gcn_tray-closed': 'display: none !important;',
-      'svg.gcn_tray-aodown': 'fill: currentcolor; display: inline-block; overflow: visible; color: inherit; vertical-align: middle; line-height: 1; width: 1em; height: 1em;',
-      ".gcn_tray-wrapper": "transform: translateZ(0px); transition: 0.5s; opacity: 1; background-color: #FFFFFF; max-height: 100vh; max-width: 100vw; overflow: hidden auto; position: fixed; box-shadow: 0 0.375rem 0.4375rem rgba(0, 0, 0, 0.1), 0 0.625rem 1.75rem rgba(0, 0, 0, 0.25); top: 0; bottom: 0; width: 28em;",
-      "[dir='ltr'] .gcn_tray-wrapper": "left: -28em; right: auto;",
-      "[dir='rtl'] .gcn_tray-wrapper": "right: -28em; left: auto;",
-      "[dir='ltr'] .gcn_tray-wrapper.gcn_open": "left: 0; right: auto;",
-      "[dir='rtl'] .gcn_tray-wrapper.gcn_open": "right: 0; left: auto;",
-      ".gcn_tray-close-btn-wrapper": "position: absolute; top: 0.5rem;",
-      "[dir='ltr'] .gcn_tray-close-btn-wrapper": "left: auto; right: 0.5rem",
-      "[dir='rtl'] .gcn_tray-close-btn-wrapper": "right: auto; left: 0.5rem",
-      ".gcn_tray-close-btn": "box-sizing: border-box; background: none; color: #2D3B45; margin: 0px; padding: 0px; border-radius: 0.25rem; outline: none; border: none; width: auto; cursor: pointer;",
-      ".gcn_tray-close-btn:hover": "background-color: rgba(45, 59, 69, 0.1);",
-      ".gcn_tray-close-btn::before": "position: absolute; pointer-events: none; opacity: 0; content: ''; transform: scale(0.95); transition: all 0.2s ease 0s; top: -0.3125rem; right: -0.3125rem; bottom: -0.3125rem; left: -0.3125rem; border-style: solid; border-color: var(--ic-brand-primary); border-width: 0.125rem; border-radius: 0.5rem; transform: scale(1);",
-      ".gcn_tray-close-btn:focus::before": "opacity: 1;",
-      ".gcn_tray-content-wrapper": "box-sizing: border-box; max-width: 100%; overflow: visible; padding: 1.5rem;",
-      ".gcn_tray-heading": "line-height: 1.125; margin: 0px; font-size: 1.375rem; font-weight: 700; color: inherit; box-sizing: border-box; max-width: 100%; overflow: visible;",
-      ".gcn_tray-list-group-heading": "line-height: 1.125; margin: 0px; font-size: 1rem; font-weight: 700; color: inherit; box-sizing: border-box; max-width: 100%; overflow: visible;",
-      ".gcn_tray-view--block-list": "margin: 0.75rem 0; list-style-type: none;",
-      ".gcn_tray-list-group-heading + .gcn_tray-view--block-list": "margin: 0.75rem;",
-      ".gcn_tray-view-listItem": "margin-top: 0.75rem; margin-bottom: 0.75rem; padding: 0px; max-width: 100%;",
-      ".gcn_tray-view-listItem:first-of-type": "margin-top: 0;",
-      ".gcn_tray-view-link:focus": "outline-color: var(--ic-link-color);",
-      ".gcn_tray-view-link": "outline-color: transparent; outline-offset: 0.25rem; outline-style: solid; outline-width: 0.125rem; transition: outline-color 0.2s ease 0s; vertical-align: baseline; max-width: 100%; overflow: visible;",
-      ".gcn_tray-link-desc-text": "font-size: 0.875rem;",
-      // for callback trays and throwbacks
+      // from instui/canvas:
+      // react .css-ab1c2d-* 
+      // renamed .css-instui-* 
+      // then .gcn-instui-*
+      ".gcn-instui-tray": "background-color: rgb(255, 255, 255); position: fixed; overflow: hidden auto; box-sizing: border-box; z-index: 9999; max-width: 100vw; max-height: 100vh; box-shadow: rgba(0, 0, 0, 0.1) 0px 0.375rem 0.4375rem, rgba(0, 0, 0, 0.25) 0px 0.625rem 1.75rem; top: 0px; bottom: 0px; width: 28em;",
+      "[dir='ltr'] .gcn-instui-tray": "left: 0px; right: auto;",
+      "[dir='rtl'] .gcn-instui-tray": "right: 0px; left: auto;",
+      ".gcn-instui-tray-slide-left-transitioning, .gcn-instui-tray-slide-right-transitioning": "transition: opacity 300ms ease-in-out, transform 300ms ease-in-out !important;",
+      ".gcn-instui-tray-slide-left-entering, .gcn-instui-tray-slide-left-entered, .gcn-instui-tray-slide-right-entering, .gcn-instui-tray-slide-right-entered": "transform: translate3d(0, 0, 0) !important; opacity: 1 !important;",
+      ".gcn-instui-tray-slide-left-exiting, .gcn-instui-tray-slide-left-exited": "transform: translate3d(-100%, 0, 0) !important; opacity: 0.01 !important;",
+      ".gcn-instui-tray-slide-right-exiting, .gcn-instui-tray-slide-right-exited": "transform: translate3d(100%, 0, 0) !important; opacity: 0.01 !important;",
+      ".gcn-tray__content": "min-height: 100vh;",
+      ".gcn-instui-closeButton": "z-index: 1; display: inline-block; position: absolute; top: 0.5rem;",
+      "[dir='ltr'] .gcn-instui-closeButton": "right: 0.5rem; left: auto;",
+      "[dir='rtl'] .gcn-instui-closeButton": "left: 0.5rem; right: auto;",
+      ".gcn-instui-view--inlineBlock-baseButton": 'margin: 0px; padding: 0px; transition: outline-color 0.2s, outline-offset 0.25s; outline-offset: -0.8rem; outline: rgba(43, 122, 188, 0) solid 0.125rem; width: auto; cursor: pointer; box-sizing: border-box; font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif; max-width: 100%; vertical-align: middle; color: rgb(39, 53, 64); background: none; position: relative; appearance: none; text-decoration: none; border-radius: 0.25rem; height: fit-content; overflow: visible; display: inline-block; border-width: 0px; overscroll-behavior: auto; touch-action: manipulation;',
+      ".gcn-instui-view--inlineBlock-baseButton:hover, .gcn-instui-view--inlineBlock-baseButton:active": "outline-offset: -0.8rem; outline: rgba(43, 122, 188, 0) solid 0.125rem;",
+      ".gcn-instui-view--inlineBlock-baseButton:focus": "outline-offset: calc(0.1875rem); outline-color: var(--ic-link-color);",
+      ".gcn-instui-baseButton__content": 'box-sizing: border-box; width: 1.75rem; display: block; direction: inherit; user-select: none; transition: background 0.2s, transform 0.2s; transform: none; font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 400; text-transform: none; letter-spacing: normal; border-style: none; border-width: 0.0625rem; border-radius: 0.25rem; line-height: 1; text-align: start; font-size: 0.875rem; padding-left: 0px; padding-right: 0px; height: 1.75rem; color: rgb(39, 53, 64); border-color: rgb(39, 53, 64); background: transparent; box-shadow: none;',
+      ".gcn-instui-baseButton__childrenLayout": "display: flex; height: 100%; width: 100%; -moz-box-pack: center; justify-content: center; box-sizing: border-box; -moz-box-align: center; align-items: center; flex-direction: row; max-width: 100%; overflow: visible; unicode-bidi: isolate;",
+      ".gcn-instui-view--inlineBlock-baseButton *": "pointer-events: none;",
+      ".gcn-instui-baseButton__iconOnly": "box-sizing: border-box; min-width: 0.0625rem; flex-shrink: 0; max-width: 100%; overflow: visible; unicode-bidi: isolate;",
+      ".gcn-instui-baseButton__iconSVG": "display: flex; -moz-box-align: center; align-items: center; font-size: 1rem;",
+      ".gcn-instui-inlineSVG-svgIcon": "fill: currentcolor; display: inline-block; overflow: visible; color: inherit; vertical-align: middle; line-height: 1; width: 1em; height: 1em;",
+      ".gcn-instui-screenReaderContent": "width: 0.0625rem !important; height: 0.0625rem !important; margin: -0.0625rem !important; padding: 0px !important; position: absolute; top: 0px; inset-inline-start: 0px; white-space: nowrap; overflow: hidden !important; clip: rect(0px, 0px, 0px, 0px) !important; border: 0px !important;",
+      ".gcn-instui-view": "padding: 1.5rem; transition: outline-color 0.2s, outline-offset 0.25s; outline-offset: -0.8rem; outline: rgba(43, 122, 188, 0) solid 0.125rem;",
+      ".gcn-instui-view-heading": "box-sizing: border-box; max-width: 100%; overflow: visible; overscroll-behavior: auto; line-height: 1.25; margin: 0px; font-family: LatoWeb, 'Lato Extended', Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 1.375rem; font-weight: 700; color: inherit; transition: outline-color 0.2s, outline-offset 0.25s; outline-offset: -0.8rem; outline: rgba(43, 122, 188, 0) solid 0.125rem;",
+      ".gcn-instui-view--block-list": "margin: 0.75rem 0px; transition: outline-color 0.2s, outline-offset 0.25s; outline-offset: -0.8rem; outline: rgba(43, 122, 188, 0) solid 0.125rem; box-sizing: border-box; font-family: LatoWeb, 'Lato Extended', Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 100%; overflow: visible; display: block; overscroll-behavior: auto; padding-inline: 0px; list-style-type: none;",
+      ".gcn-instui-view-listItem:first-of-type": "margin-top: 0px;",
+      ".gcn-instui-view-listItem": "box-sizing: border-box; max-width: 100%; overflow: visible; overscroll-behavior: auto; font-weight: 400; font-family: LatoWeb, 'Lato Extended', Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: 1.5; color: rgb(39, 53, 64); padding: 0px; font-size: 1rem; margin-top: 0.75rem; margin-bottom: 0.75rem; transition: outline-color 0.2s, outline-offset 0.25s; outline-offset: -0.8rem; outline: rgba(43, 122, 188, 0) solid 0.125rem;",
+      ".gcn-instui-view-link": "transition: outline-color 0.2s, outline-offset 0.25s; outline-offset: -0.8rem; outline: rgba(43, 122, 188, 0) solid 0.125rem;",
+      ".gcn-instui-view-link:is(a), .gcn-instui-view-link:is(button)": "box-sizing: border-box; font-family: LatoWeb, \"Lato Extended\", Lato, \"Helvetica Neue\", Helvetica, Arial, sans-serif; font-weight: 400; transition: outline-color 0.2s; vertical-align: baseline; outline-color: transparent; outline-offset: 0.25rem; text-underline-offset: auto; cursor: pointer; color: var(--ic-link-color); text-decoration: none;",
+      ".gcn-instui-view-link:focus": "outline-offset: calc(0.1875rem); outline-color: var(--ic-brand-primary);",
+      ".gcn-instui-view-link:is(a):focus, .gcn-instui-view-link:is(button):focus": "border-radius: 0.125rem;",
+      ".gcn-instui-text": "font-family: LatoWeb, 'Lato Extended', Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif; letter-spacing: 0px; font-size: 1rem;",
+      ".gcn-instui-screenReaderContent": "width: 0.0625rem !important; height: 0.0625rem !important; margin: -0.0625rem !important; padding: 0px !important; position: absolute; top: 0px; inset-inline-start: 0px; white-space: nowrap; overflow: hidden !important; clip: rect(0px, 0px, 0px, 0px) !important; border: 0px !important;",
+      // for rspv trays
+      'div.gcn-tray-rspv-expand': 'display: block !important;',
+      'svg.gcn-tray-rspv-closed': 'display: none !important;',
+      'svg.gcn-tray-rspv-aodown': 'fill: currentcolor; display: inline-block; overflow: visible; color: inherit; vertical-align: middle; line-height: 1; width: 1em; height: 1em;',
+      // common - for callback trays and throwbacks
       ".gcn_tray-view-spinner": "max-width: 100%; overscroll-behavior: auto; display: inline-block; vertical-align: middle; position: relative; box-sizing: border-box; overflow: hidden; width: 3em; height: 3em;",
       ".gcn_tray-spinner__circle": "display: block; position: absolute; top: 0px; left: 0px; animation-name: gcn-spinner-rotate; animation-duration: 2.25s; animation-iteration-count: infinite; animation-timing-function: linear; width: 3em; height: 3em;",
       ".gcn_tray_throwback-spinner__circle": "display: block; animation-name: gcn-spinner-rotate; animation-duration: 2.25s; animation-iteration-count: infinite; animation-timing-function: linear; width: 3em; height: 3em;",
@@ -82,7 +95,7 @@
         tray_portal: 'div[role="dialog"]:has(.ic-brand-mobile-global-nav-logo) ul',
         tray_container: 'div[class$="-tray__content"]',
         INSTUI_aodown: `<svg name="IconArrowOpenDown" viewBox="0 0 1920 1920" rotate="0" style="width: 1em; height: 1em;" 
-        width="1em" height="1em" aria-hidden="true" role="presentation" focusable="false" class="gcn_tray-aodown">
+        width="1em" height="1em" aria-hidden="true" role="presentation" focusable="false" class="gcn-tray-rspv-aodown">
         <g role="presentation"><path d="M568.129648 0.0124561278L392 176.142104 1175.86412 960.130789 392 1743.87035 568.129648 1920 1528.24798 960.130789z" 
         fill-rule="evenodd" stroke="none" stroke-width="1" transform="matrix(0 1 1 0 .067 -.067)"></path></g></svg>`,
         keeper: null
@@ -446,20 +459,20 @@
       a.textContent = item.title;
       a.href = item.href;
       a.setAttribute('dir', globalCustomNav.dir);
-      a.classList.add('gcn_tray-view-link');
+      a.classList.add('gcn-instui-view-link');
       if (typeof item.target !== 'undefined' && globalCustomNav.cfg.targets.includes(item.target)) {
         a.target = item.target;
       }
       return a.outerHTML;
     },
     tray_links: items => {
-      var html = `<ul class="gcn_tray-view--block-list" dir="${globalCustomNav.dir}">`;
+      var html = `<ul class="gcn-instui-view--block-list" dir="${globalCustomNav.dir}">`;
       items.forEach(item => {
-        html += `<li class="gcn_tray-view-listItem" dir="${globalCustomNav.dir}">`;
+        html += `<li class="gcn-instui-view-listItem" dir="${globalCustomNav.dir}">`;
         html += globalCustomNav.link(item);
 
         // append link description if set
-        html += (!!item.desc && item.desc.length > 1) ? `<div wrap="normal" letter-spacing="normal" class="gcn_tray-link-desc-text">${item.desc}</div>` : '';
+        html += (!!item.desc && item.desc.length > 1) ? `<div wrap="normal" letter-spacing="normal" class="gcn-instui-text">${item.desc}</div>` : '';
         html += '</li>';
       })
       html += `</ul>`;
@@ -471,13 +484,13 @@
       // tray content is empty
       if (!tray_content.childElementCount)
         globalCustomNav.rspv_tray_content(item);
-      
+
       // toggle tray state (expand/collapse)
-      tray_content.classList.toggle('gcn_tray-content');
+      tray_content.classList.toggle('gcn-tray-rspv-expand');
 
       // swap the arrows based on expand/collapse
       document.querySelectorAll(`#rspv-${item.slug} svg[name^="IconArrowOpen"]`).forEach(e => {
-        e.classList.toggle('gcn_tray-closed');
+        e.classList.toggle('gcn-tray-rspv-closed');
       });
     },
     rspv_tray_content: item => {
@@ -489,11 +502,12 @@
         let arrow_end = document.querySelector(`${tray_icon_id} svg[name="IconArrowOpenEnd"]`);
         arrow_end.parentElement.insertAdjacentHTML('afterbegin', globalCustomNav.cfg.rspv.INSTUI_aodown);
         let arrow_down = document.querySelector(`${tray_icon_id} svg[name="IconArrowOpenDown"]`);
+        // clone the class list to the added 'open' arrow
         let arrow_class = arrow_end.classList;
         arrow_class.forEach(c => {
           arrow_down.classList.add(c);
         });
-        document.querySelector(`${tray_icon_id} svg[name="IconArrowOpenDown"]`).classList.toggle('gcn_tray-closed');
+        document.querySelector(`${tray_icon_id} svg[name="IconArrowOpenDown"]`).classList.toggle('gcn-tray-rspv-closed');
       }
       // tray links
       if (document.querySelectorAll(`#rspv-${item.slug}-tray a`).length == 0) {
@@ -517,8 +531,8 @@
     tray_handler: () => {
 
       const glbl_tray_close = (slug, restore_focus = true) => {
-        const tray_wrapper = document.querySelector('.gcn_tray-wrapper');
-        if (!tray_wrapper || !tray_wrapper.classList.contains('gcn_open')) return;
+        const open_tray = document.querySelector('.gcn-instui-tray');
+        if (!open_tray || !open_tray.classList.contains('gcn-instui-tray')) return;
 
         // restore focus on nav item when tray closes
         if (restore_focus) {
@@ -528,16 +542,25 @@
             tray_nav_anchor.focus();
           }
         }
- 
-        // handle transition, wait for the css
-        tray_wrapper.addEventListener('transitionend', () => {
-          // remove tray after transition if it still exists
-          document.getElementById(`${slug}-tray`)?.remove();
-          // use { once: true } so the listener cleans itself up immediately
-        }, { once: true });
-        
+       
         // trigger tray slide on close
-        tray_wrapper.classList.remove('gcn_open');
+        const direction = globalCustomNav.dir == 'ltr' ? 'left' : 'right';
+        // re-add the transition rules so it animates the departure
+        open_tray.classList.add(`gcn-instui-tray-slide-${direction}-transitioning`);
+        // use a single requestAnimationFrame to ensure the browser registers
+        // the transition class BEFORE we change the physical location.
+        requestAnimationFrame(() => {
+          // swap the resting state to the exiting state (moves it off-screen)
+          open_tray.classList.replace(`gcn-instui-tray-slide-${direction}-entered`, `gcn-instui-tray-slide-${direction}-exiting`);
+          // wait for the exact 300ms animation to finish
+          setTimeout(() => {
+            // lock it into its final off-screen state
+            open_tray.classList.replace(`gcn-instui-tray-slide-${direction}-exiting`, `gcn-instui-tray-slide-${direction}-exited`);
+            open_tray.classList.remove(`gcn-instui-tray-slide-${direction}-transitioning`);
+            // cleanup: remove it from the DOM
+            document.getElementById(`${slug}-tray`)?.remove();
+          }, 300);
+        });
       };
 
       document.addEventListener('click', (e) => {
@@ -553,9 +576,9 @@
           // native tray nav items (li) do not have an id
           // only run for global nav trays because responsive trays don't use this handler for closing
           if(!is_rspv && nav_anchor.closest('li') && !nav_anchor.closest('li').hasAttribute('id')) {
-            const open_wrapper = document.querySelector('.gcn_open');
-            if (open_wrapper) {
-              const open_slug = open_wrapper.parentElement.id.replace('-tray', '');
+            const open_tray = document.querySelector('.gcn-instui-tray');
+            if (open_tray) {
+              const open_slug = open_tray.parentElement.id.replace('-tray', '');
               // pass 'false' to prevent focus stealing from the native tray
               glbl_tray_close(open_slug, false);
             }
@@ -568,7 +591,7 @@
 
           // check if this specific item has custom tray content
           const has_tray = item && item.tray !== undefined;
-          const open_wrapper = document.querySelector('.gcn_open');
+          const open_tray = document.querySelector('.gcn-instui-tray');
 
           // handle toggling open/close states for custom trays
           if (has_tray) {
@@ -580,8 +603,8 @@
               const is_open = !!document.getElementById(`${item.slug}-tray`);
               if (!is_open) {
                 // close open trays before opening
-                if (open_wrapper) {
-                  const open_slug = open_wrapper.parentElement.id.replace('-tray', '');
+                if (open_tray) {
+                  const open_slug = open_tray.parentElement.id.replace('-tray', '');
                   // pass 'false' because we are opening a NEW custom tray 
                   // and don't want the old nav item to steal focus
                   glbl_tray_close(open_slug, false);
@@ -602,9 +625,9 @@
         }
 
         // handle close button
-        const open_wrapper = document.querySelector('.gcn_open');
-        if (open_wrapper && !nav_anchor) {
-          const tray_container = open_wrapper.parentElement;
+        const open_tray = document.querySelector('.gcn-instui-tray');
+        if (open_tray && !nav_anchor) {
+          const tray_container = open_tray.parentElement;
           const slug = tray_container.id.replace('-tray', '');
           const item = globalCustomNav.nav_items.find(i => i.slug === slug);
           
@@ -613,7 +636,7 @@
           // ...a click is only "outside" if it's not the tray 
           // ...and not the nav item that controls the tray
           const is_close_btn = target.closest('[id$="-tray-close"]');
-          const is_inside_tray = open_wrapper.contains(target);
+          const is_inside_tray = open_tray.contains(target);
 
           if (is_close_btn || !is_inside_tray) {
             if (item) {
@@ -626,9 +649,9 @@
       // close tray with escape key when the tray is open
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-          const open_wrapper = document.querySelector('.gcn_open');
-          if (open_wrapper) {
-            const slug = open_wrapper.parentElement.id.replace('-tray', '');
+          const open_tray = document.querySelector('.gcn-instui-tray');
+          if (open_tray) {
+            const slug = open_tray.parentElement.id.replace('-tray', '');
             if (slug) glbl_tray_close(slug);
           }
         }
@@ -639,8 +662,8 @@
       const global_nav = document.querySelector(globalCustomNav.cfg.glbl.nav_selector);
       if (global_nav) {
         global_nav.addEventListener('focus', (e) => {
-          const open_wrapper = document.querySelector('.gcn_open');
-          if (open_wrapper) {
+          const open_tray = document.querySelector('.gcn-instui-tray');
+          if (open_tray) {
             const target_li = e.target.closest('li');
             // if the focused element is a native nav item (lacks a custom id) 
             // and a custom tray is actively open, intercept it
@@ -648,7 +671,7 @@
               // clear focus from native item
               e.target.blur();
               // redirect focus back to our custom tray's close button
-              const close_btn = document.querySelector('.gcn_tray-close-btn');
+              const close_btn = document.querySelector('.gcn-tray-close-btn');
               if (close_btn) close_btn.focus();
             }
           }
@@ -658,45 +681,76 @@
     },
     glbl_tray_content: item => {
       const tray_content_id = `${item.slug}-tray`;
+      const direction = globalCustomNav.dir == 'ltr' ? 'left' : 'right';
 
       var tray_html = `<span id="${tray_content_id}" dir="${globalCustomNav.dir}">
-      <span class="gcn_tray-wrapper">
+      <span class="gcn-instui-tray">
       <div role="dialog" aria-label="${item.title} tray">
-      <div style="min-height: 100vh;">
+      <div class="gcn-tray__content">
       <div class="${globalCustomNav.cfg.glbl.tray_container} ${item.tidle}-tray">`;
 
       // close button
-      tray_html += `<span class="gcn_tray-close-btn-wrapper">
-      <button id="${tray_content_id}-close" cursor="pointer" type="button" tabindex="0" class="gcn_tray-close-btn" dir="${globalCustomNav.dir}">
-          <i class="icon-solid icon-x" style="padding:0.5rem;"></i><span class="screenreader-only">Close</span>
-      </button></span>`;
+      tray_html += `<span class="gcn-instui-closeButton">
+        <button id="${tray_content_id}-close" dir="${globalCustomNav.dir}" cursor="pointer" type="button" class="gcn-instui-view--inlineBlock-baseButton">
+          <span class="gcn-instui-baseButton__content">
+            <span class="gcn-instui-baseButton__childrenLayout">
+              <span class="gcn-instui-baseButton__iconOnly">
+                <span class="gcn-instui-baseButton__iconSVG">
+                  <svg name="IconX" viewBox="0 0 1920 1920" rotate="0" style="width: 1em; height: 1em;" width="1em"
+                  height="1em" aria-hidden="true" role="presentation" focusable="false"
+                  class="gcn-instui-inlineSVG-svgIcon">
+                    <g role="presentation">
+                      <path
+                        d="M797.32 985.882 344.772 1438.43l188.561 188.562 452.549-452.549 452.548 452.549 188.562-188.562-452.549-452.548 452.549-452.549-188.562-188.561L985.882 797.32 533.333 344.772 344.772 533.333z">
+                      </path>
+                    </g>
+                  </svg></span><span
+                  class="gcn-instui-screenReaderContent">Close</span>
+                </span></span></span></button></span>`;
 
       // tray content
       tray_html += `<div class="${globalCustomNav.cfg.glbl.space}">
-            <div class="gcn_tray-content-wrapper">
-              <h2 class="gcn_tray-heading" dir="${globalCustomNav.dir}">${item.title}</h2>
+            <div class="gcn-instui-view">
+              <h2 class="gcn-instui-view-heading" dir="${globalCustomNav.dir}">${item.title}</h2>
               <hr role="presentation" class="gcn-cb_content">`;
 
       // handle links vs callback
       tray_html += globalCustomNav.tray_links_vs_cb(item, false);
 
       if (item.tray.footer && item.tray.footer.length > 1) {
-        tray_html += `<ul class="gcn_tray-view--block-list" dir="${globalCustomNav.dir}">
-        <li class="gcn_tray-view-listItem" dir="${globalCustomNav.dir}"><hr role="presentation"></li>
-        <li class="gcn_tray-view-listItem" dir="${globalCustomNav.dir}">`;
+        tray_html += `
+        <ul class="gcn-instui-view--block-list" dir="${globalCustomNav.dir}">
+        <li class="gcn-instui-view-listItem" dir="${globalCustomNav.dir}"><hr role="presentation"></li>
+        <li class="gcn-instui-view-listItem" dir="${globalCustomNav.dir}">`;
         tray_html += globalCustomNav.link(item);
-        tray_html += `</li></ul><br><div wrap="normal" letter-spacing="normal" class="gcn_tray-link-desc-text">${item.tray.footer}</div>`;
+        tray_html += `</li></ul><br><div wrap="normal" letter-spacing="normal" class="gcn-instui-text">${item.tray.footer}</div>`;
       }
       tray_html += `</div></div></div></div></div></span></span>`;
 
       // append tray
       document.getElementById('nav-tray-portal').insertAdjacentHTML('afterbegin', tray_html);
 
-      // focus on close button
-      document.querySelector('.gcn_tray-close-btn')?.focus();
-
       // slide in tray on open
-      document.querySelector('.gcn_tray-wrapper').classList.add('gcn_open');
+      const tray = document.querySelector('.gcn-instui-tray');
+      tray.classList.add(`gcn-instui-tray-slide-${direction}-exited`);
+      // queue the first frame (browser calculates the off-screen layout)
+      requestAnimationFrame(() => {
+        // queue the second frame (browser has painted, now we trigger the move)
+        requestAnimationFrame(() => {
+          // moving in
+          tray.classList.replace(`gcn-instui-tray-slide-${direction}-exited`, `gcn-instui-tray-slide-${direction}-entering`);
+          // add the transition rules to animate the move
+          tray.classList.add(`gcn-instui-tray-slide-${direction}-transitioning`);
+          // duration
+          setTimeout(() => {
+            tray.classList.replace(`gcn-instui-tray-slide-${direction}-entering`, `gcn-instui-tray-slide-${direction}-entered`);
+            tray.classList.remove(`gcn-instui-tray-slide-${direction}-transitioning`);
+          }, 300);
+        });
+      });
+
+      // focus on close button
+      document.querySelector('.gcn-instui-tray [class$="-closeButton"] button')?.focus();
 
       // handle callback
       globalCustomNav.handle_tray_cb(item, `.${globalCustomNav.cfg.glbl.space} div.gcn-loading-tray-cb-svg`, 'afterbegin', false);
@@ -717,16 +771,16 @@
             tray_html += globalCustomNav.tray_links(groups[0].concat(groups[1]));
           } else {
             Object.keys(item.tray.items).forEach(group => {
-              tray_html += `<h3 class="gcn_tray-list-group-heading">${group}</h3>`;
+              tray_html += `<h3 class="gcn-instui-view-heading">${group}</h3>`;
               tray_html += globalCustomNav.tray_links(item.tray.items[group]);
             })
           }
         }
         // prep for callback
       } else if (typeof item.tray.cb !== 'undefined' && typeof item.tray.cb === 'function') {
-        tray_html += `<ul class="gcn_tray-view--block-list gcn-loading-tray-cb" dir="${globalCustomNav.dir}">
-        <li class="gcn_tray-view-listItem" dir="${globalCustomNav.dir}">
-          <div dir="${globalCustomNav.dir}" class="gcn_tray-view-spinner gcn-loading-tray-cb-svg gcn_tray-link-desc-text"></div>
+        tray_html += `<ul class="gcn-instui-view--block-list gcn-loading-tray-cb" dir="${globalCustomNav.dir}">
+        <li class="gcn-instui-view-listItem" dir="${globalCustomNav.dir}">
+          <div dir="${globalCustomNav.dir}" class="gcn-tray-view-spinner gcn-loading-tray-cb-svg gcn-instui-text"></div>
         </li>
       </ul>`;
       }
