@@ -12,6 +12,8 @@
       // for item icons
       'i.gcn_inst_menu_icon:before': 'font-size: 1.625rem;',
       'i.gcn_inst_rspv_icon': 'color: var(--ic-brand-primary);',
+      // font in trays
+      ":root": '--gcn-ic-font: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;',
       // from instui/canvas:
       // react .css-ab1c2d-* 
       // renamed .css-instui-* 
@@ -23,14 +25,14 @@
       ".gcn-instui-tray-slide-left-entering, .gcn-instui-tray-slide-left-entered, .gcn-instui-tray-slide-right-entering, .gcn-instui-tray-slide-right-entered": "transform: translate3d(0, 0, 0) !important; opacity: 1 !important;",
       ".gcn-instui-tray-slide-left-exiting, .gcn-instui-tray-slide-left-exited": "transform: translate3d(-100%, 0, 0) !important; opacity: 0.01 !important;",
       ".gcn-instui-tray-slide-right-exiting, .gcn-instui-tray-slide-right-exited": "transform: translate3d(100%, 0, 0) !important; opacity: 0.01 !important;",
-      ".gcn-tray__content": "min-height: 100vh;",
+      ".gcn-instui-tray__content": "min-height: 100vh;",
       ".gcn-instui-closeButton": "z-index: 1; display: inline-block; position: absolute; top: 0.5rem;",
       "[dir='ltr'] .gcn-instui-closeButton": "right: 0.5rem; left: auto;",
       "[dir='rtl'] .gcn-instui-closeButton": "left: 0.5rem; right: auto;",
-      ".gcn-instui-view--inlineBlock-baseButton": 'margin: 0px; padding: 0px; transition: outline-color 0.2s, outline-offset 0.25s; outline-offset: -0.8rem; outline: rgba(43, 122, 188, 0) solid 0.125rem; width: auto; cursor: pointer; box-sizing: border-box; font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif; max-width: 100%; vertical-align: middle; color: rgb(39, 53, 64); background: none; position: relative; appearance: none; text-decoration: none; border-radius: 0.25rem; height: fit-content; overflow: visible; display: inline-block; border-width: 0px; overscroll-behavior: auto; touch-action: manipulation;',
+      ".gcn-instui-view--inlineBlock-baseButton": 'margin: 0px; padding: 0px; transition: outline-color 0.2s, outline-offset 0.25s; outline-offset: -0.8rem; outline: rgba(43, 122, 188, 0) solid 0.125rem; width: auto; cursor: pointer; box-sizing: border-box; font-family: var(--gcn-ic-font); max-width: 100%; vertical-align: middle; color: rgb(39, 53, 64); background: none; position: relative; appearance: none; text-decoration: none; border-radius: 0.25rem; height: fit-content; overflow: visible; display: inline-block; border-width: 0px; overscroll-behavior: auto; touch-action: manipulation;',
       ".gcn-instui-view--inlineBlock-baseButton:hover, .gcn-instui-view--inlineBlock-baseButton:active": "outline-offset: -0.8rem; outline: rgba(43, 122, 188, 0) solid 0.125rem;",
       ".gcn-instui-view--inlineBlock-baseButton:focus": "outline-offset: calc(0.1875rem); outline-color: var(--ic-link-color);",
-      ".gcn-instui-baseButton__content": 'box-sizing: border-box; width: 1.75rem; display: block; direction: inherit; user-select: none; transition: background 0.2s, transform 0.2s; transform: none; font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 400; text-transform: none; letter-spacing: normal; border-style: none; border-width: 0.0625rem; border-radius: 0.25rem; line-height: 1; text-align: start; font-size: 0.875rem; padding-left: 0px; padding-right: 0px; height: 1.75rem; color: rgb(39, 53, 64); border-color: rgb(39, 53, 64); background: transparent; box-shadow: none;',
+      ".gcn-instui-baseButton__content": 'box-sizing: border-box; width: 1.75rem; display: block; direction: inherit; user-select: none; transition: background 0.2s, transform 0.2s; transform: none; font-family: var(--gcn-ic-font); font-weight: 400; text-transform: none; letter-spacing: normal; border-style: none; border-width: 0.0625rem; border-radius: 0.25rem; line-height: 1; text-align: start; font-size: 0.875rem; padding-left: 0px; padding-right: 0px; height: 1.75rem; color: rgb(39, 53, 64); border-color: rgb(39, 53, 64); background: transparent; box-shadow: none;',
       ".gcn-instui-baseButton__childrenLayout": "display: flex; height: 100%; width: 100%; -moz-box-pack: center; justify-content: center; box-sizing: border-box; -moz-box-align: center; align-items: center; flex-direction: row; max-width: 100%; overflow: visible; unicode-bidi: isolate;",
       ".gcn-instui-view--inlineBlock-baseButton *": "pointer-events: none;",
       ".gcn-instui-baseButton__iconOnly": "box-sizing: border-box; min-width: 0.0625rem; flex-shrink: 0; max-width: 100%; overflow: visible; unicode-bidi: isolate;",
@@ -38,15 +40,16 @@
       ".gcn-instui-inlineSVG-svgIcon": "fill: currentcolor; display: inline-block; overflow: visible; color: inherit; vertical-align: middle; line-height: 1; width: 1em; height: 1em;",
       ".gcn-instui-screenReaderContent": "width: 0.0625rem !important; height: 0.0625rem !important; margin: -0.0625rem !important; padding: 0px !important; position: absolute; top: 0px; inset-inline-start: 0px; white-space: nowrap; overflow: hidden !important; clip: rect(0px, 0px, 0px, 0px) !important; border: 0px !important;",
       ".gcn-instui-view": "padding: 1.5rem; transition: outline-color 0.2s, outline-offset 0.25s; outline-offset: -0.8rem; outline: rgba(43, 122, 188, 0) solid 0.125rem;",
-      ".gcn-instui-view-heading": "box-sizing: border-box; max-width: 100%; overflow: visible; overscroll-behavior: auto; line-height: 1.25; margin: 0px; font-family: LatoWeb, 'Lato Extended', Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 1.375rem; font-weight: 700; color: inherit; transition: outline-color 0.2s, outline-offset 0.25s; outline-offset: -0.8rem; outline: rgba(43, 122, 188, 0) solid 0.125rem;",
-      ".gcn-instui-view--block-list": "margin: 0.75rem 0px; transition: outline-color 0.2s, outline-offset 0.25s; outline-offset: -0.8rem; outline: rgba(43, 122, 188, 0) solid 0.125rem; box-sizing: border-box; font-family: LatoWeb, 'Lato Extended', Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 100%; overflow: visible; display: block; overscroll-behavior: auto; padding-inline: 0px; list-style-type: none;",
+      ".gcn-instui-view-heading": "box-sizing: border-box; max-width: 100%; overflow: visible; overscroll-behavior: auto; line-height: 1.25; margin: 0px; font-family: var(--gcn-ic-font); font-size: 1.375rem; font-weight: 700; color: inherit; transition: outline-color 0.2s, outline-offset 0.25s; outline-offset: -0.8rem; outline: rgba(43, 122, 188, 0) solid 0.125rem;",
+      ".gcn-instui-view--block-list": "margin: 0.75rem 0px; transition: outline-color 0.2s, outline-offset 0.25s; outline-offset: -0.8rem; outline: rgba(43, 122, 188, 0) solid 0.125rem; box-sizing: border-box; font-family: var(--gcn-ic-font); max-width: 100%; overflow: visible; display: block; overscroll-behavior: auto; padding-inline: 0px; list-style-type: none;",
       ".gcn-instui-view-listItem:first-of-type": "margin-top: 0px;",
-      ".gcn-instui-view-listItem": "box-sizing: border-box; max-width: 100%; overflow: visible; overscroll-behavior: auto; font-weight: 400; font-family: LatoWeb, 'Lato Extended', Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: 1.5; color: rgb(39, 53, 64); padding: 0px; font-size: 1rem; margin-top: 0.75rem; margin-bottom: 0.75rem; transition: outline-color 0.2s, outline-offset 0.25s; outline-offset: -0.8rem; outline: rgba(43, 122, 188, 0) solid 0.125rem;",
+      ".gcn-instui-view-listItem": "box-sizing: border-box; max-width: 100%; overflow: visible; overscroll-behavior: auto; font-weight: 400; font-family: var(--gcn-ic-font); line-height: 1.5; color: rgb(39, 53, 64); padding: 0px; font-size: 1rem; margin-top: 0.75rem; margin-bottom: 0.75rem; transition: outline-color 0.2s, outline-offset 0.25s; outline-offset: -0.8rem; outline: rgba(43, 122, 188, 0) solid 0.125rem;",
       ".gcn-instui-view-link": "transition: outline-color 0.2s, outline-offset 0.25s; outline-offset: -0.8rem; outline: rgba(43, 122, 188, 0) solid 0.125rem;",
-      ".gcn-instui-view-link:is(a), .gcn-instui-view-link:is(button)": "box-sizing: border-box; font-family: LatoWeb, \"Lato Extended\", Lato, \"Helvetica Neue\", Helvetica, Arial, sans-serif; font-weight: 400; transition: outline-color 0.2s; vertical-align: baseline; outline-color: transparent; outline-offset: 0.25rem; text-underline-offset: auto; cursor: pointer; color: var(--ic-link-color); text-decoration: none;",
+      ".gcn-instui-view-link:is(a), .gcn-instui-view-link:is(button)": "box-sizing: border-box; font-family: var(--gcn-ic-font); font-weight: 400; transition: outline-color 0.2s; vertical-align: baseline; outline-color: transparent; outline-offset: 0.25rem; text-underline-offset: auto; cursor: pointer; color: var(--ic-link-color); text-decoration: none;",
       ".gcn-instui-view-link:focus": "outline-offset: calc(0.1875rem); outline-color: var(--ic-brand-primary);",
       ".gcn-instui-view-link:is(a):focus, .gcn-instui-view-link:is(button):focus": "border-radius: 0.125rem;",
-      ".gcn-instui-text": "font-family: LatoWeb, 'Lato Extended', Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif; letter-spacing: 0px; font-size: 1rem;",
+      ".gcn-instui-text": "font-family: var(--gcn-ic-font); letter-spacing: 0px; font-weight: 300; font-size: 0.75rem;",
+      ".gcn-instui-text-footer": "font-family: var(--gcn-ic-font); letter-spacing: 0px; font-size: 1rem;",
       ".gcn-instui-screenReaderContent": "width: 0.0625rem !important; height: 0.0625rem !important; margin: -0.0625rem !important; padding: 0px !important; position: absolute; top: 0px; inset-inline-start: 0px; white-space: nowrap; overflow: hidden !important; clip: rect(0px, 0px, 0px, 0px) !important; border: 0px !important;",
       // for rspv trays
       'div.gcn-tray-rspv-expand': 'display: block !important;',
@@ -117,7 +120,7 @@
         // preserve the nav item to restore active class when a tray is closed
         // handle primary routes, external tools, and custom contexts
         var active_context = document.querySelector(`${globalCustomNav.cfg.glbl.nav_selector} li.${globalCustomNav.cfg.glbl.trayActiveClass} a`);
-        if(active_context) {
+        if (active_context) {
           globalCustomNav.cfg.context_item = active_context.id || active_context.closest('li').id;
         }
         // update the glbl menu with custom nav items
@@ -279,7 +282,7 @@
           globalCustomNav.create_nav_icon(item, hamb);
 
           if (!!item.high_contrast && item.high_contrast == true) {
-            if(ENV.use_high_contrast != true) return;
+            if (ENV.use_high_contrast != true) return;
             globalCustomNav.append_high_contrast(item);
             return;
           }
@@ -420,16 +423,16 @@
       var style_sheet = document.querySelector('[data-global-custom-nav-css]').sheet;
 
       // responsive/mobile high contrast logos, single and consortiums
-      if(!!item.rspv && !item.rspv.logo_svg) {
+      if (!!item.rspv && !item.rspv.logo_svg) {
         item.rspv.logo_svg = item.rspv.cdn + item.rspv.logos[window.location.host.split('.')[0]];
-      } 
+      }
       style_sheet.insertRule(`.ic-brand-mobile-global-nav-logo { background-image:url(${item.rspv.logo_svg}) !important; }`, style_sheet.cssRules.length);
 
       // prevent readding when changing view between mobile and desktop - add only once
-      if(document.querySelector('.gcn-high-contrast-glbl')) return;
+      if (document.querySelector('.gcn-high-contrast-glbl')) return;
 
       // global high contrast logos, single and consortiums
-      if(!!item.glbl && !item.glbl.logo_svg) {
+      if (!!item.glbl && !item.glbl.logo_svg) {
         item.glbl.logo_svg = item.glbl.cdn 
           + (typeof item.glbl.logos === 'function' ? item.glbl.logos() : item.glbl.logos[window.location.host.split('.')[0]]);
       }
@@ -472,7 +475,7 @@
         html += globalCustomNav.link(item);
 
         // append link description if set
-        html += (!!item.desc && item.desc.length > 1) ? `<div wrap="normal" letter-spacing="normal" class="gcn-instui-text">${item.desc}</div>` : '';
+        html += (!!item.desc && item.desc.length > 1) ? `<div class="gcn-instui-text" wrap="normal" letter-spacing="normal">${item.desc}</div>` : '';
         html += '</li>';
       })
       html += `</ul>`;
@@ -545,7 +548,7 @@
        
         // trigger tray slide on close
         const direction = globalCustomNav.dir == 'ltr' ? 'left' : 'right';
-        // re-add the transition rules so it animates the departure
+        // re-add the transition so it animates the departure
         open_tray.classList.add(`gcn-instui-tray-slide-${direction}-transitioning`);
         // use a single requestAnimationFrame to ensure the browser registers
         // the transition class BEFORE we change the physical location.
@@ -575,7 +578,7 @@
           // do nothing for native trays except close any open custom trays
           // native tray nav items (li) do not have an id
           // only run for global nav trays because responsive trays don't use this handler for closing
-          if(!is_rspv && nav_anchor.closest('li') && !nav_anchor.closest('li').hasAttribute('id')) {
+          if (!is_rspv && nav_anchor.closest('li') && !nav_anchor.closest('li').hasAttribute('id')) {
             const open_tray = document.querySelector('.gcn-instui-tray');
             if (open_tray) {
               const open_slug = open_tray.parentElement.id.replace('-tray', '');
@@ -684,9 +687,9 @@
       const direction = globalCustomNav.dir == 'ltr' ? 'left' : 'right';
 
       var tray_html = `<span id="${tray_content_id}" dir="${globalCustomNav.dir}">
-      <span class="gcn-instui-tray">
+      <span class="gcn-instui-tray" dir="${globalCustomNav.dir}">
       <div role="dialog" aria-label="${item.title} tray">
-      <div class="gcn-tray__content">
+      <div class="gcn-instui-tray__content">
       <div class="${globalCustomNav.cfg.glbl.tray_container} ${item.tidle}-tray">`;
 
       // close button
@@ -710,7 +713,7 @@
 
       // tray content
       tray_html += `<div class="${globalCustomNav.cfg.glbl.space}">
-            <div class="gcn-instui-view">
+            <div class="gcn-instui-view" dir="${globalCustomNav.dir}">
               <h2 class="gcn-instui-view-heading" dir="${globalCustomNav.dir}">${item.title}</h2>
               <hr role="presentation" class="gcn-cb_content">`;
 
@@ -723,7 +726,7 @@
         <li class="gcn-instui-view-listItem" dir="${globalCustomNav.dir}"><hr role="presentation"></li>
         <li class="gcn-instui-view-listItem" dir="${globalCustomNav.dir}">`;
         tray_html += globalCustomNav.link(item);
-        tray_html += `</li></ul><br><div wrap="normal" letter-spacing="normal" class="gcn-instui-text">${item.tray.footer}</div>`;
+        tray_html += `</li></ul><br /><div class="gcn-instui-text-footer" wrap="normal" letter-spacing="normal">${item.tray.footer}</div>`;
       }
       tray_html += `</div></div></div></div></div></span></span>`;
 
@@ -739,12 +742,14 @@
         requestAnimationFrame(() => {
           // moving in
           tray.classList.replace(`gcn-instui-tray-slide-${direction}-exited`, `gcn-instui-tray-slide-${direction}-entering`);
-          // add the transition rules to animate the move
+          // add the transition to animate the move
           tray.classList.add(`gcn-instui-tray-slide-${direction}-transitioning`);
+          tray.setAttribute('aria-hidden', 'true');
           // duration
           setTimeout(() => {
             tray.classList.replace(`gcn-instui-tray-slide-${direction}-entering`, `gcn-instui-tray-slide-${direction}-entered`);
             tray.classList.remove(`gcn-instui-tray-slide-${direction}-transitioning`);
+            tray.removeAttribute('aria-hidden');
           }, 300);
         });
       });
