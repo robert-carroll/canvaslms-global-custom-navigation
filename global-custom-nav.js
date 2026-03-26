@@ -785,7 +785,7 @@
       } else if (typeof item.tray.cb !== 'undefined' && typeof item.tray.cb === 'function') {
         tray_html += `<ul class="gcn-instui-view--block-list gcn-loading-tray-cb" dir="${globalCustomNav.dir}">
         <li class="gcn-instui-view-listItem" dir="${globalCustomNav.dir}">
-          <div dir="${globalCustomNav.dir}" class="gcn-tray-view-spinner gcn-loading-tray-cb-svg gcn-instui-text"></div>
+          <div dir="${globalCustomNav.dir}" class="gcn_tray-view-spinner gcn-loading-tray-cb-svg gcn-instui-text"></div>
         </li>
       </ul>`;
       }
