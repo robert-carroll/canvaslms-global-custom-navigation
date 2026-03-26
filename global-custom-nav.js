@@ -1037,6 +1037,23 @@
       }
     },
     {
+      title: 'Spinner',
+      icon_svg: 'icon-record',
+      href: '#',
+      position: 'after',
+      tray: {
+        footer: 'Just keep...',
+        cb: function (_item) {    
+          // to keep the spinner spinning indefinitely, create an 
+          // unresolved promise that never calls globalCustomNav.append_cb_content()
+          return new Promise(() => {
+            // intentionally left blank
+            // because resolve() is never called, the spinner just keeps spinning
+          });
+        }
+      }
+    },
+    {
       title: 'Tray with Callback link render',
       // example tray with custom callback for content area
       icon_svg: 'icon-flag',
