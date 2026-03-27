@@ -402,7 +402,7 @@ svg.gcn-tray-rspv-aodown {
   stroke-width: 0.375em;
   stroke-dasharray: 6em;
   transform-origin: calc(1.5em) calc(1.5em) 0px;
-  stroke: rgb(3, 116, 181);
+  stroke: var(--ic-brand-primary);
 }
 
 @keyframes gcn-spinner-rotate {
