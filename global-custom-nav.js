@@ -60,7 +60,7 @@
       ".gcn_tray-spinner__circle": "display: block; position: absolute; top: 0px; left: 0px; animation-name: gcn-spinner-rotate; animation-duration: 2.25s; animation-iteration-count: infinite; animation-timing-function: linear; width: 3em; height: 3em;",
       ".gcn_tray_throwback-spinner__circle": "display: block; animation-name: gcn-spinner-rotate; animation-duration: 2.25s; animation-iteration-count: infinite; animation-timing-function: linear; width: 3em; height: 3em;",
       ".gcn_tray-spinner__circleTrack": "stroke: rgb(245, 245, 245); fill: none; stroke-width: 0.375em;",
-      ".gcn_tray-spinner__circleSpin": "fill: none; stroke-linecap: round; animation-name: gcn-spinner-morph; animation-duration: 1.75s; animation-iteration-count: infinite; animation-timing-function: ease; stroke-width: 0.375em; stroke-dasharray: 6em; transform-origin: calc(1.5em) calc(1.5em) 0px; stroke: rgb(3, 116, 181);",
+      ".gcn_tray-spinner__circleSpin": "fill: none; stroke-linecap: round; animation-name: gcn-spinner-morph; animation-duration: 1.75s; animation-iteration-count: infinite; animation-timing-function: ease; stroke-width: 0.375em; stroke-dasharray: 6em; transform-origin: calc(1.5em) calc(1.5em) 0px; stroke: var(--ic-brand-primary);",
       "@keyframes gcn-spinner-rotate": "to { transform: rotate(360deg) }",
       "@keyframes gcn-spinner-morph": "0% { stroke-dashoffset: 190%; } 50% { stroke-dashoffset: 50%; transform: rotate(90deg); } 100% { stroke-dashoffset: 190%; transform: rotate(360deg); }"
     };
@@ -1040,13 +1040,23 @@
       href: '#',
       position: 'after',
       tray: {
-        footer: 'Just keep...',
-        cb: function (_item) {    
-          // to keep the spinner spinning indefinitely, create an 
-          // unresolved promise that never calls globalCustomNav.append_cb_content()
-          return new Promise(() => {
-            // intentionally left blank
-            // because resolve() is never called, the spinner just keeps spinning
+        cb: function (item) {    
+          // keep spinning while the tray is open
+          return new Promise((resolve) => {
+            const check_tray = setInterval(() => {
+              // check for the tray
+              const open_tray = document.getElementById(`${item.slug}-tray`);
+              // if the tray is closed
+              if (!open_tray) {
+                // stop the interval check
+                clearInterval(check_tray);
+                // resolve the promise
+                resolve();
+              // } else {
+              //   // tray is open, keep spinning
+              //   console.log(item.slug);
+              }
+            }, 300);
           });
         }
       }
