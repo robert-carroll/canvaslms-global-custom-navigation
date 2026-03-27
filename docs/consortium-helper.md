@@ -1,6 +1,6 @@
-# Cross-Instance Navigation
+# Consortium Helper for Cross-Instance Context Items
 
-A common use case for consortiums or organizations with multiple Canvas instances is routing users to a shared context on another instance. 
+A routing helper for consortiums or organizations with multiple Canvas instances. If you need to route users from one instance to a shared context (like a 'resource' course) on another instance, this helper allows you to deploy the exact same global nav script everywhere. It dynamically handles the cross-instance URL generation and ensures that once the user arrives at the target instance, the `activeClass` is applied to the global nav item.
 
 The `x_instance_context_href` helper solves this by dynamically handling the environment and routing.
 
@@ -46,7 +46,7 @@ Call the helper function inline when defining the `href` for a navigation item.
 ```js
 {
   title: 'Consortium Context',
-  icon_svg: 'icon-educators',
+  icon_svg: 'icon-subaccounts',
   href: x_instance_context_url('/courses/101', 'main.instructure.com'), 
   target: '_blank',
   //position: 'before' // default
