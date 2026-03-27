@@ -79,8 +79,6 @@
 (function () {
   'use strict';
 
-  // TODO context items globally applied to consortium instances, should handle a root url, and ensure active class
-
   // continue if curious
   const globalCustomNav = {  
     cfg: {
@@ -884,7 +882,7 @@
       title: 'Icon with Role Requirements - Faculty',
       // example icon with role requirement
       icon_svg: 'icon-educators',
-      href: 'https://community.canvaslms.com/t5/Canvas-Instructor/ct-p/canvas_instructor',
+      href: 'https://community.instructure.com/en/kb/canvas-lms-instructor-guide',
       target: '_blank',
       position: 'after',
       roles: function () {
@@ -897,7 +895,7 @@
       title: 'Icon with Role Requirements - Student',
       // example icon with role requirement
       icon_svg: 'icon-group',
-      href: 'https://community.canvaslms.com/t5/Canvas-Student/ct-p/canvas_student',
+      href: 'https://community.instructure.com/en/kb/canvas-lms-student-guide',
       target: '_blank',
       position: 'after',
       roles: function () {
@@ -940,7 +938,7 @@
             desc: 'Canvas Community'
           },
           {
-            href: 'https://community.canvaslms.com/t5/Canvas-Developers-Group/gh-p/developers',
+            href: 'https://community.instructure.com/en/categories/developers-group',
             title: 'Help Desk',
             target: '_blank'
           },
@@ -970,7 +968,7 @@
               desc: 'Canvas Community'
             },
             {
-              href: 'https://community.canvaslms.com/t5/Canvas-Developers-Group/gh-p/developers',
+              href: 'https://community.instructure.com/en/categories/developers-group',
               title: 'Help Desk',
               target: '_blank'
             },
@@ -1075,7 +1073,7 @@
               desc: 'Canvas Community'
             },
             {
-              href: 'https://community.canvaslms.com/t5/Canvas-Developers-Group/gh-p/developers',
+              href: 'https://community.instructure.com/en/categories/developers-group',
               title: 'Help Desk',
               target: '_blank'
             },

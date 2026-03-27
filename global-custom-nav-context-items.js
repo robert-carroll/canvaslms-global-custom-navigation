@@ -28,8 +28,6 @@
 (function () {
   'use strict';
 
-  // TODO context items globally applied to consortium instances, should handle a root url, and ensure active class
-
   // continue if curious
   const globalCustomNav = {  
     cfg: {
@@ -104,7 +102,7 @@
       // there is no portal, start observer
       if (!portal) {
         if (!globalCustomNav.cfg.rspv.keeper) {
-          // store the observer in the keeper, prevent stacking and hand off
+          // store the observer in the keeper, prevent stacking and utilize hand off
           // subtree ensures items are added responsive menu opens
           globalCustomNav.cfg.rspv.keeper = new MutationObserver(globalCustomNav.detect_rspv_portal);
           globalCustomNav.cfg.rspv.keeper.observe(document.body, { childList: true, subtree: true });
