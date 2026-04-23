@@ -171,6 +171,16 @@
     watch_glbl_portal: (mtx) => {
       // watch for tray container, handle throwbacks
       const portal = document.querySelector(globalCustomNav.cfg.glbl.tray_portal);
+      // detect the tray container
+      const tray_container_open = document.querySelector(`${globalCustomNav.cfg.glbl.tray_portal} div.${globalCustomNav.cfg.glbl.tray_container}`);
+
+      if (tray_container_open) {
+        // get the current open tray slug
+        let ui_tray = [...tray_container_open.classList].find(c => c.endsWith('-tray'))?.replace('-tray', '');
+        if (ui_tray) {
+          globalCustomNav.glbl_ensure_active_class(`global_nav_${ui_tray}_link`);
+        }
+      }
 
       mtx.forEach(mutation => {
         if (mutation.removedNodes.length > 0 && portal.children.length === 0) {
@@ -316,7 +326,7 @@
       title: 'Custom Context',
       // custom context handles active class in global nav
       icon_svg: 'icon-expand-start',
-      href: '/courses/101',
+      href: '/courses/'+ENV.COURSE_ID,
       target: '_top',
       roles: function () {
         return ['user'].some(a => ENV.current_user_roles.includes(a));
