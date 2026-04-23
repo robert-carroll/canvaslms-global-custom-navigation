@@ -32,6 +32,7 @@ Some guides on how to setup and configure features and customizations:
 - [/docs/custom-tray-throwbacks.md](/docs/custom-tray-throwbacks.md) - setup throwbacks to modify or add content to a Canvas tray
 - [/docs/high-contrast-logos.md](/docs/high-contrast-logos.md) - handle branding logos for high contrast mode
 - [/docs/consortium-helper.md](/docs/consortium-helper.md) - handle hrefs for nav items across instances
+- [/docs/roles.md](/docs/roles.md) - handling roles for users groups and nav items
 
 ## Development & Testing Files
 The files in the root of this repo are for testing and development:
