@@ -190,16 +190,23 @@
       });
     },
     glbl_ensure_active_class: (context_item = globalCustomNav.cfg.context_item) => {
-      // clear existing active classes to prevent duplicates
+      // clear existing active classes and aria attributes to prevent duplicates
       document.querySelectorAll(`.${globalCustomNav.cfg.glbl.trayActiveClass}`).forEach(el => {
         el.classList.remove(globalCustomNav.cfg.glbl.trayActiveClass);
+        el.removeAttribute('aria-current');
       });
 
       // attempt to find the requested item, fallback to the default context item
       const nav_item = document.getElementById(context_item) || document.getElementById(globalCustomNav.cfg.context_item);
 
-      // safely apply the active class to the parent <li> if it exists
-      nav_item?.closest('li')?.classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
+      if (nav_item) {
+        // safely apply the active class and aria-current to the parent <li>
+        const nav_li = nav_item.closest('li');
+        if (nav_li) {
+          nav_li.classList.add(globalCustomNav.cfg.glbl.trayActiveClass);
+          nav_li.setAttribute('aria-current', 'page');
+        }
+      }
     },
     prepare_nav_items: (items, hamb = true) => {
       items.forEach(item => {
